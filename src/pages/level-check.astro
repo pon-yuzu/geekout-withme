@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro';
+import LevelCheckApp from '../components/LevelCheckApp.tsx';
+---
+
+<Layout title="Level Check" description="Discover your Japanese or English level with our text and voice assessment.">
+  <section class="min-h-screen py-12 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">
+          <span class="bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">
+            Level Check
+          </span>
+        </h1>
+        <p class="text-xl text-slate-300">
+          Find out your reading/writing and speaking levels
+        </p>
+      </div>
+
+      <LevelCheckApp client:load />
+    </div>
+  </section>
+</Layout>

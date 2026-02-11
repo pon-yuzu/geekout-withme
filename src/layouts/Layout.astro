@@ -1,0 +1,55 @@
+---
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "Find your language level, discover resources, and connect with fellow language geeks!" } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title} | Geek Out With Me</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
+    <nav class="fixed top-0 w-full bg-slate-900/80 backdrop-blur-md z-50 border-b border-white/10">
+      <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+        <a href="/" class="text-xl font-bold bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">
+          Geek Out With Me
+        </a>
+        <div class="flex gap-6">
+          <a href="/level-check" class="hover:text-primary-400 transition-colors">Level Check</a>
+          <a href="/resources" class="hover:text-primary-400 transition-colors">Resources</a>
+          <a href="/community" class="hover:text-primary-400 transition-colors">Community</a>
+        </div>
+      </div>
+    </nav>
+    
+    <main class="pt-20">
+      <slot />
+    </main>
+
+    <footer class="border-t border-white/10 mt-20 py-8">
+      <div class="max-w-6xl mx-auto px-4 text-center text-slate-400">
+        <p>© 2026 Geek Out With Me. Learn languages through your passions.</p>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+</style>

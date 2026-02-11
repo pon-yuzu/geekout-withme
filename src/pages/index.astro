@@ -1,0 +1,90 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Home">
+  <!-- Hero Section -->
+  <section class="min-h-[80vh] flex items-center justify-center px-4">
+    <div class="max-w-4xl mx-auto text-center">
+      <h1 class="text-5xl md:text-7xl font-bold mb-6">
+        <span class="bg-gradient-to-r from-primary-400 via-accent-400 to-primary-400 bg-clip-text text-transparent">
+          Learn Languages
+        </span>
+        <br />
+        <span class="text-white">Through Your Passions</span>
+      </h1>
+      
+      <p class="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
+        Whether you're into anime, cooking, tech, or music — 
+        find your level, discover the perfect resources, and connect with fellow geeks learning Japanese and English.
+      </p>
+
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a 
+          href="/level-check" 
+          class="px-8 py-4 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full font-semibold text-lg hover:opacity-90 transition-opacity"
+        >
+          🎯 Check Your Level
+        </a>
+        <a 
+          href="/resources" 
+          class="px-8 py-4 bg-white/10 border border-white/20 rounded-full font-semibold text-lg hover:bg-white/20 transition-colors"
+        >
+          📚 Browse Resources
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-20 px-4">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-12">How It Works</h2>
+      
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Feature 1 -->
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
+          <div class="text-4xl mb-4">🎤</div>
+          <h3 class="text-xl font-semibold mb-2">Level Check</h3>
+          <p class="text-slate-400">
+            Take our text and voice assessment to discover your reading, writing, and speaking levels in Japanese or English.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
+          <div class="text-4xl mb-4">💡</div>
+          <h3 class="text-xl font-semibold mb-2">Personalized Resources</h3>
+          <p class="text-slate-400">
+            Tell us your interests — we'll recommend free resources matched to your level and passions.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
+          <div class="text-4xl mb-4">🌏</div>
+          <h3 class="text-xl font-semibold mb-2">Community</h3>
+          <p class="text-slate-400">
+            Join our weekly language exchange and voice lounges to practice with fellow learners and native speakers.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-20 px-4">
+    <div class="max-w-4xl mx-auto text-center bg-gradient-to-r from-primary-900/50 to-accent-900/50 rounded-3xl p-12 border border-white/10">
+      <h2 class="text-3xl font-bold mb-4">Ready to Geek Out?</h2>
+      <p class="text-slate-300 mb-8">
+        Start with a free level check — no sign-up required.
+      </p>
+      <a 
+        href="/level-check" 
+        class="inline-block px-8 py-4 bg-white text-slate-900 rounded-full font-semibold text-lg hover:bg-slate-100 transition-colors"
+      >
+        Get Started →
+      </a>
+    </div>
+  </section>
+</Layout>
