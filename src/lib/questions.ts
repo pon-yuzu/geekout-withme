@@ -131,7 +131,7 @@ export const englishQuestionPool: LevelBlock[] = [
       // subjunctive
       { question: 'Choose the correct word: "It is imperative that she ___ present at the hearing."', options: ['is', 'be', 'was', 'will be'], correct: 1 },
       // advanced connector
-      { question: 'Choose the correct word: "___ the severe weather, the event proceeded as planned."', options: ['Despite', 'Notwithstanding', 'Although', 'However'], correct: 1 },
+      { question: 'Choose the correct word: "___ the severe weather, the event proceeded as planned."', options: ['Despite', 'Notwithstanding', 'Although', 'However'], correct: [0, 1] },
       // cleft emphasis
       { question: 'Choose the correct word: "What ___ me most was her determination."', options: ['impressed', 'impressing', 'was impressed', 'to impress'], correct: 0 },
       // complex passive

@@ -198,13 +198,17 @@ export default function Results({ language, textLevel, listeningLevel, voiceLeve
       </div>
 
       {/* Skill Gap Notice */}
-      {textLevel && voiceLevel && textLevel !== voiceLevel && (
-        <div className="bg-yellow-50 border border-yellow-300 rounded-xl p-4 mb-8">
-          <p className="text-yellow-700">
-            💡 {t('results.skillGap')}
-          </p>
-        </div>
-      )}
+      {(() => {
+        const levels = [textLevel, listeningLevel, voiceLevel].filter(Boolean);
+        const hasGap = levels.length >= 2 && new Set(levels).size > 1;
+        return hasGap ? (
+          <div className="bg-yellow-50 border border-yellow-300 rounded-xl p-4 mb-8">
+            <p className="text-yellow-700">
+              💡 {t('results.skillGap')}
+            </p>
+          </div>
+        ) : null;
+      })()}
 
       {/* AI Fallback Notice */}
       {(isFallback || feedback?.isFallback) && (

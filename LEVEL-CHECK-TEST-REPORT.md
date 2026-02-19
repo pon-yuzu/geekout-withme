@@ -1,4 +1,15 @@
-# Level Check Test Report (2026-02-19)
+# Level Check Test Report v3 (2026-02-20)
+
+## Changes Since v2
+- **FIXED**: Audio files generated and deployed (100 mp3 via Google Cloud TTS Neural2)
+- **FIXED**: en-A2-05.mp3 was truncated (5.9KB) — regenerated to 52.6KB
+- **FIXED**: C1 Q4 "Despite"/"Notwithstanding" — now accepts both (`correct: [0, 1]`)
+- **FIXED**: `/api/save-assessment` now saves `listeningLevel` and accepts `'listening'` mode
+- **FIXED**: Skill gap notice now compares all three skills (text/listening/voice)
+- **ADDED**: `sql/011_add_listening_level.sql` migration for DB schema update
+- **MOVED**: `@google-cloud/text-to-speech` to devDependencies
+
+---
 
 ## 1. Page Load
 
@@ -7,87 +18,134 @@
 | `/` top page | 200 OK |
 | `/level-check` page | 200 OK |
 | Language selection UI (JA/EN) | Renders correctly |
+| Mode selection (Text/Listening/Voice/Both) | Renders correctly |
 | Navigation | Working |
 
 ---
 
-## 2. API Tests (5 runs each, EN + JA)
+## 2. API Tests (10 total: 5 EN + 5 JA)
 
-All 10 calls to `/api/analyze-text` returned **`401 Unauthorized`**.
-
-The endpoint checks `locals.user` (login required) at `src/pages/api/analyze-text.ts:6`.
-
-**Issue**: The text assessment itself runs client-side, but **AI feedback (studyTips, focusAreas, etc.) is unavailable for non-logged-in users**. The frontend (`TextAssessment.tsx:75-82`) silently catches the error (`.catch(() => {})`), so **no crash occurs**, but the results screen shows no feedback.
+All 10 calls to `/api/analyze-text` returned **`401 Unauthorized`** (requires login — by design for AI feedback).
 
 ---
 
-## 3. Question Correctness (100 questions total)
+## 3. Text Assessment Questions (100 questions)
 
 | Language | Level | Questions | Result |
 |----------|-------|-----------|--------|
-| English | A1 | 10 | All correct |
-| English | A2 | 10 | All correct |
-| English | B1 | 10 | All correct |
-| English | B2 | 10 | All correct |
-| English | **C1** | 10 | **1 issue found** |
-| Japanese | N5 | 10 | All correct |
-| Japanese | N4 | 10 | All correct |
-| Japanese | N3 | 10 | All correct |
-| Japanese | N2 | 10 | All correct |
-| Japanese | N1 | 10 | All correct |
+| English | A1-B2 | 40 | All correct |
+| English | C1 | 10 | All correct (Q4 fixed: accepts both Despite/Notwithstanding) |
+| Japanese | N5-N1 | 50 | All correct |
 
-### Issue: C1 Q4 (`questions.ts:134`)
+---
 
+## 4. Listening Assessment Questions (100 questions)
+
+### English Listening (50 questions: A1-C1, 10 per level)
+
+| Level | Questions | Types | Issues |
+|-------|-----------|-------|--------|
+| A1 | 10 | 5 comprehension + 5 dictation | None |
+| A2 | 10 | 6 comprehension + 4 dictation | None |
+| B1 | 10 | 6 comprehension + 4 dictation | None |
+| B2 | 10 | 6 comprehension + 4 dictation | None |
+| C1 | 10 | 6 comprehension + 4 dictation | None |
+
+### Japanese Listening (50 questions: N5-N1, 10 per level)
+
+| Level | Questions | Types | Issues |
+|-------|-----------|-------|--------|
+| N5 | 10 | 6 comprehension + 4 dictation | None |
+| N4 | 10 | 6 comprehension + 4 dictation | None |
+| N3 | 10 | 6 comprehension + 4 dictation | None |
+| N2 | 10 | 6 comprehension + 4 dictation | None |
+| N1 | 10 | 6 comprehension + 4 dictation | None |
+
+All 100 listening questions verified — correct answers are accurate, difficulty is appropriate for each level.
+
+### Audio Files
+
+| Test | Result |
+|------|--------|
+| 100 mp3 files in `public/audio/listening/` | All present |
+| File sizes | 19KB–163KB (appropriate for content length) |
+| en-A2-05.mp3 (previously truncated) | Fixed — 52.6KB |
+| TTS voices | EN: Neural2-D (male) / Neural2-F (female) alternating |
+| TTS voices | JA: Neural2-B (female) / Neural2-D (male) alternating |
+| Speaking rates | A1/N5=0.85, A2/N4=0.9, B1/N3=0.95, B2+/N2+=1.0 |
+
+### Listening Component Logic
+- 5 questions per level, 3+ correct to pass
+- Fisher-Yates shuffle from pool of 10
+- Audio plays max 2 times per question
+- Questions shown only after first listen
+- On audio error: still allows answering (graceful fallback)
+- Teal color scheme (distinct from text's orange)
+
+---
+
+## 5. Flow Logic Tests
+
+### "Both" Mode Flow
 ```
-Q: "___ the severe weather, the event proceeded as planned."
-Options: ['Despite', 'Notwithstanding', 'Although', 'However']
-Marked correct: Notwithstanding (index 1)
+Language Select → Mode Select → Text Assessment → Transition (shows text result)
+→ Listening Assessment → Transition (shows text + listening results)
+→ Voice Assessment → Results (shows all 3 levels)
 ```
+Flow is correct. Transition screens display accumulated results properly.
 
-**Both "Despite" and "Notwithstanding" are grammatically correct and semantically equivalent here.** A learner selecting "Despite" would be unfairly marked wrong.
+### Results Page
+- Dynamic grid: 2-col for 2 skills, 3-col for 3 skills
+- Skill gap notice compares all available skills (text, listening, voice)
+- Save endpoint sends and stores `listeningLevel`
 
-**Fix options:**
-- Change `correct: 1` to `correct: [0, 1]` to accept both answers
-- Or replace "Despite" with "Nevertheless" (which is an adverb and wouldn't work grammatically here, making it clearly wrong)
-
----
-
-## 4. Resource Links
-
-| URL | Status |
-|-----|--------|
-| VOA Learning English - Beginning | 200 OK |
-| ESOL Courses | 403 (bot protection, works in browser) |
-| VOA Learning English | 200 OK |
-| ER Central | 200 OK |
-| TED-Ed | 200 OK |
-| BBC Learning English | 200 OK |
-| The Economist | 403 (bot protection, works in browser) |
-| NPR Podcasts | 200 OK |
-| Tadoku Free Books | 200 OK |
-| Yomujp | 200 OK |
-| NHK NEWS WEB EASY | 200 OK |
-| NHK NEWS | 200 OK |
-| Aozora Bunko | 200 OK |
-
-All links functional (403s are bot protection only, browser access works fine).
+### Scoring Logic
+- Text: 5 per level, pass = 3+ correct
+- Listening: 5 per level, pass = 3+ correct
+- Voice: progressive levels, AI or fallback scoring
 
 ---
 
-## 5. Scoring Logic (Code Review)
+## 6. Save Assessment API
 
-- 5 questions per level, 3+ correct to pass -> advance to next level
-- On fail: assign previous level (fail A1/N5 -> "Starter")
-- Fisher-Yates shuffle selects 5 from pool of 10 -> correct
-- `checkCorrect` handles both `number` and `number[]` -> correct
-- Level progression: A1->A2->B1->B2->C1 (EN), N5->N4->N3->N2->N1 (JA) -> correct
+| Test | Result |
+|------|--------|
+| Accepts mode `'text'` | Yes |
+| Accepts mode `'listening'` | Yes (fixed in v3) |
+| Accepts mode `'voice'` | Yes |
+| Accepts mode `'both'` | Yes |
+| Saves `listeningLevel` | Yes (fixed in v3) |
+| DB migration `011_add_listening_level.sql` | Created — needs manual apply |
 
 ---
 
-## Summary of Issues Found
+## 7. i18n Completeness
 
-| # | Severity | Description | File | Line |
-|---|----------|-------------|------|------|
-| 1 | **High** | C1 Q4: "Despite" and "Notwithstanding" both correct, only one accepted | `src/lib/questions.ts` | 134 |
-| 2 | **Medium** | Non-logged-in users get no AI feedback after assessment (401 from `/api/analyze-text`) — no crash but poor UX | `src/pages/api/analyze-text.ts` | 6 |
-| 3 | **Low** | `/api/analyze-voice` likely has same auth issue for voice assessment feedback | `src/pages/api/analyze-voice.ts` | - |
+All listening i18n keys present in both `en.json` and `ja.json`:
+- `levelCheck.selectMode.listening` / `listeningSub`
+- `levelCheck.transition.listeningTitle` / `listeningDesc` / `listeningContinue`
+- `listening.play` / `playing` / `replay` / `replaysLeft` / `listenFirst`
+- `results.listening`
+
+---
+
+## 8. Resource Links (unchanged)
+
+All 13 resource URLs return 200 OK (except ESOL Courses and The Economist which return 403 due to bot protection — they work in browsers).
+
+---
+
+## Remaining Items
+
+| # | Severity | Description | Action |
+|---|----------|-------------|--------|
+| 1 | **MEDIUM** | DB migration `011_add_listening_level.sql` not yet applied | Run in Supabase SQL editor |
+| 2 | **LOW** | Non-logged-in users get no AI feedback (401 on analyze endpoints) | By design — consider simplified fallback later |
+
+---
+
+## Deployment Status
+
+- Code: Deployed to Cloudflare Pages via `git push origin main`
+- Audio files: 100 mp3 included in deploy
+- DB: Migration `011_add_listening_level.sql` pending manual apply

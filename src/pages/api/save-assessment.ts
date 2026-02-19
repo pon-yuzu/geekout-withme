@@ -15,9 +15,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400 });
   }
 
-  const { language, mode, textLevel, voiceLevel, feedback } = body;
+  const { language, mode, textLevel, listeningLevel, voiceLevel, feedback } = body;
 
-  if (!language || !mode || !['english', 'japanese'].includes(language) || !['text', 'voice', 'both'].includes(mode)) {
+  if (!language || !mode || !['english', 'japanese'].includes(language) || !['text', 'listening', 'voice', 'both'].includes(mode)) {
     return new Response(JSON.stringify({ error: 'Invalid language or mode' }), { status: 400 });
   }
 
@@ -28,6 +28,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       language,
       mode,
       text_level: textLevel || null,
+      listening_level: listeningLevel || null,
       voice_level: voiceLevel || null,
       feedback: feedback || null,
     })
