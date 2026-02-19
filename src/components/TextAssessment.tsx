@@ -1,5 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useTranslation } from '../i18n/index';
+import {
+  englishQuestionPool,
+  japaneseQuestionPool,
+  selectQuestions,
+  QUESTIONS_PER_LEVEL,
+  PASS_THRESHOLD,
+  type LevelBlock,
+} from '../lib/questions';
 
 interface Props {
   language: 'english' | 'japanese';
@@ -8,264 +16,6 @@ interface Props {
   onFeedback?: (feedback: any) => void;
 }
 
-interface Question {
-  question: string;
-  options: string[];
-  correct: number | number[];
-}
-
-interface LevelBlock {
-  level: string;
-  questions: Question[];
-}
-
-// ── English (CEFR A1–C1) ── 3 questions per level, all unambiguous
-const englishLevels: LevelBlock[] = [
-  {
-    level: 'A1',
-    questions: [
-      {
-        question: 'Choose the correct word: "She ___ a student."',
-        options: ['is', 'are', 'am', 'be'],
-        correct: 0,
-      },
-      {
-        question: 'Choose the correct word: "They ___ from Japan."',
-        options: ['is', 'am', 'are', 'be'],
-        correct: 2,
-      },
-      {
-        question: 'Choose the correct word: "I have two ___."',
-        options: ['cat', 'cats', 'a cat', 'the cat'],
-        correct: 1,
-      },
-    ],
-  },
-  {
-    level: 'A2',
-    questions: [
-      {
-        question: 'What does "I\'m looking forward to meeting you" mean?',
-        options: [
-          "I don't want to meet you",
-          "I'm excited to meet you",
-          'I forgot to meet you',
-          "I'm tired of meeting you",
-        ],
-        correct: 1,
-      },
-      {
-        question: 'Choose the correct word: "Yesterday, I ___ to the store."',
-        options: ['go', 'going', 'went', 'gone'],
-        correct: 2,
-      },
-      {
-        question: 'Choose the correct word: "She can speak English ___ than her brother."',
-        options: ['good', 'better', 'best', 'more good'],
-        correct: 1,
-      },
-    ],
-  },
-  {
-    level: 'B1',
-    questions: [
-      {
-        question: 'Choose the correct sentence:',
-        options: [
-          'If I would have known, I would have come.',
-          'If I had known, I would have come.',
-          'If I knew, I would have came.',
-          'If I know, I would come.',
-        ],
-        correct: 1,
-      },
-      {
-        question: 'Choose the correct word: "By the time we arrived, the movie ___."',
-        options: [
-          'already started',
-          'had already started',
-          'has already started',
-          'is starting',
-        ],
-        correct: 1,
-      },
-      {
-        question: 'Choose the correct word: "I wish I ___ more time to travel."',
-        options: ['have', 'had', 'will have', 'having'],
-        correct: 1,
-      },
-    ],
-  },
-  {
-    level: 'B2',
-    questions: [
-      {
-        question: '"He tends to beat around the bush." This means he:',
-        options: [
-          'Likes gardening',
-          'Avoids saying things directly',
-          'Is very honest',
-          'Speaks too quickly',
-        ],
-        correct: 1,
-      },
-      {
-        question:
-          'Choose the correct form: "Not only ___ the project on time, but she also won an award."',
-        options: [
-          'she completed',
-          'did she complete',
-          'she has completed',
-          'she completing',
-        ],
-        correct: 1,
-      },
-      {
-        question:
-          'Choose the correct word: "Had I known about the delay, I ___ an earlier flight."',
-        options: [
-          'would book',
-          'would have booked',
-          'will book',
-          'had booked',
-        ],
-        correct: 1,
-      },
-    ],
-  },
-  {
-    level: 'C1',
-    questions: [
-      {
-        question:
-          'Choose the correct word: "The proposal, ___ merits are questionable, was nonetheless approved."',
-        options: ['who', 'whose', 'which', 'that'],
-        correct: 1,
-      },
-      {
-        question:
-          'Choose the correct word: "Scarcely had he arrived ___ the meeting began."',
-        options: ['when', 'than', 'that', 'then'],
-        correct: 0,
-      },
-      {
-        question:
-          'Choose the correct word: "So pervasive is the influence of media ___ it shapes public opinion unconsciously."',
-        options: ['that', 'which', 'what', 'where'],
-        correct: 0,
-      },
-    ],
-  },
-];
-
-// ── Japanese (JLPT N5–N1) ── 3 questions per level, all unambiguous
-const japaneseLevels: LevelBlock[] = [
-  {
-    level: 'N5',
-    questions: [
-      {
-        question: '「わたしは まいにち がっこう___いきます。」',
-        options: ['を', 'に', 'で', 'が'],
-        correct: 1,
-      },
-      {
-        question: '「きのう ともだちと えいがを ___。」',
-        options: ['みます', 'みません', 'みました', 'みて'],
-        correct: 2,
-      },
-      {
-        question: '「この りんごは ___ おいしいです。」',
-        options: ['とても', 'あまり', 'ぜんぜん', 'たくさん'],
-        correct: 0,
-      },
-    ],
-  },
-  {
-    level: 'N4',
-    questions: [
-      {
-        question: '「しゅくだいを ___から、あそびに いきます。」',
-        options: ['して', 'した', 'する', 'します'],
-        correct: 0,
-      },
-      {
-        question: '「この かんじが ___か。」',
-        options: ['よむ', 'よめます', 'よみたい', 'よんだ'],
-        correct: 1,
-      },
-      {
-        question: '「母に プレゼントを ___もらいました。」',
-        options: ['かって', 'かいて', 'かった', 'かう'],
-        correct: 0,
-      },
-    ],
-  },
-  {
-    level: 'N3',
-    questions: [
-      {
-        question: '「レポートは 金曜日___出してください。」',
-        options: ['まで', 'までに', 'ごろ', 'ぐらい'],
-        correct: 1,
-      },
-      {
-        question: '「彼女は うれしそう___笑った。」',
-        options: ['な', 'に', 'で', 'と'],
-        correct: 1,
-      },
-      {
-        question: '「説明書を 読んだ___、使い方が わからない。」',
-        options: ['のに', 'ので', 'ために', 'ところ'],
-        correct: 0,
-      },
-    ],
-  },
-  {
-    level: 'N2',
-    questions: [
-      {
-        question: '「日本語を 3年 勉強した___、まだ 上手に 話せない。」',
-        options: ['ものの', 'ものだ', 'ものか', 'ものを'],
-        correct: 0,
-      },
-      {
-        question: '「終電が なくなったので、歩いて 帰る___。」',
-        options: ['しかない', 'つもりだ', 'ようにする', 'ことにした'],
-        correct: 0,
-      },
-      {
-        question:
-          '「明日は 大事な 試験だから、勉強___わけにはいかない。」',
-        options: ['する', 'した', 'しない', 'している'],
-        correct: 2,
-      },
-    ],
-  },
-  {
-    level: 'N1',
-    questions: [
-      {
-        question:
-          '「この プロジェクトの 成功は、チーム全員の 協力の___だ。」',
-        options: ['たまもの', 'せい', 'くせ', 'すえ'],
-        correct: 0,
-      },
-      {
-        question: '「本日___、応募を 締め切らせていただきます。」',
-        options: ['をもって', 'において', 'にわたって', 'にかけて'],
-        correct: 0,
-      },
-      {
-        question: '「部長___、責任も 大きくなる。」',
-        options: ['ともなると', 'にしては', 'としても', 'ことから'],
-        correct: 0,
-      },
-    ],
-  },
-];
-
-const PASS_THRESHOLD = 2; // 3問中2問正解でレベル通過
-
 export default function TextAssessment({
   language,
   onComplete,
@@ -273,7 +23,18 @@ export default function TextAssessment({
   onFeedback,
 }: Props) {
   const { t } = useTranslation();
-  const levels = language === 'english' ? englishLevels : japaneseLevels;
+  const pool = language === 'english' ? englishQuestionPool : japaneseQuestionPool;
+
+  // Build levels with randomly selected questions (memoized on mount)
+  const levels: LevelBlock[] = useMemo(
+    () =>
+      pool.map((block) => ({
+        level: block.level,
+        questions: selectQuestions(block.questions, QUESTIONS_PER_LEVEL),
+      })),
+    [language],
+  );
+
   const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [levelCorrect, setLevelCorrect] = useState(0);
@@ -282,16 +43,17 @@ export default function TextAssessment({
     { level: string; correct: boolean }[]
   >([]);
 
+  // Feedback state
+  const [feedbackState, setFeedbackState] = useState<'correct' | 'incorrect' | null>(null);
+  const [showingFeedback, setShowingFeedback] = useState(false);
+
+  // Level cleared flash
+  const [levelCleared, setLevelCleared] = useState<string | null>(null);
+
   const currentLevel = levels[currentLevelIndex];
   const currentQuestion = currentLevel.questions[currentQuestionIndex];
-  const totalQuestions = levels.reduce(
-    (sum, l) => sum + l.questions.length,
-    0,
-  );
-  const answeredSoFar =
-    levels
-      .slice(0, currentLevelIndex)
-      .reduce((sum, l) => sum + l.questions.length, 0) + currentQuestionIndex;
+  const totalQuestions = levels.length * QUESTIONS_PER_LEVEL;
+  const answeredSoFar = currentLevelIndex * QUESTIONS_PER_LEVEL + currentQuestionIndex;
 
   const checkCorrect = (
     selected: number,
@@ -302,6 +64,7 @@ export default function TextAssessment({
   };
 
   const handleSelect = (optionIndex: number) => {
+    if (showingFeedback) return;
     setSelectedOption(optionIndex);
   };
 
@@ -319,59 +82,89 @@ export default function TextAssessment({
       .catch(() => {});
   };
 
-  const handleNext = () => {
-    if (selectedOption === null) return;
-
-    const correct = checkCorrect(selectedOption, currentQuestion.correct);
-    const newAnswer = { level: currentLevel.level, correct };
-    const updatedAnswers = [...allAnswers, newAnswer];
-    setAllAnswers(updatedAnswers);
-
-    const newLevelCorrect = correct ? levelCorrect + 1 : levelCorrect;
-
+  const advanceAfterFeedback = (
+    isCorrect: boolean,
+    updatedAnswers: { level: string; correct: boolean }[],
+    newLevelCorrect: number,
+  ) => {
     if (currentQuestionIndex < currentLevel.questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setLevelCorrect(newLevelCorrect);
       setSelectedOption(null);
+      setFeedbackState(null);
+      setShowingFeedback(false);
       return;
     }
 
     const passed = newLevelCorrect >= PASS_THRESHOLD;
 
+    if (passed && currentLevelIndex < levels.length - 1) {
+      // Show level cleared flash before advancing
+      setLevelCleared(currentLevel.level);
+      setTimeout(() => {
+        setLevelCleared(null);
+        setCurrentLevelIndex(currentLevelIndex + 1);
+        setCurrentQuestionIndex(0);
+        setLevelCorrect(0);
+        setSelectedOption(null);
+        setFeedbackState(null);
+        setShowingFeedback(false);
+      }, 800);
+      return;
+    }
+
     if (!passed) {
       const level =
         currentLevelIndex === 0
           ? language === 'english'
-            ? 'Below A1'
-            : 'Below N5'
+            ? 'Starter'
+            : 'Starter'
           : levels[currentLevelIndex - 1].level;
       sendFeedbackRequest(level, updatedAnswers);
       onComplete(level);
       return;
     }
 
-    if (currentLevelIndex === levels.length - 1) {
-      sendFeedbackRequest(currentLevel.level, updatedAnswers);
-      onComplete(currentLevel.level);
-      return;
-    }
+    // Passed final level
+    sendFeedbackRequest(currentLevel.level, updatedAnswers);
+    onComplete(currentLevel.level);
+  };
 
-    setCurrentLevelIndex(currentLevelIndex + 1);
-    setCurrentQuestionIndex(0);
-    setLevelCorrect(0);
-    setSelectedOption(null);
+  const handleNext = () => {
+    if (selectedOption === null || showingFeedback) return;
+
+    const isCorrect = checkCorrect(selectedOption, currentQuestion.correct);
+    const newAnswer = { level: currentLevel.level, correct: isCorrect };
+    const updatedAnswers = [...allAnswers, newAnswer];
+    setAllAnswers(updatedAnswers);
+
+    const newLevelCorrect = isCorrect ? levelCorrect + 1 : levelCorrect;
+
+    // Show feedback
+    setFeedbackState(isCorrect ? 'correct' : 'incorrect');
+    setShowingFeedback(true);
+
+    setTimeout(() => {
+      advanceAfterFeedback(isCorrect, updatedAnswers, newLevelCorrect);
+    }, 800);
   };
 
   const isLastQuestion =
     currentLevelIndex === levels.length - 1 &&
     currentQuestionIndex === currentLevel.questions.length - 1;
 
+  // Determine correct answer index for feedback display
+  const correctIndex = Array.isArray(currentQuestion.correct)
+    ? currentQuestion.correct[0]
+    : currentQuestion.correct;
+
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-4">
         <button
           onClick={onBack}
-          className="text-gray-500 hover:text-gray-800 transition-colors"
+          disabled={showingFeedback}
+          className="text-gray-500 hover:text-gray-800 transition-colors disabled:opacity-50"
         >
           {t('levelCheck.back')}
         </button>
@@ -379,6 +172,36 @@ export default function TextAssessment({
           {currentLevel.level} — {currentQuestionIndex + 1} /{' '}
           {currentLevel.questions.length}
         </span>
+      </div>
+
+      {/* Level Stepper */}
+      <div className="flex items-center justify-center gap-1 mb-4">
+        {levels.map((lvl, i) => {
+          const isCurrent = i === currentLevelIndex;
+          const isPassed = i < currentLevelIndex;
+          return (
+            <div key={lvl.level} className="flex items-center">
+              {i > 0 && (
+                <div
+                  className={`w-4 h-0.5 mx-0.5 ${
+                    isPassed ? 'bg-orange-400' : 'bg-gray-200'
+                  }`}
+                />
+              )}
+              <div
+                className={`flex items-center justify-center w-8 h-8 rounded-full text-xs font-medium transition-all ${
+                  isCurrent
+                    ? 'bg-orange-500 text-white ring-2 ring-orange-300'
+                    : isPassed
+                      ? 'bg-orange-100 text-orange-600'
+                      : 'bg-gray-100 text-gray-400'
+                }`}
+              >
+                {isPassed ? '✓' : lvl.level}
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {/* Progress bar */}
@@ -391,52 +214,98 @@ export default function TextAssessment({
         />
       </div>
 
+      {/* Level Cleared Flash */}
+      {levelCleared && (
+        <div className="text-center mb-4 animate-pulse">
+          <span className="inline-block px-4 py-2 bg-green-100 border border-green-300 rounded-full text-green-700 font-medium">
+            {t('levelCheck.levelCleared', { level: levelCleared })}
+          </span>
+        </div>
+      )}
+
       {/* Level indicator */}
-      <div className="text-center mb-4">
-        <span className="inline-block px-3 py-1 bg-orange-50 border border-orange-200 rounded-full text-sm text-gray-700">
-          {t('levelCheck.level')} {currentLevel.level}
-        </span>
-      </div>
-
-      {/* Question */}
-      <h3 className="text-xl font-medium text-center mb-8">
-        {currentQuestion.question}
-      </h3>
-
-      {/* Options */}
-      <div className="space-y-3 max-w-lg mx-auto mb-8">
-        {currentQuestion.options.map((option, index) => (
-          <button
-            key={`${currentLevelIndex}-${currentQuestionIndex}-${index}`}
-            onClick={() => handleSelect(index)}
-            className={`w-full px-6 py-4 rounded-xl text-left transition-all ${
-              selectedOption === index
-                ? 'bg-orange-50 border-2 border-orange-500'
-                : 'bg-white border-2 border-gray-200 hover:bg-orange-50'
-            }`}
-          >
-            <span className="inline-block w-8 h-8 rounded-full bg-gray-100 text-center leading-8 mr-3">
-              {String.fromCharCode(65 + index)}
+      {!levelCleared && (
+        <>
+          <div className="text-center mb-4">
+            <span className="inline-block px-3 py-1 bg-orange-50 border border-orange-200 rounded-full text-sm text-gray-700">
+              {t('levelCheck.level')} {currentLevel.level}
             </span>
-            {option}
-          </button>
-        ))}
-      </div>
+          </div>
 
-      {/* Next button */}
-      <div className="text-center">
-        <button
-          onClick={handleNext}
-          disabled={selectedOption === null}
-          className={`px-8 py-3 rounded-full font-medium transition-all ${
-            selectedOption !== null
-              ? 'bg-orange-500 text-white hover:bg-orange-600'
-              : 'bg-gray-100 text-gray-500 cursor-not-allowed'
-          }`}
-        >
-          {isLastQuestion ? t('levelCheck.finish') : t('levelCheck.next')}
-        </button>
-      </div>
+          {/* Question */}
+          <h3 className="text-xl font-medium text-center mb-8">
+            {currentQuestion.question}
+          </h3>
+
+          {/* Options */}
+          <div className="space-y-3 max-w-lg mx-auto mb-8">
+            {currentQuestion.options.map((option, index) => {
+              let className =
+                'w-full px-6 py-4 rounded-xl text-left transition-all ';
+
+              if (showingFeedback) {
+                if (index === correctIndex) {
+                  className += 'bg-green-50 border-2 border-green-500 text-green-800';
+                } else if (index === selectedOption && feedbackState === 'incorrect') {
+                  className += 'bg-red-50 border-2 border-red-400 text-red-700';
+                } else {
+                  className += 'bg-white border-2 border-gray-200 opacity-50';
+                }
+              } else if (selectedOption === index) {
+                className += 'bg-orange-50 border-2 border-orange-500';
+              } else {
+                className += 'bg-white border-2 border-gray-200 hover:bg-orange-50';
+              }
+
+              return (
+                <button
+                  key={`${currentLevelIndex}-${currentQuestionIndex}-${index}`}
+                  onClick={() => handleSelect(index)}
+                  disabled={showingFeedback}
+                  className={className}
+                >
+                  <span className="inline-block w-8 h-8 rounded-full bg-gray-100 text-center leading-8 mr-3">
+                    {String.fromCharCode(65 + index)}
+                  </span>
+                  {option}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Feedback message */}
+          {showingFeedback && (
+            <div className="text-center mb-4">
+              <span
+                className={`inline-block px-4 py-2 rounded-full font-medium text-sm ${
+                  feedbackState === 'correct'
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-red-100 text-red-700'
+                }`}
+              >
+                {feedbackState === 'correct'
+                  ? t('levelCheck.correct')
+                  : t('levelCheck.incorrect')}
+              </span>
+            </div>
+          )}
+
+          {/* Next button */}
+          <div className="text-center">
+            <button
+              onClick={handleNext}
+              disabled={selectedOption === null || showingFeedback}
+              className={`px-8 py-3 rounded-full font-medium transition-all ${
+                selectedOption !== null && !showingFeedback
+                  ? 'bg-orange-500 text-white hover:bg-orange-600'
+                  : 'bg-gray-100 text-gray-500 cursor-not-allowed'
+              }`}
+            >
+              {isLastQuestion ? t('levelCheck.finish') : t('levelCheck.next')}
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 }

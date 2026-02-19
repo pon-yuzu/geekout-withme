@@ -7,6 +7,7 @@ interface AssessmentFeedback {
   focusAreas?: string[];
   strengths?: string[];
   improvements?: string[];
+  isFallback?: boolean;
 }
 
 interface Props {
@@ -14,6 +15,7 @@ interface Props {
   textLevel?: string;
   voiceLevel?: string;
   feedback?: AssessmentFeedback;
+  isFallback?: boolean;
   onRestart: () => void;
   isLoggedIn?: boolean;
   mode?: string;
@@ -21,6 +23,10 @@ interface Props {
 
 const resourceRecommendations: Record<string, Record<string, { name: string; url: string; description: string }[]>> = {
   english: {
+    'Starter': [
+      { name: 'VOA Learning English - Beginning', url: 'https://learningenglish.voanews.com/p/5609.html', description: 'Video lessons with slow, clear speech' },
+      { name: 'ESOL Courses', url: 'https://www.esolcourses.com/', description: 'Simple reading materials' },
+    ],
     'A1': [
       { name: 'VOA Learning English - Beginning', url: 'https://learningenglish.voanews.com/p/5609.html', description: 'Video lessons with slow, clear speech' },
       { name: 'ESOL Courses', url: 'https://www.esolcourses.com/', description: 'Simple reading materials' },
@@ -43,6 +49,10 @@ const resourceRecommendations: Record<string, Record<string, { name: string; url
     ],
   },
   japanese: {
+    'Starter': [
+      { name: 'Tadoku Free Books', url: 'https://tadoku.org/japanese/free-books/', description: 'Graded readers with audio - Level 0-1' },
+      { name: 'Yomujp - N5', url: 'https://yomujp.com/', description: 'Simple readings with furigana' },
+    ],
     'N5': [
       { name: 'Tadoku Free Books', url: 'https://tadoku.org/japanese/free-books/', description: 'Graded readers with audio - Level 0-1' },
       { name: 'Yomujp - N5', url: 'https://yomujp.com/', description: 'Simple readings with furigana' },
@@ -66,16 +76,41 @@ const resourceRecommendations: Record<string, Record<string, { name: string; url
   },
 };
 
-export default function Results({ language, textLevel, voiceLevel, feedback, onRestart, isLoggedIn, mode }: Props) {
+// Display name mapping: internal "Starter" → user-facing display
+function getDisplayLevel(level: string | undefined, t: (key: string) => string): string {
+  if (!level) return '';
+  if (level === 'Starter') return t('results.levels.starter');
+  return level;
+}
+
+export default function Results({ language, textLevel, voiceLevel, feedback, isFallback, onRestart, isLoggedIn, mode }: Props) {
   const { t } = useTranslation();
   const [showInterests, setShowInterests] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
   const mainLevel = textLevel || voiceLevel || 'A1';
+  const displayTextLevel = getDisplayLevel(textLevel, t);
+  const displayVoiceLevel = getDisplayLevel(voiceLevel, t);
 
   const getLevelDescription = (level: string): string => {
-    const key = `results.levels.${language}.${level.replace(' ', '')}`;
+    if (level === 'Starter') {
+      const key = `results.levels.${language}.starter.desc`;
+      const result = t(key);
+      return result !== key ? result : '';
+    }
+    const key = `results.levels.${language}.${level}.desc`;
+    const result = t(key);
+    return result !== key ? result : '';
+  };
+
+  const getNextGoal = (level: string): string => {
+    if (level === 'Starter') {
+      const key = `results.levels.${language}.starter.goal`;
+      const result = t(key);
+      return result !== key ? result : '';
+    }
+    const key = `results.levels.${language}.${level}.goal`;
     const result = t(key);
     return result !== key ? result : '';
   };
@@ -117,8 +152,13 @@ export default function Results({ language, textLevel, voiceLevel, feedback, onR
               <span className="text-2xl">📝</span>
               <span className="text-sm text-gray-500">{t('results.readingWriting')}</span>
             </div>
-            <div className="text-3xl font-bold text-orange-500 mb-2">{textLevel}</div>
-            <p className="text-sm text-gray-600">{getLevelDescription(textLevel)}</p>
+            <div className="text-3xl font-bold text-orange-500 mb-2">{displayTextLevel}</div>
+            <p className="text-sm text-gray-600 mb-2">{getLevelDescription(textLevel)}</p>
+            {getNextGoal(textLevel) && (
+              <p className="text-xs text-orange-600 bg-orange-100 rounded-lg px-3 py-2 mt-2">
+                {t('results.nextGoal')}: {getNextGoal(textLevel)}
+              </p>
+            )}
           </div>
         )}
         {voiceLevel && (
@@ -127,8 +167,13 @@ export default function Results({ language, textLevel, voiceLevel, feedback, onR
               <span className="text-2xl">🎤</span>
               <span className="text-sm text-gray-500">{t('results.speakingListening')}</span>
             </div>
-            <div className="text-3xl font-bold text-teal-500 mb-2">{voiceLevel}</div>
-            <p className="text-sm text-gray-600">{getLevelDescription(voiceLevel)}</p>
+            <div className="text-3xl font-bold text-teal-500 mb-2">{displayVoiceLevel}</div>
+            <p className="text-sm text-gray-600 mb-2">{getLevelDescription(voiceLevel)}</p>
+            {getNextGoal(voiceLevel) && (
+              <p className="text-xs text-teal-600 bg-teal-50 rounded-lg px-3 py-2 mt-2">
+                {t('results.nextGoal')}: {getNextGoal(voiceLevel)}
+              </p>
+            )}
           </div>
         )}
       </div>
@@ -138,6 +183,15 @@ export default function Results({ language, textLevel, voiceLevel, feedback, onR
         <div className="bg-yellow-50 border border-yellow-300 rounded-xl p-4 mb-8">
           <p className="text-yellow-700">
             💡 {t('results.skillGap')}
+          </p>
+        </div>
+      )}
+
+      {/* AI Fallback Notice */}
+      {(isFallback || feedback?.isFallback) && (
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-8">
+          <p className="text-blue-700 text-sm">
+            {t('results.fallbackNotice')}
           </p>
         </div>
       )}

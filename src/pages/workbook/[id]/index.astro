@@ -9,7 +9,7 @@ const user = Astro.locals.user;
 const lang = Astro.locals.lang as Lang;
 const supabase = Astro.locals.supabase;
 
-if (!user || !supabase) {
+if (!supabase) {
   return Astro.redirect('/login');
 }
 
@@ -20,16 +20,19 @@ if (!workbook) {
   return Astro.redirect('/workbook');
 }
 
-if (workbook.user_id !== user.id) {
+// Allow access if: owner OR public workbook
+const isOwner = user && workbook.user_id === user.id;
+if (!isOwner && !workbook.is_public) {
   return Astro.redirect('/workbook');
 }
 
-if (workbook.status === 'generating') {
+if (workbook.status === 'generating' && isOwner) {
   return Astro.redirect('/workbook/create');
 }
 
 const days = await getAllDays(supabase, id!);
 const theme = getTheme(workbook.theme_color);
+const isSample = workbook.is_public && !isOwner;
 ---
 
 <Layout title={workbook.title} user={user}>
@@ -39,6 +42,11 @@ const theme = getTheme(workbook.theme_color);
       <div class="text-center mb-8">
         <h1 class="text-3xl font-bold text-gray-800 mb-2">{workbook.title}</h1>
         <p class="text-gray-500">{workbook.subtitle}</p>
+        {isSample && (
+          <span class="inline-block mt-2 px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-sm font-medium">
+            {t(lang, 'workbook.samples.badge')}
+          </span>
+        )}
       </div>
 
       <!-- Day Grid -->

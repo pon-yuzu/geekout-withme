@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { WorkbookCard } from '../../components/workbook/WorkbookCard';
-import { getUserWorkbooks, getPublicWorkbooks } from '../../lib/workbook/db';
+import { getUserWorkbooks, getPublicWorkbooks, getSampleWorkbooks } from '../../lib/workbook/db';
 import { t } from '../../i18n/index';
 import type { Lang } from '../../i18n/index';
 
@@ -13,22 +13,28 @@ const tab = Astro.url.searchParams.get('tab') === 'public' ? 'public' : 'mine';
 
 let myWorkbooks: Awaited<ReturnType<typeof getUserWorkbooks>> = [];
 let publicWorkbooks: Awaited<ReturnType<typeof getPublicWorkbooks>> = [];
+let sampleWorkbooks: Awaited<ReturnType<typeof getSampleWorkbooks>> = [];
 let isPremium = false;
 
-if (user && supabase) {
-  const { data: subs } = await supabase
-    .from('subscriptions')
-    .select('status')
-    .eq('user_id', user.id)
-    .eq('status', 'active')
-    .limit(1);
-  isPremium = (subs?.length ?? 0) > 0;
+if (supabase) {
+  // Always fetch sample workbooks for non-premium display
+  sampleWorkbooks = await getSampleWorkbooks(supabase);
 
-  if (isPremium) {
-    if (tab === 'mine') {
-      myWorkbooks = await getUserWorkbooks(supabase, user.id);
-    } else {
-      publicWorkbooks = await getPublicWorkbooks(supabase);
+  if (user) {
+    const { data: subs } = await supabase
+      .from('subscriptions')
+      .select('status')
+      .eq('user_id', user.id)
+      .eq('status', 'active')
+      .limit(1);
+    isPremium = (subs?.length ?? 0) > 0;
+
+    if (isPremium) {
+      if (tab === 'mine') {
+        myWorkbooks = await getUserWorkbooks(supabase, user.id);
+      } else {
+        publicWorkbooks = await getPublicWorkbooks(supabase);
+      }
     }
   }
 }
@@ -54,25 +60,7 @@ const workbooks = tab === 'mine' ? myWorkbooks : publicWorkbooks;
         )}
       </div>
 
-      {!user ? (
-        <div class="text-center py-20">
-          <div class="text-5xl mb-4">🔒</div>
-          <h2 class="text-xl font-semibold text-gray-700 mb-2">{t(lang, 'workbook.loginRequired')}</h2>
-          <p class="text-gray-500 mb-6">{t(lang, 'workbook.loginRequiredDesc')}</p>
-          <a href="/login" class="px-6 py-3 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition-colors">
-            {t(lang, 'workbook.loginBtn')}
-          </a>
-        </div>
-      ) : !isPremium ? (
-        <div class="text-center py-20">
-          <div class="text-5xl mb-4">⭐</div>
-          <h2 class="text-xl font-semibold text-gray-700 mb-2">{t(lang, 'workbook.premiumFeature')}</h2>
-          <p class="text-gray-500 mb-6">{t(lang, 'workbook.premiumDesc')}</p>
-          <a href="/community" class="px-6 py-3 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition-colors">
-            {t(lang, 'workbook.premiumBtn')}
-          </a>
-        </div>
-      ) : (
+      {isPremium ? (
         <>
           {/* Tabs */}
           <div class="flex gap-1 mb-6 bg-gray-100 rounded-xl p-1 max-w-xs">
@@ -118,6 +106,37 @@ const workbooks = tab === 'mine' ? myWorkbooks : publicWorkbooks;
               ))}
             </div>
           )}
+        </>
+      ) : (
+        <>
+          {/* Sample workbooks for non-premium users */}
+          {sampleWorkbooks.length > 0 && (
+            <div class="mb-8">
+              <h2 class="text-xl font-semibold text-gray-700 mb-2">{t(lang, 'workbook.samples.title')}</h2>
+              <p class="text-gray-500 mb-6">{t(lang, 'workbook.samples.desc')}</p>
+              <div class="grid md:grid-cols-2 gap-6">
+                {sampleWorkbooks.map(wb => (
+                  <WorkbookCard client:load workbook={wb} showAuthor={false} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Premium upsell */}
+          <div class="text-center py-12 bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl border border-orange-200">
+            <div class="text-5xl mb-4">⭐</div>
+            <h2 class="text-xl font-semibold text-gray-700 mb-2">{t(lang, 'workbook.premiumFeature')}</h2>
+            <p class="text-gray-500 mb-6">{t(lang, 'workbook.premiumDesc')}</p>
+            {!user ? (
+              <a href="/login" class="px-6 py-3 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition-colors">
+                {t(lang, 'workbook.loginBtn')}
+              </a>
+            ) : (
+              <a href="/community" class="px-6 py-3 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition-colors">
+                {t(lang, 'workbook.premiumBtn')}
+              </a>
+            )}
+          </div>
         </>
       )}
     </div>

@@ -124,6 +124,21 @@ export async function getPublicWorkbooks(
   return (data ?? []) as Workbook[];
 }
 
+export async function getSampleWorkbooks(
+  supabase: SupabaseClient
+): Promise<Workbook[]> {
+  const { data, error } = await supabase
+    .from('workbooks')
+    .select('*')
+    .eq('is_public', true)
+    .eq('status', 'completed')
+    .lte('days_completed', 5)
+    .order('created_at', { ascending: false })
+    .limit(3);
+  if (error) return [];
+  return (data ?? []) as Workbook[];
+}
+
 export function parseDayContent(day: WorkbookDay): DayContent {
   const raw = typeof day.content_json === 'string'
     ? JSON.parse(day.content_json)

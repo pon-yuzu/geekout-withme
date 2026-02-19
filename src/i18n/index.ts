@@ -10,9 +10,15 @@ const dictionaries: Record<Lang, Record<string, string>> = { en, ja };
 let serverLang: Lang = 'en';
 export function setServerLang(lang: Lang) { serverLang = lang; }
 
-/** Astro pages: t(lang, 'nav.levelCheck') */
-export function t(lang: Lang, key: string): string {
-  return dictionaries[lang][key] ?? dictionaries['en'][key] ?? key;
+/** Astro pages: t(lang, 'nav.levelCheck') or t(lang, 'key', { name: 'val' }) */
+export function t(lang: Lang, key: string, params?: Record<string, string>): string {
+  let str = dictionaries[lang][key] ?? dictionaries['en'][key] ?? key;
+  if (params) {
+    for (const [k, v] of Object.entries(params)) {
+      str = str.replace(new RegExp(`\\{\\{${k}\\}\\}`, 'g'), v);
+    }
+  }
+  return str;
 }
 
 /** Read current lang — cookie on client, middleware-set value on server */
@@ -38,6 +44,6 @@ export function setLangCookie(lang: Lang): void {
 /** React hook: const { t, lang } = useTranslation() */
 export function useTranslation() {
   const lang = getLangFromCookie();
-  const translate = useMemo(() => (key: string) => t(lang, key), [lang]);
+  const translate = useMemo(() => (key: string, params?: Record<string, string>) => t(lang, key, params), [lang]);
   return { lang, t: translate };
 }

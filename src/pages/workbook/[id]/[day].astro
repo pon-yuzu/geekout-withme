@@ -12,7 +12,7 @@ const user = Astro.locals.user;
 const lang = Astro.locals.lang as Lang;
 const supabase = Astro.locals.supabase;
 
-if (!user || !supabase) {
+if (!supabase) {
   return Astro.redirect('/login');
 }
 
@@ -21,7 +21,10 @@ const dayNumber = parseInt(dayParam!, 10);
 
 const workbook = await getWorkbook(supabase, id!);
 if (!workbook) return Astro.redirect('/workbook');
-if (workbook.user_id !== user.id) return Astro.redirect('/workbook');
+
+// Allow access if: owner OR public workbook
+const isOwner = user && workbook.user_id === user.id;
+if (!isOwner && !workbook.is_public) return Astro.redirect('/workbook');
 
 const dayRow = await getDay(supabase, id!, dayNumber);
 if (!dayRow) return Astro.redirect(`/workbook/${id}`);
