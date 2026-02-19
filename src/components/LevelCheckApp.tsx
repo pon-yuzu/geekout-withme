@@ -1,12 +1,21 @@
 import { useState } from 'react';
 import { useTranslation } from '../i18n/index';
 import TextAssessment from './TextAssessment';
+import ListeningAssessment from './ListeningAssessment';
 import VoiceAssessment from './VoiceAssessment';
 import Results from './Results';
 
 type Language = 'english' | 'japanese';
-type Step = 'select-language' | 'select-mode' | 'text-assessment' | 'transition' | 'voice-assessment' | 'results';
-type AssessmentMode = 'text' | 'voice' | 'both';
+type Step =
+  | 'select-language'
+  | 'select-mode'
+  | 'text-assessment'
+  | 'transition-listening'
+  | 'listening-assessment'
+  | 'transition-voice'
+  | 'voice-assessment'
+  | 'results';
+type AssessmentMode = 'text' | 'listening' | 'voice' | 'both';
 
 interface AssessmentFeedback {
   feedback?: string;
@@ -19,6 +28,7 @@ interface AssessmentFeedback {
 
 interface AssessmentResult {
   textLevel?: string;
+  listeningLevel?: string;
   voiceLevel?: string;
   details?: string;
   feedback?: AssessmentFeedback;
@@ -45,6 +55,8 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
     setMode(selectedMode);
     if (selectedMode === 'text' || selectedMode === 'both') {
       setStep('text-assessment');
+    } else if (selectedMode === 'listening') {
+      setStep('listening-assessment');
     } else {
       setStep('voice-assessment');
     }
@@ -53,7 +65,16 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
   const handleTextComplete = (level: string) => {
     setResults(prev => ({ ...prev, textLevel: level }));
     if (mode === 'both') {
-      setStep('transition');
+      setStep('transition-listening');
+    } else {
+      setStep('results');
+    }
+  };
+
+  const handleListeningComplete = (level: string) => {
+    setResults(prev => ({ ...prev, listeningLevel: level }));
+    if (mode === 'both') {
+      setStep('transition-voice');
     } else {
       setStep('results');
     }
@@ -66,6 +87,13 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
 
   const handleTextFeedback = (feedback: AssessmentFeedback) => {
     setResults(prev => ({ ...prev, feedback }));
+  };
+
+  const handleListeningFeedback = (feedback: AssessmentFeedback) => {
+    setResults(prev => ({
+      ...prev,
+      feedback: { ...prev.feedback, ...feedback },
+    }));
   };
 
   const handleVoiceFeedback = (feedback: AssessmentFeedback) => {
@@ -83,6 +111,13 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
     setResults({});
   };
 
+  const isAssessmentStep =
+    step === 'text-assessment' ||
+    step === 'listening-assessment' ||
+    step === 'voice-assessment' ||
+    step === 'transition-listening' ||
+    step === 'transition-voice';
+
   return (
     <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
       {/* Progress Indicator */}
@@ -93,7 +128,7 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
             className={`w-3 h-3 rounded-full ${
               (step === 'select-language' && i === 0) ||
               (step === 'select-mode' && i === 1) ||
-              ((step === 'text-assessment' || step === 'voice-assessment' || step === 'transition') && i === 2) ||
+              (isAssessmentStep && i === 2) ||
               (step === 'results' && i === 3)
                 ? 'bg-orange-500'
                 : 'bg-gray-200'
@@ -142,6 +177,14 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
               <span className="block text-sm text-gray-500 ml-9">{t('levelCheck.selectMode.textSub')}</span>
             </button>
             <button
+              onClick={() => handleModeSelect('listening')}
+              className="px-6 py-4 bg-white border border-gray-200 rounded-xl hover:bg-orange-50 transition-colors text-left shadow-sm"
+            >
+              <span className="text-2xl mr-3">👂</span>
+              <span className="font-medium">{t('levelCheck.selectMode.listening')}</span>
+              <span className="block text-sm text-gray-500 ml-9">{t('levelCheck.selectMode.listeningSub')}</span>
+            </button>
+            <button
               onClick={() => handleModeSelect('voice')}
               className="px-6 py-4 bg-white border border-gray-200 rounded-xl hover:bg-orange-50 transition-colors text-left shadow-sm"
             >
@@ -177,8 +220,8 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
         />
       )}
 
-      {/* Step: Transition (both mode) */}
-      {step === 'transition' && language && (
+      {/* Step: Transition to Listening (both mode) */}
+      {step === 'transition-listening' && language && (
         <div className="text-center py-8">
           <div className="text-5xl mb-6">✅</div>
           <h2 className="text-2xl font-semibold mb-3">
@@ -188,6 +231,49 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
             <p className="text-gray-600">
               {t('results.readingWriting')}: <span className="font-bold text-orange-500">{results.textLevel}</span>
             </p>
+          </div>
+          <p className="text-gray-500 mb-8">
+            {t('levelCheck.transition.listeningDesc')}
+          </p>
+          <button
+            onClick={() => setStep('listening-assessment')}
+            className="px-8 py-3 bg-teal-500 text-white rounded-full font-medium hover:bg-teal-600 transition-colors"
+          >
+            {t('levelCheck.transition.listeningContinue')}
+          </button>
+        </div>
+      )}
+
+      {/* Step: Listening Assessment */}
+      {step === 'listening-assessment' && language && (
+        <ListeningAssessment
+          language={language}
+          onComplete={handleListeningComplete}
+          onBack={() => mode === 'both' ? setStep('transition-listening') : setStep('select-mode')}
+          onFeedback={handleListeningFeedback}
+        />
+      )}
+
+      {/* Step: Transition to Voice (both mode) */}
+      {step === 'transition-voice' && language && (
+        <div className="text-center py-8">
+          <div className="text-5xl mb-6">✅</div>
+          <h2 className="text-2xl font-semibold mb-3">
+            {t('levelCheck.transition.listeningTitle')}
+          </h2>
+          <div className="inline-flex flex-col sm:flex-row gap-3 mb-6">
+            {results.textLevel && (
+              <div className="inline-block bg-orange-50 border border-orange-200 rounded-xl px-6 py-4">
+                <p className="text-gray-600">
+                  {t('results.readingWriting')}: <span className="font-bold text-orange-500">{results.textLevel}</span>
+                </p>
+              </div>
+            )}
+            <div className="inline-block bg-teal-50 border border-teal-200 rounded-xl px-6 py-4">
+              <p className="text-gray-600">
+                {t('results.listening')}: <span className="font-bold text-teal-500">{results.listeningLevel}</span>
+              </p>
+            </div>
           </div>
           <p className="text-gray-500 mb-8">
             {t('levelCheck.transition.desc')}
@@ -206,7 +292,7 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
         <VoiceAssessment
           language={language}
           onComplete={handleVoiceComplete}
-          onBack={() => mode === 'both' ? setStep('transition') : setStep('select-mode')}
+          onBack={() => mode === 'both' ? setStep('transition-voice') : setStep('select-mode')}
           onFeedback={handleVoiceFeedback}
         />
       )}
@@ -216,6 +302,7 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
         <Results
           language={language}
           textLevel={results.textLevel}
+          listeningLevel={results.listeningLevel}
           voiceLevel={results.voiceLevel}
           feedback={results.feedback}
           isFallback={results.isFallback}

@@ -13,6 +13,7 @@ interface AssessmentFeedback {
 interface Props {
   language: 'english' | 'japanese';
   textLevel?: string;
+  listeningLevel?: string;
   voiceLevel?: string;
   feedback?: AssessmentFeedback;
   isFallback?: boolean;
@@ -83,15 +84,18 @@ function getDisplayLevel(level: string | undefined, t: (key: string) => string):
   return level;
 }
 
-export default function Results({ language, textLevel, voiceLevel, feedback, isFallback, onRestart, isLoggedIn, mode }: Props) {
+export default function Results({ language, textLevel, listeningLevel, voiceLevel, feedback, isFallback, onRestart, isLoggedIn, mode }: Props) {
   const { t } = useTranslation();
   const [showInterests, setShowInterests] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
-  const mainLevel = textLevel || voiceLevel || 'A1';
+  const mainLevel = textLevel || listeningLevel || voiceLevel || 'A1';
   const displayTextLevel = getDisplayLevel(textLevel, t);
+  const displayListeningLevel = getDisplayLevel(listeningLevel, t);
   const displayVoiceLevel = getDisplayLevel(voiceLevel, t);
+
+  const cardCount = [textLevel, listeningLevel, voiceLevel].filter(Boolean).length;
 
   const getLevelDescription = (level: string): string => {
     if (level === 'Starter') {
@@ -145,7 +149,7 @@ export default function Results({ language, textLevel, voiceLevel, feedback, isF
       </div>
 
       {/* Level Cards */}
-      <div className="grid md:grid-cols-2 gap-4 mb-8">
+      <div className={`grid gap-4 mb-8 ${cardCount >= 3 ? 'md:grid-cols-3' : 'md:grid-cols-2'}`}>
         {textLevel && (
           <div className="bg-orange-50 border border-orange-200 rounded-xl p-6">
             <div className="flex items-center gap-3 mb-3">
@@ -157,6 +161,21 @@ export default function Results({ language, textLevel, voiceLevel, feedback, isF
             {getNextGoal(textLevel) && (
               <p className="text-xs text-orange-600 bg-orange-100 rounded-lg px-3 py-2 mt-2">
                 {t('results.nextGoal')}: {getNextGoal(textLevel)}
+              </p>
+            )}
+          </div>
+        )}
+        {listeningLevel && (
+          <div className="bg-teal-50 border border-teal-200 rounded-xl p-6">
+            <div className="flex items-center gap-3 mb-3">
+              <span className="text-2xl">👂</span>
+              <span className="text-sm text-gray-500">{t('results.listening')}</span>
+            </div>
+            <div className="text-3xl font-bold text-teal-500 mb-2">{displayListeningLevel}</div>
+            <p className="text-sm text-gray-600 mb-2">{getLevelDescription(listeningLevel)}</p>
+            {getNextGoal(listeningLevel) && (
+              <p className="text-xs text-teal-600 bg-teal-100 rounded-lg px-3 py-2 mt-2">
+                {t('results.nextGoal')}: {getNextGoal(listeningLevel)}
               </p>
             )}
           </div>
@@ -332,7 +351,7 @@ export default function Results({ language, textLevel, voiceLevel, feedback, isF
                 const res = await fetch('/api/save-assessment', {
                   method: 'POST',
                   headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ language, mode, textLevel, voiceLevel, feedback }),
+                  body: JSON.stringify({ language, mode, textLevel, listeningLevel, voiceLevel, feedback }),
                 });
                 if (res.ok) {
                   setSaveState('saved');

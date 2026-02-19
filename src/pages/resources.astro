@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { ResourceLibrary } from '../components/ResourceLibrary';
 import { t } from '../i18n/index';
 import type { Lang } from '../i18n/index';
 
@@ -10,7 +11,7 @@ const lang = Astro.locals.lang as Lang;
 <Layout title={t(lang, 'resources.title')} description="Free Japanese and English learning resources for all levels." user={user}>
   <section class="py-12 px-4">
     <div class="max-w-6xl mx-auto">
-      <div class="text-center mb-12">
+      <div class="text-center mb-10">
         <h1 class="text-4xl md:text-5xl font-bold mb-4">
           <span class="text-orange-500">
             {t(lang, 'resources.title')}
@@ -21,139 +22,7 @@ const lang = Astro.locals.lang as Lang;
         </p>
       </div>
 
-      <!-- Japanese Resources -->
-      <div class="mb-16">
-        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-800">
-          <span>🇯🇵</span> {t(lang, 'resources.japanese.title')}
-        </h2>
-
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- N5-N4 -->
-          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-            <div class="text-sm text-orange-500 mb-2">{t(lang, 'resources.japanese.beginner')}</div>
-            <h3 class="text-lg font-semibold mb-4 text-gray-800">Tadoku Free Books</h3>
-            <p class="text-gray-500 text-sm mb-4">
-              {t(lang, 'resources.japanese.tadoku.desc')}
-            </p>
-            <a href="https://tadoku.org/japanese/free-books/" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
-              {t(lang, 'resources.visitSite')}
-            </a>
-          </div>
-
-          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-            <div class="text-sm text-orange-500 mb-2">{t(lang, 'resources.japanese.beginner')}</div>
-            <h3 class="text-lg font-semibold mb-4 text-gray-800">Yomujp (N5/N4)</h3>
-            <p class="text-gray-500 text-sm mb-4">
-              {t(lang, 'resources.japanese.yomujpN5.desc')}
-            </p>
-            <a href="https://yomujp.com/" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
-              {t(lang, 'resources.visitSite')}
-            </a>
-          </div>
-
-          <!-- N3-N2 -->
-          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-            <div class="text-sm text-teal-500 mb-2">{t(lang, 'resources.japanese.intermediate')}</div>
-            <h3 class="text-lg font-semibold mb-4 text-gray-800">NHK NEWS WEB EASY</h3>
-            <p class="text-gray-500 text-sm mb-4">
-              {t(lang, 'resources.japanese.nhkEasy.desc')}
-            </p>
-            <a href="https://www3.nhk.or.jp/news/easy/" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
-              {t(lang, 'resources.visitSite')}
-            </a>
-          </div>
-
-          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-            <div class="text-sm text-teal-500 mb-2">{t(lang, 'resources.japanese.intermediate')}</div>
-            <h3 class="text-lg font-semibold mb-4 text-gray-800">Yomujp (N3/N2)</h3>
-            <p class="text-gray-500 text-sm mb-4">
-              {t(lang, 'resources.japanese.yomujpN3.desc')}
-            </p>
-            <a href="https://yomujp.com/" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
-              {t(lang, 'resources.visitSite')}
-            </a>
-          </div>
-
-          <!-- N1 -->
-          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-            <div class="text-sm text-yellow-700 mb-2">{t(lang, 'resources.japanese.advanced')}</div>
-            <h3 class="text-lg font-semibold mb-4 text-gray-800">Yomujp (N1)</h3>
-            <p class="text-gray-500 text-sm mb-4">
-              {t(lang, 'resources.japanese.yomujpN1.desc')}
-            </p>
-            <a href="https://yomujp.com/" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
-              {t(lang, 'resources.visitSite')}
-            </a>
-          </div>
-        </div>
-      </div>
-
-      <!-- English Resources -->
-      <div>
-        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-800">
-          <span>🇺🇸</span> {t(lang, 'resources.english.title')}
-        </h2>
-
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- A1-A2 -->
-          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-            <div class="text-sm text-orange-500 mb-2">{t(lang, 'resources.english.beginner')}</div>
-            <h3 class="text-lg font-semibold mb-4 text-gray-800">VOA Learning English - Beginning</h3>
-            <p class="text-gray-500 text-sm mb-4">
-              {t(lang, 'resources.english.voaBeginner.desc')}
-            </p>
-            <a href="https://learningenglish.voanews.com/p/5609.html" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
-              {t(lang, 'resources.visitSite')}
-            </a>
-          </div>
-
-          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-            <div class="text-sm text-orange-500 mb-2">{t(lang, 'resources.english.beginner')}</div>
-            <h3 class="text-lg font-semibold mb-4 text-gray-800">ESOL Courses</h3>
-            <p class="text-gray-500 text-sm mb-4">
-              {t(lang, 'resources.english.esol.desc')}
-            </p>
-            <a href="https://www.esolcourses.com/" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
-              {t(lang, 'resources.visitSite')}
-            </a>
-          </div>
-
-          <!-- B1-B2 -->
-          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-            <div class="text-sm text-teal-500 mb-2">{t(lang, 'resources.english.intermediate')}</div>
-            <h3 class="text-lg font-semibold mb-4 text-gray-800">VOA Learning English</h3>
-            <p class="text-gray-500 text-sm mb-4">
-              {t(lang, 'resources.english.voaIntermediate.desc')}
-            </p>
-            <a href="https://learningenglish.voanews.com/" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
-              {t(lang, 'resources.visitSite')}
-            </a>
-          </div>
-
-          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-            <div class="text-sm text-teal-500 mb-2">{t(lang, 'resources.english.intermediate')}</div>
-            <h3 class="text-lg font-semibold mb-4 text-gray-800">ER Central</h3>
-            <p class="text-gray-500 text-sm mb-4">
-              {t(lang, 'resources.english.erCentral.desc')}
-            </p>
-            <a href="https://er-central.com/" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
-              {t(lang, 'resources.visitSite')}
-            </a>
-          </div>
-
-          <!-- C1 -->
-          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-            <div class="text-sm text-yellow-700 mb-2">{t(lang, 'resources.english.advanced')}</div>
-            <h3 class="text-lg font-semibold mb-4 text-gray-800">VOA - Words & Their Stories</h3>
-            <p class="text-gray-500 text-sm mb-4">
-              {t(lang, 'resources.english.voaAdvanced.desc')}
-            </p>
-            <a href="https://learningenglish.voanews.com/" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
-              {t(lang, 'resources.visitSite')}
-            </a>
-          </div>
-        </div>
-      </div>
+      <ResourceLibrary client:load lang={lang} />
 
       <!-- CTA -->
       <div class="mt-16 text-center bg-orange-50 rounded-3xl p-12 border border-orange-100 shadow-sm">
