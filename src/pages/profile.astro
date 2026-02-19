@@ -1,0 +1,60 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ProfileEditor from '../components/ProfileEditor.tsx';
+import { t } from '../i18n/index';
+import type { Lang } from '../i18n/index';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+if (!user) return Astro.redirect('/login');
+
+const supabase = Astro.locals.supabase;
+
+const displayName = user.user_metadata?.display_name || '';
+const email = user.email || '';
+
+// Fetch subscription info
+let isPremium = false;
+let subscriptionStatus: string | null = null;
+let currentPeriodEnd: string | null = null;
+let cancelAtPeriodEnd = false;
+
+if (supabase) {
+  const { data: sub } = await supabase
+    .from('subscriptions')
+    .select('status, current_period_end, cancel_at_period_end')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  if (sub) {
+    subscriptionStatus = sub.status;
+    isPremium = sub.status === 'active' || sub.status === 'trialing';
+    currentPeriodEnd = sub.current_period_end;
+    cancelAtPeriodEnd = sub.cancel_at_period_end ?? false;
+  }
+}
+---
+
+<Layout title={t(lang, 'profile.title')} user={user}>
+  <section class="py-12 px-4">
+    <div class="max-w-2xl mx-auto">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">
+          <span class="text-orange-500">{t(lang, 'profile.title')}</span>
+        </h1>
+      </div>
+
+      <ProfileEditor
+        client:load
+        displayName={displayName}
+        email={email}
+        isPremium={isPremium}
+        subscriptionStatus={subscriptionStatus}
+        currentPeriodEnd={currentPeriodEnd}
+        cancelAtPeriodEnd={cancelAtPeriodEnd}
+      />
+    </div>
+  </section>
+</Layout>

@@ -1,23 +1,28 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import LevelCheckApp from '../components/LevelCheckApp.tsx';
+import { t } from '../i18n/index';
+import type { Lang } from '../i18n/index';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
 ---
 
-<Layout title="Level Check" description="Discover your Japanese or English level with our text and voice assessment.">
+<Layout title={t(lang, 'levelCheck.title')} description="Discover your Japanese or English level with our text and voice assessment." user={user}>
   <section class="min-h-screen py-12 px-4">
     <div class="max-w-4xl mx-auto">
       <div class="text-center mb-12">
         <h1 class="text-4xl md:text-5xl font-bold mb-4">
-          <span class="bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">
-            Level Check
+          <span class="text-orange-500">
+            {t(lang, 'levelCheck.title')}
           </span>
         </h1>
-        <p class="text-xl text-slate-300">
-          Find out your reading/writing and speaking levels
+        <p class="text-xl text-gray-600">
+          {t(lang, 'levelCheck.subtitle')}
         </p>
       </div>
 
-      <LevelCheckApp client:load />
+      <LevelCheckApp client:load isLoggedIn={!!user} />
     </div>
   </section>
 </Layout>

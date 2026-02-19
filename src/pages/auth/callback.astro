@@ -1,0 +1,18 @@
+---
+import { createSupabaseServerClient } from '../../lib/supabase';
+
+const responseHeaders = new Headers();
+const supabase = createSupabaseServerClient(Astro.request, responseHeaders);
+
+const code = Astro.url.searchParams.get('code');
+if (code) {
+  await supabase.auth.exchangeCodeForSession(code);
+}
+
+// Copy cookies then redirect
+const response = Astro.redirect('/');
+responseHeaders.forEach((value, key) => {
+  response.headers.append(key, value);
+});
+return response;
+---

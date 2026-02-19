@@ -1,0 +1,17 @@
+name = "geekout-voice-room"
+main = "index.ts"
+compatibility_date = "2024-01-01"
+
+[durable_objects]
+bindings = [
+  { name = "VOICE_ROOM", class_name = "VoiceRoom" }
+]
+
+[[migrations]]
+tag = "v1"
+new_classes = ["VoiceRoom"]
+
+# SUPABASE_URL: public URL なので vars に直接記載OK
+# SUPABASE_SERVICE_ROLE_KEY: シークレットなので wrangler secret put で設定すること
+[vars]
+SUPABASE_URL = "https://kiqxyajlfyavvcxflrkw.supabase.co"

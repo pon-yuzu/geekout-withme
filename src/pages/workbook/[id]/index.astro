@@ -1,0 +1,66 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { getWorkbook, getAllDays } from '../../../lib/workbook/db';
+import { getTheme } from '../../../lib/workbook/themes';
+import { t } from '../../../i18n/index';
+import type { Lang } from '../../../i18n/index';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+const supabase = Astro.locals.supabase;
+
+if (!user || !supabase) {
+  return Astro.redirect('/login');
+}
+
+const { id } = Astro.params;
+const workbook = await getWorkbook(supabase, id!);
+
+if (!workbook) {
+  return Astro.redirect('/workbook');
+}
+
+if (workbook.user_id !== user.id) {
+  return Astro.redirect('/workbook');
+}
+
+if (workbook.status === 'generating') {
+  return Astro.redirect('/workbook/create');
+}
+
+const days = await getAllDays(supabase, id!);
+const theme = getTheme(workbook.theme_color);
+---
+
+<Layout title={workbook.title} user={user}>
+  <section class="py-8 px-4">
+    <div class="max-w-4xl mx-auto">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">{workbook.title}</h1>
+        <p class="text-gray-500">{workbook.subtitle}</p>
+      </div>
+
+      <!-- Day Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3">
+        {days.map(day => (
+          <a
+            href={`/workbook/${id}/${day.day_number}`}
+            class="flex flex-col items-center p-4 bg-white border border-gray-200 rounded-xl hover:border-orange-300 hover:shadow-md transition-all text-center group"
+          >
+            <span class="text-2xl mb-2">{day.item_emoji || '📖'}</span>
+            <span class="text-xs font-bold text-orange-500 group-hover:text-orange-600">{t(lang, 'workbook.day.dayLabel') === 'Day' ? `Day ${day.day_number}` : `${day.day_number}${t(lang, 'workbook.day.dayLabel')}`}</span>
+            <span class="text-xs text-gray-500 mt-1 line-clamp-2">{day.item_en}</span>
+          </a>
+        ))}
+      </div>
+
+      <!-- Back link -->
+      <div class="text-center mt-8">
+        <a href="/workbook" class="text-orange-500 hover:text-orange-600 font-medium">
+          ← {t(lang, 'workbook.day.backToList')}
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

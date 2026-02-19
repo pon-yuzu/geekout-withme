@@ -1,0 +1,263 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { Quiz } from '../../../components/workbook/Quiz';
+import { getWorkbook, getDay, parseDayContent } from '../../../lib/workbook/db';
+import { getTopicConfig, getDestinationConfig } from '../../../lib/workbook/slots';
+import { getTheme } from '../../../lib/workbook/themes';
+import { t } from '../../../i18n/index';
+import type { Lang } from '../../../i18n/index';
+import type { DayContent } from '../../../lib/workbook/types';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+const supabase = Astro.locals.supabase;
+
+if (!user || !supabase) {
+  return Astro.redirect('/login');
+}
+
+const { id, day: dayParam } = Astro.params;
+const dayNumber = parseInt(dayParam!, 10);
+
+const workbook = await getWorkbook(supabase, id!);
+if (!workbook) return Astro.redirect('/workbook');
+if (workbook.user_id !== user.id) return Astro.redirect('/workbook');
+
+const dayRow = await getDay(supabase, id!, dayNumber);
+if (!dayRow) return Astro.redirect(`/workbook/${id}`);
+
+const content: DayContent = parseDayContent(dayRow);
+const topicConfig = getTopicConfig(workbook.topic);
+const destConfig = getDestinationConfig(workbook.destination);
+const theme = getTheme(workbook.theme_color);
+
+const prevDay = dayNumber > 1 ? dayNumber - 1 : null;
+const nextDay = dayNumber < 30 ? dayNumber + 1 : null;
+const sectionLabels = topicConfig?.sectionLabels;
+const destCountry = destConfig?.country ?? 'the destination';
+
+function formatDetail(text: string): string {
+  return text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
+
+function formatTips(text: string): string {
+  return text.split('\n\n').filter(Boolean).map(p => `<p class="mb-3 leading-relaxed">${p.trim()}</p>`).join('\n');
+}
+
+const dayLabel = lang === 'ja' ? `${dayNumber}${t(lang, 'workbook.day.dayLabel')}` : `Day ${dayNumber}`;
+---
+
+<Layout title={`${dayLabel}: ${content.meta.en}`} user={user}>
+  <section class="py-8 px-4">
+    <div class="max-w-3xl mx-auto">
+      <!-- Header -->
+      <div class="text-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">
+          {content.meta.emoji} {dayLabel}: {content.meta.en}
+        </h1>
+        <p class="text-sm text-gray-500 mt-1">{workbook.title} — {dayLabel}</p>
+      </div>
+
+      <!-- Progress -->
+      <div class="w-full bg-gray-200 rounded-full h-2 mb-8">
+        <div
+          class="bg-orange-500 h-2 rounded-full transition-all"
+          style={`width: ${Math.round((dayNumber / 30) * 100)}%`}
+        />
+      </div>
+
+      <!-- Section 1: Main Content -->
+      <div class="bg-white rounded-2xl p-6 mb-5 shadow-sm border border-gray-100">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold text-sm">1</div>
+          <div>
+            <div class="font-bold text-gray-800">{sectionLabels?.main ?? 'Main'}</div>
+            <div class="text-sm text-gray-500">{content.meta.ja}{sectionLabels?.mainSubtitle ?? ''}</div>
+          </div>
+        </div>
+
+        <div class="bg-gray-50 border-l-4 border-orange-400 p-4 mb-4 leading-relaxed">
+          <p class="font-bold mb-2">{content.main.title}</p>
+          <p class="mb-3">{content.main.intro}</p>
+          <p class="mb-3"><strong>{sectionLabels?.mainBodyLabel ?? 'Overview'}:</strong><br />{content.main.body}</p>
+          <p class="font-bold mb-2">{sectionLabels?.mainDetailsLabel ?? 'Key Points'}:</p>
+          {content.main.details.map((detail, i) => (
+            <p class="mb-1" set:html={`${i + 1}. ${formatDetail(detail)}`} />
+          ))}
+        </div>
+
+        <details class="mt-3">
+          <summary class="cursor-pointer text-orange-500 font-medium text-sm">📚 {t(lang, 'workbook.day.vocabList')}</summary>
+          <div class="mt-3 bg-amber-50 p-4 rounded-lg">
+            <p class="text-sm text-amber-700 font-medium mb-3">💡 {t(lang, 'workbook.day.vocabHint')}</p>
+            {content.main_vocab.map(item => (
+              <div class="flex items-start gap-2 py-1.5 border-b border-amber-100 last:border-0">
+                <input type="checkbox" class="vocab-check mt-1" data-word={item.word} />
+                <span class="font-bold text-orange-600 min-w-[100px]">{item.word}</span>
+                <span class="text-gray-600">{item.meaning}</span>
+              </div>
+            ))}
+          </div>
+        </details>
+      </div>
+
+      <!-- Section 2: Quiz 1 -->
+      <div class="bg-white rounded-2xl p-6 mb-5 shadow-sm border border-gray-100">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold text-sm">2</div>
+          <div>
+            <div class="font-bold text-gray-800">Quiz 1</div>
+            <div class="text-sm text-gray-500">{t(lang, 'workbook.day.contentCheck')}</div>
+          </div>
+        </div>
+        <Quiz client:load quiz={content.quiz1} id="quiz1" />
+      </div>
+
+      <!-- Section 3: Review -->
+      <div class="bg-white rounded-2xl p-6 mb-5 shadow-sm border border-gray-100">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold text-sm">3</div>
+          <div>
+            <div class="font-bold text-gray-800">{sectionLabels?.review ?? 'Review'}</div>
+            <div class="text-sm text-gray-500">{destCountry}{sectionLabels?.reviewSubtitle ?? ''}</div>
+          </div>
+        </div>
+
+        <div class="bg-gray-50 border-l-4 border-orange-400 p-4 mb-4 leading-relaxed">
+          <p class="font-bold mb-1">🏠 {content.review.place} — {content.review.location}, {destCountry}</p>
+          <p class="mb-2">{'⭐'.repeat(content.review.stars)}</p>
+          <p>{content.review.content}</p>
+        </div>
+
+        <details class="mt-3">
+          <summary class="cursor-pointer text-orange-500 font-medium text-sm">📚 {t(lang, 'workbook.day.vocabList')}</summary>
+          <div class="mt-3 bg-amber-50 p-4 rounded-lg">
+            <p class="text-sm text-amber-700 font-medium mb-3">💡 {t(lang, 'workbook.day.vocabHint')}</p>
+            {content.review_vocab.map(item => (
+              <div class="flex items-start gap-2 py-1.5 border-b border-amber-100 last:border-0">
+                <input type="checkbox" class="vocab-check mt-1" data-word={item.word} />
+                <span class="font-bold text-orange-600 min-w-[100px]">{item.word}</span>
+                <span class="text-gray-600">{item.meaning}</span>
+              </div>
+            ))}
+          </div>
+        </details>
+      </div>
+
+      <!-- Section 4: Quiz 2 -->
+      <div class="bg-white rounded-2xl p-6 mb-5 shadow-sm border border-gray-100">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold text-sm">4</div>
+          <div>
+            <div class="font-bold text-gray-800">Quiz 2</div>
+            <div class="text-sm text-gray-500">{t(lang, 'workbook.day.reviewCheck')}</div>
+          </div>
+        </div>
+        <Quiz client:load quiz={content.quiz2} id="quiz2" />
+      </div>
+
+      <!-- Section 5: Tips -->
+      <div class="bg-white rounded-2xl p-6 mb-5 shadow-sm border border-gray-100">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold text-sm">5</div>
+          <div>
+            <div class="font-bold text-gray-800">{sectionLabels?.tipsEmoji ?? '🌍'} {destCountry} {sectionLabels?.tips ?? 'Tips'}</div>
+            <div class="text-sm text-gray-500">{content.tips.title}</div>
+          </div>
+        </div>
+        <div class="bg-amber-50 border-2 border-dashed border-amber-300 p-4 rounded-lg leading-relaxed" set:html={formatTips(content.tips.content)} />
+      </div>
+
+      <!-- Section 6: Conversation -->
+      <div class="bg-white rounded-2xl p-6 mb-5 shadow-sm border border-gray-100">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold text-sm">6</div>
+          <div>
+            <div class="font-bold text-gray-800">{sectionLabels?.conversation ?? 'Conversation'}</div>
+            <div class="text-sm text-gray-500">{content.conversation.scene}</div>
+          </div>
+        </div>
+
+        <div class="bg-gray-50 rounded-xl p-4 mb-4">
+          <p class="text-gray-500 text-sm mb-3">🏠 {content.conversation.scene}</p>
+          {content.conversation.lines.map(line => (
+            <div class="flex gap-3 mb-3 last:mb-0">
+              <span class={`font-bold min-w-[24px] ${line.speaker === 'B' ? 'text-pink-500' : 'text-orange-500'}`}>{line.speaker}:</span>
+              <span class="leading-relaxed">{line.text}</span>
+            </div>
+          ))}
+        </div>
+
+        <details class="mt-3">
+          <summary class="cursor-pointer text-orange-500 font-medium text-sm">📚 {t(lang, 'workbook.day.vocabList')}</summary>
+          <div class="mt-3 bg-amber-50 p-4 rounded-lg">
+            <p class="text-sm text-amber-700 font-medium mb-3">💡 {t(lang, 'workbook.day.vocabHint')}</p>
+            {content.conversation_vocab.map(item => (
+              <div class="flex items-start gap-2 py-1.5 border-b border-amber-100 last:border-0">
+                <input type="checkbox" class="vocab-check mt-1" data-word={item.word} />
+                <span class="font-bold text-orange-600 min-w-[100px]">{item.word}</span>
+                <span class="text-gray-600">{item.meaning}</span>
+              </div>
+            ))}
+          </div>
+        </details>
+      </div>
+
+      <!-- Section 7: Quiz 3 -->
+      <div class="bg-white rounded-2xl p-6 mb-5 shadow-sm border border-gray-100">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold text-sm">7</div>
+          <div>
+            <div class="font-bold text-gray-800">Quiz 3</div>
+            <div class="text-sm text-gray-500">{t(lang, 'workbook.day.conversationCheck')}</div>
+          </div>
+        </div>
+        <Quiz client:load quiz={content.quiz3} id="quiz3" />
+      </div>
+
+      <!-- Section 8: Try It -->
+      <div class="bg-white rounded-2xl p-6 mb-5 shadow-sm border border-gray-100">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-8 h-8 bg-orange-500 text-white rounded-full flex items-center justify-center font-bold text-sm">8</div>
+          <div>
+            <div class="font-bold text-gray-800">✏️ {t(lang, 'workbook.day.tryIt')}</div>
+            <div class="text-sm text-gray-500">{t(lang, 'workbook.day.tryItDesc')}</div>
+          </div>
+        </div>
+        <div class="bg-gray-50 p-3 rounded-lg mb-3 text-sm text-gray-600">
+          <p>💡 {t(lang, 'workbook.day.tryItHint')}</p>
+          <p class="mt-2 italic text-orange-500">{content.try_it_hint}</p>
+        </div>
+        <textarea
+          placeholder="I'm making..."
+          class="w-full min-h-[120px] p-3 border-2 border-gray-200 rounded-lg text-base leading-relaxed resize-y focus:outline-none focus:border-orange-400"
+        />
+      </div>
+
+      <!-- Footer Navigation -->
+      <div class="text-center mb-4">
+        <a href={`/workbook/${id}`} class="text-orange-500 hover:text-orange-600 font-medium">
+          🏠 {t(lang, 'workbook.day.backToHome')}
+        </a>
+      </div>
+      <div class="flex justify-between pb-8">
+        {prevDay ? (
+          <a href={`/workbook/${id}/${prevDay}`} class="px-5 py-3 bg-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-300 transition-colors">
+            ← {lang === 'ja' ? `${prevDay}${t(lang, 'workbook.day.dayLabel')}` : `Day ${prevDay}`}
+          </a>
+        ) : (
+          <span />
+        )}
+        {nextDay ? (
+          <a href={`/workbook/${id}/${nextDay}`} class="px-5 py-3 bg-orange-500 text-white rounded-xl font-medium hover:bg-orange-600 transition-colors">
+            {lang === 'ja' ? `${nextDay}${t(lang, 'workbook.day.dayLabel')}` : `Day ${nextDay}`} →
+          </a>
+        ) : (
+          <span class="px-5 py-3 bg-green-500 text-white rounded-xl font-medium">
+            {t(lang, 'workbook.day.complete')} 🎉
+          </span>
+        )}
+      </div>
+    </div>
+  </section>
+</Layout>

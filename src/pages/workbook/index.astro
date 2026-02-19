@@ -1,0 +1,125 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { WorkbookCard } from '../../components/workbook/WorkbookCard';
+import { getUserWorkbooks, getPublicWorkbooks } from '../../lib/workbook/db';
+import { t } from '../../i18n/index';
+import type { Lang } from '../../i18n/index';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+const supabase = Astro.locals.supabase;
+
+const tab = Astro.url.searchParams.get('tab') === 'public' ? 'public' : 'mine';
+
+let myWorkbooks: Awaited<ReturnType<typeof getUserWorkbooks>> = [];
+let publicWorkbooks: Awaited<ReturnType<typeof getPublicWorkbooks>> = [];
+let isPremium = false;
+
+if (user && supabase) {
+  const { data: subs } = await supabase
+    .from('subscriptions')
+    .select('status')
+    .eq('user_id', user.id)
+    .eq('status', 'active')
+    .limit(1);
+  isPremium = (subs?.length ?? 0) > 0;
+
+  if (isPremium) {
+    if (tab === 'mine') {
+      myWorkbooks = await getUserWorkbooks(supabase, user.id);
+    } else {
+      publicWorkbooks = await getPublicWorkbooks(supabase);
+    }
+  }
+}
+
+const workbooks = tab === 'mine' ? myWorkbooks : publicWorkbooks;
+---
+
+<Layout title={t(lang, 'nav.workbook')} user={user}>
+  <section class="py-12 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-800">{t(lang, 'workbook.myWorkbooks')}</h1>
+          <p class="text-gray-500 mt-1">{t(lang, 'workbook.subtitle')}</p>
+        </div>
+        {isPremium && (
+          <a
+            href="/workbook/create"
+            class="px-6 py-3 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition-colors"
+          >
+            {t(lang, 'workbook.newWorkbook')}
+          </a>
+        )}
+      </div>
+
+      {!user ? (
+        <div class="text-center py-20">
+          <div class="text-5xl mb-4">🔒</div>
+          <h2 class="text-xl font-semibold text-gray-700 mb-2">{t(lang, 'workbook.loginRequired')}</h2>
+          <p class="text-gray-500 mb-6">{t(lang, 'workbook.loginRequiredDesc')}</p>
+          <a href="/login" class="px-6 py-3 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition-colors">
+            {t(lang, 'workbook.loginBtn')}
+          </a>
+        </div>
+      ) : !isPremium ? (
+        <div class="text-center py-20">
+          <div class="text-5xl mb-4">⭐</div>
+          <h2 class="text-xl font-semibold text-gray-700 mb-2">{t(lang, 'workbook.premiumFeature')}</h2>
+          <p class="text-gray-500 mb-6">{t(lang, 'workbook.premiumDesc')}</p>
+          <a href="/community" class="px-6 py-3 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition-colors">
+            {t(lang, 'workbook.premiumBtn')}
+          </a>
+        </div>
+      ) : (
+        <>
+          {/* Tabs */}
+          <div class="flex gap-1 mb-6 bg-gray-100 rounded-xl p-1 max-w-xs">
+            <a
+              href="/workbook"
+              class:list={[
+                'flex-1 text-center px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+                tab === 'mine' ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-500 hover:text-gray-700',
+              ]}
+            >
+              {t(lang, 'workbook.tab.mine')}
+            </a>
+            <a
+              href="/workbook?tab=public"
+              class:list={[
+                'flex-1 text-center px-4 py-2 rounded-lg text-sm font-medium transition-colors',
+                tab === 'public' ? 'bg-white text-gray-800 shadow-sm' : 'text-gray-500 hover:text-gray-700',
+              ]}
+            >
+              {t(lang, 'workbook.tab.public')}
+            </a>
+          </div>
+
+          {workbooks.length === 0 ? (
+            <div class="text-center py-20">
+              <div class="text-5xl mb-4">{tab === 'mine' ? '📚' : '🌍'}</div>
+              <h2 class="text-xl font-semibold text-gray-700 mb-2">
+                {tab === 'mine' ? t(lang, 'workbook.noWorkbooks') : t(lang, 'workbook.noPublicWorkbooks')}
+              </h2>
+              <p class="text-gray-500 mb-6">
+                {tab === 'mine' ? t(lang, 'workbook.noWorkbooksDesc') : t(lang, 'workbook.noPublicWorkbooksDesc')}
+              </p>
+              {tab === 'mine' && (
+                <a href="/workbook/create" class="px-6 py-3 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition-colors">
+                  {t(lang, 'workbook.createBtn')}
+                </a>
+              )}
+            </div>
+          ) : (
+            <div class="grid md:grid-cols-2 gap-6">
+              {workbooks.map(wb => (
+                <WorkbookCard client:load workbook={wb} showAuthor={tab === 'public'} />
+              ))}
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  </section>
+</Layout>

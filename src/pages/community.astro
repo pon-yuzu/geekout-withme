@@ -1,139 +1,241 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import PricingCard from '../components/PricingCard.tsx';
+import { t } from '../i18n/index';
+import type { Lang } from '../i18n/index';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+let isPremium = false;
+if (user && Astro.locals.supabase) {
+  const supabase = Astro.locals.supabase;
+  const { data } = await supabase
+    .from('subscriptions')
+    .select('status')
+    .eq('user_id', user.id)
+    .eq('status', 'active')
+    .limit(1);
+  isPremium = (data?.length ?? 0) > 0;
+}
+
+// Fetch latest YouTube video from RSS feed
+const YT_CHANNEL_ID = 'UCQGr0AXdkMqqMV05xvYsq4g';
+let latestVideo: { id: string; title: string; thumbnail: string } | null = null;
+try {
+  const rss = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${YT_CHANNEL_ID}`, {
+    headers: { 'User-Agent': 'Mozilla/5.0' },
+  });
+  const xml = await rss.text();
+  const videoIdMatch = xml.match(/<yt:videoId>([^<]+)<\/yt:videoId>/);
+  const titleMatch = xml.match(/<entry>[\s\S]*?<title>([^<]+)<\/title>/);
+  if (videoIdMatch) {
+    latestVideo = {
+      id: videoIdMatch[1],
+      title: titleMatch?.[1] ?? '',
+      thumbnail: `https://i.ytimg.com/vi/${videoIdMatch[1]}/hqdefault.jpg`,
+    };
+  }
+} catch {
+  // RSS fetch failed — show YouTube section without embed
+}
 ---
 
-<Layout title="Community" description="Join our language exchange community and connect with fellow learners.">
+<Layout title={t(lang, 'nav.community')} description="Join our language exchange community and connect with fellow learners." user={user}>
   <section class="py-12 px-4">
     <div class="max-w-4xl mx-auto">
       <div class="text-center mb-12">
         <h1 class="text-4xl md:text-5xl font-bold mb-4">
-          <span class="bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">
-            Join Our Community
+          <span class="text-orange-500">
+            {t(lang, 'community.title')}
           </span>
         </h1>
-        <p class="text-xl text-slate-300">
-          Connect with fellow language geeks learning Japanese and English
+        <p class="text-xl text-gray-600">
+          {t(lang, 'community.subtitle')}
         </p>
       </div>
 
-      <!-- Free Tier -->
-      <div class="bg-white/5 border border-white/10 rounded-2xl p-8 mb-8">
+      <!-- Free Tier: Chat'n'Chill -->
+      <div class="bg-white border border-gray-200 rounded-2xl p-8 mb-8 shadow-sm">
         <div class="flex items-center gap-3 mb-4">
           <span class="text-3xl">🌏</span>
           <div>
-            <h2 class="text-2xl font-bold">Weekly Language Exchange</h2>
-            <span class="text-primary-400 font-semibold">FREE</span>
+            <h2 class="text-2xl font-bold text-gray-800">{t(lang, 'community.exchange.title')}</h2>
+            <span class="text-orange-500 font-semibold">{t(lang, 'community.exchange.free')}</span>
           </div>
         </div>
-        
-        <p class="text-slate-300 mb-6">
-          Join our weekly Zoom meetup where Japanese and English learners come together to practice. 
-          All levels welcome — it's about connection, not perfection!
+
+        <p class="text-gray-600 mb-6">
+          {t(lang, 'community.exchange.desc')}
         </p>
 
-        <ul class="space-y-3 mb-6">
+        <ul class="space-y-3 mb-8">
           <li class="flex items-center gap-3">
-            <span class="text-green-400">✓</span>
-            <span>Weekly Zoom sessions</span>
+            <span class="text-teal-500">✓</span>
+            <span class="text-gray-700">{t(lang, 'community.exchange.features.zoom')}</span>
           </li>
           <li class="flex items-center gap-3">
-            <span class="text-green-400">✓</span>
-            <span>Mixed level groups</span>
+            <span class="text-teal-500">✓</span>
+            <span class="text-gray-700">{t(lang, 'community.exchange.features.mixed')}</span>
           </li>
           <li class="flex items-center gap-3">
-            <span class="text-green-400">✓</span>
-            <span>Japanese & English speakers</span>
+            <span class="text-teal-500">✓</span>
+            <span class="text-gray-700">{t(lang, 'community.exchange.features.speakers')}</span>
           </li>
           <li class="flex items-center gap-3">
-            <span class="text-green-400">✓</span>
-            <span>Fun conversation topics</span>
+            <span class="text-teal-500">✓</span>
+            <span class="text-gray-700">{t(lang, 'community.exchange.features.topics')}</span>
           </li>
         </ul>
 
-        <a 
-          href="#" 
-          class="inline-block px-6 py-3 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full font-semibold hover:opacity-90 transition-opacity"
-        >
-          Join Instagram Group →
-        </a>
+        <!-- How to Join -->
+        <div class="bg-orange-50 rounded-xl p-6 mb-6">
+          <h3 class="text-lg font-bold text-gray-800 mb-4">{t(lang, 'community.exchange.howTo.title')}</h3>
+          <ol class="space-y-4">
+            <li class="flex items-start gap-3">
+              <span class="flex-shrink-0 w-7 h-7 bg-teal-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</span>
+              <span class="text-gray-700 pt-0.5">{t(lang, 'community.exchange.howTo.step1')}</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="flex-shrink-0 w-7 h-7 bg-teal-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</span>
+              <div class="pt-0.5">
+                <span class="text-gray-700">{t(lang, 'community.exchange.howTo.step2')}</span>
+                <div class="mt-2 flex items-center gap-2">
+                  <code class="px-4 py-2 bg-white border-2 border-orange-300 rounded-lg text-orange-600 font-bold text-lg" id="phrase">Chat'n'Chill</code>
+                  <button
+                    id="copy-btn"
+                    class="px-3 py-2 bg-orange-500 text-white rounded-lg text-sm font-medium hover:bg-orange-600 transition-colors"
+                    data-copied-text={t(lang, 'community.exchange.howTo.copied')}
+                  >
+                    Copy
+                  </button>
+                </div>
+              </div>
+            </li>
+            <li class="flex items-start gap-3">
+              <span class="flex-shrink-0 w-7 h-7 bg-teal-500 text-white rounded-full flex items-center justify-center text-sm font-bold">3</span>
+              <span class="text-gray-700 pt-0.5">{t(lang, 'community.exchange.howTo.step3')}</span>
+            </li>
+          </ol>
+        </div>
+
+        <!-- Instagram link + QR -->
+        <div class="flex flex-col sm:flex-row items-center gap-6">
+          <a
+            href="https://www.instagram.com/rebellious1124/"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-orange-500 via-pink-500 to-purple-500 text-white rounded-full font-semibold hover:opacity-90 transition-opacity"
+          >
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            {t(lang, 'community.exchange.button')}
+          </a>
+          <a
+            href="https://www.instagram.com/rebellious1124/"
+            target="_blank"
+            rel="noopener"
+            class="block"
+          >
+            <img src="/instagram-qr.png" alt="@rebellious1124 QR code" class="w-32 h-32 rounded-lg" />
+          </a>
+        </div>
       </div>
 
-      <!-- Premium Tier (Coming Soon) -->
-      <div class="bg-gradient-to-br from-accent-900/30 to-primary-900/30 border border-accent-500/30 rounded-2xl p-8 mb-8 relative overflow-hidden">
-        <div class="absolute top-4 right-4 bg-accent-500 text-xs font-bold px-3 py-1 rounded-full">
-          COMING SOON
-        </div>
-        
+      <!-- YouTube: Latest Video -->
+      <div class="bg-white border border-gray-200 rounded-2xl p-8 mb-8 shadow-sm">
         <div class="flex items-center gap-3 mb-4">
-          <span class="text-3xl">✨</span>
-          <div>
-            <h2 class="text-2xl font-bold">Premium Community</h2>
-            <span class="text-accent-400 font-semibold">¥500/month</span>
-          </div>
+          <span class="text-3xl">🎬</span>
+          <h2 class="text-2xl font-bold text-gray-800">{t(lang, 'community.youtube.title')}</h2>
         </div>
-        
-        <p class="text-slate-300 mb-6">
-          Get deeper support with voice lounges, personalized recommendations, and direct access to coaching.
+        <p class="text-gray-600 mb-6">
+          {t(lang, 'community.youtube.desc')}
         </p>
 
-        <ul class="space-y-3 mb-6 text-slate-400">
-          <li class="flex items-center gap-3">
-            <span class="text-accent-400">◇</span>
-            <span>Everything in Free tier</span>
-          </li>
-          <li class="flex items-center gap-3">
-            <span class="text-accent-400">◇</span>
-            <span>24/7 Voice lounges (like Mokuri)</span>
-          </li>
-          <li class="flex items-center gap-3">
-            <span class="text-accent-400">◇</span>
-            <span>AI-powered personalized study plans</span>
-          </li>
-          <li class="flex items-center gap-3">
-            <span class="text-accent-400">◇</span>
-            <span>Monthly group coaching sessions</span>
-          </li>
-          <li class="flex items-center gap-3">
-            <span class="text-accent-400">◇</span>
-            <span>Priority access to events</span>
-          </li>
-        </ul>
+        {latestVideo && (
+          <div class="mb-6">
+            <p class="text-sm font-medium text-gray-500 mb-3">{t(lang, 'community.youtube.latest')}</p>
+            <div class="aspect-video rounded-xl overflow-hidden bg-black">
+              <iframe
+                src={`https://www.youtube.com/embed/${latestVideo.id}`}
+                title={latestVideo.title}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                class="w-full h-full"
+                loading="lazy"
+              ></iframe>
+            </div>
+            {latestVideo.title && (
+              <p class="mt-3 text-sm font-medium text-gray-700">{latestVideo.title}</p>
+            )}
+          </div>
+        )}
 
-        <button 
-          disabled
-          class="inline-block px-6 py-3 bg-white/10 rounded-full font-semibold cursor-not-allowed"
-        >
-          Notify Me When Available
-        </button>
-      </div>
-
-      <!-- YouTube CTA -->
-      <div class="bg-white/5 border border-white/10 rounded-2xl p-8 text-center">
-        <span class="text-4xl block mb-4">🎬</span>
-        <h2 class="text-2xl font-bold mb-2">Watch Geek Out With Me</h2>
-        <p class="text-slate-300 mb-6">
-          Hear real people share their passions in English. 
-          Learn language through authentic conversations about things that matter.
-        </p>
-        <a 
-          href="https://www.youtube.com/@geekoutwithme" 
+        <a
+          href="https://www.youtube.com/@cairsen1000"
           target="_blank"
           rel="noopener"
-          class="inline-block px-6 py-3 bg-red-600 rounded-full font-semibold hover:bg-red-700 transition-colors"
+          class="inline-flex items-center gap-2 px-6 py-3 bg-red-600 text-white rounded-full font-semibold hover:bg-red-700 transition-colors"
         >
-          Subscribe on YouTube →
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"/><path fill="#fff" d="M9.545 15.568V8.432L15.818 12z"/></svg>
+          {t(lang, 'community.youtube.button')}
         </a>
+      </div>
+
+      <!-- Premium Tier -->
+      <div class="mb-8">
+        <PricingCard client:load isLoggedIn={!!user} isPremium={isPremium} />
+      </div>
+
+      <!-- 1-on-1 Coaching CTA -->
+      <div class="bg-gradient-to-br from-orange-50 to-teal-50 border border-orange-200 rounded-2xl p-8 mb-8 shadow-sm">
+        <div class="flex flex-col md:flex-row items-center gap-6">
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-3">
+              <span class="text-3xl">🎯</span>
+              <h2 class="text-2xl font-bold text-gray-800">{t(lang, 'community.coaching.title')}</h2>
+            </div>
+            <p class="text-gray-600 mb-6">
+              {t(lang, 'community.coaching.desc')}
+            </p>
+            <a
+              href="https://savemy12weeks.com/gowm/"
+              target="_blank"
+              rel="noopener"
+              class="inline-flex items-center gap-2 px-6 py-3 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition-colors"
+            >
+              {t(lang, 'community.coaching.button')}
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+        </div>
       </div>
 
       <!-- Rules Reminder -->
-      <div class="mt-12 text-center text-slate-400 text-sm">
+      <div class="mt-12 text-center text-gray-500 text-sm">
         <p class="mb-2">
-          🙌 By joining, you agree to our community guidelines:
+          {t(lang, 'community.rules.title')}
         </p>
         <p>
-          Be respectful • No soliciting • No harassment • No unauthorized recording
+          {t(lang, 'community.rules.text')}
         </p>
       </div>
     </div>
   </section>
+
+  <script>
+    const btn = document.getElementById('copy-btn');
+    if (btn) {
+      btn.addEventListener('click', async () => {
+        await navigator.clipboard.writeText('Chat\'n\'Chill');
+        const original = btn.textContent;
+        btn.textContent = btn.dataset.copiedText || 'Copied!';
+        btn.classList.replace('bg-orange-500', 'bg-green-500');
+        btn.classList.replace('hover:bg-orange-600', 'hover:bg-green-600');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.replace('bg-green-500', 'bg-orange-500');
+          btn.classList.replace('hover:bg-green-600', 'hover:bg-orange-600');
+        }, 2000);
+      });
+    }
+  </script>
 </Layout>

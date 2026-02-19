@@ -1,0 +1,134 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { ChatBot } from '../../components/workbook/ChatBot';
+import { GenerationProgress } from '../../components/workbook/GenerationProgress';
+import { t } from '../../i18n/index';
+import type { Lang } from '../../i18n/index';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+const supabase = Astro.locals.supabase;
+
+// Auth check
+if (!user) {
+  return Astro.redirect('/login');
+}
+
+// Premium check
+let isPremium = false;
+if (supabase) {
+  const { data: subs } = await supabase
+    .from('subscriptions')
+    .select('status')
+    .eq('user_id', user.id)
+    .eq('status', 'active')
+    .limit(1);
+  isPremium = (subs?.length ?? 0) > 0;
+}
+
+if (!isPremium) {
+  return Astro.redirect('/community');
+}
+
+// 生成中のワークブックがあるかチェック
+let generatingWorkbook: { id: string; days_completed: number; topic_label: string; level_label: string; dest_label: string } | null = null;
+let canCreate = true;
+
+if (supabase) {
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+  // まず生成中のワークブックを確認
+  const { data: generating } = await supabase
+    .from('workbooks')
+    .select('id, days_completed, topic_label, level_label, dest_label')
+    .eq('user_id', user.id)
+    .eq('status', 'generating')
+    .gte('created_at', monthStart)
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  if (generating) {
+    generatingWorkbook = generating;
+  } else {
+    // 生成中がなければ、完了済みの月1冊制限チェック
+    const { count } = await supabase
+      .from('workbooks')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', user.id)
+      .gte('created_at', monthStart);
+    canCreate = (count ?? 0) < 1;
+  }
+}
+
+// Get auto-level from latest assessment
+let autoLevel: string | null = null;
+let autoLevelLabel: string | null = null;
+
+try {
+  const levelMap: Record<string, string> = {
+    A1: 'eiken5', A2: 'eiken4', B1: 'eiken3', B2: 'toeic400', C1: 'toeic600',
+    N5: 'eiken5', N4: 'eiken4', N3: 'eiken3', N2: 'toeic400', N1: 'toeic600',
+  };
+  const levelLabels: Record<string, string> = {
+    eiken5: '英検5級（中1程度）', eiken4: '英検4級（中2程度）', eiken3: '英検3級（中3程度）',
+    toeic400: 'TOEIC 400点レベル', toeic600: 'TOEIC 600点レベル',
+  };
+
+  const { data: assessment } = await supabase
+    .from('assessment_results')
+    .select('text_level, voice_level')
+    .eq('user_id', user.id)
+    .eq('language', 'english')
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  if (assessment) {
+    const bestLevel = (assessment.text_level ?? assessment.voice_level) as string | null;
+    if (bestLevel && levelMap[bestLevel]) {
+      autoLevel = levelMap[bestLevel];
+      autoLevelLabel = levelLabels[autoLevel] ?? null;
+    }
+  }
+} catch {
+  // No assessment found, that's fine
+}
+---
+
+<Layout title={t(lang, 'workbook.create.title')} user={user}>
+  {generatingWorkbook ? (
+    <section class="py-4 px-4">
+      <GenerationProgress
+        client:load
+        slots={{
+          topicLabel: generatingWorkbook.topic_label,
+          levelLabel: generatingWorkbook.level_label,
+          destLabel: generatingWorkbook.dest_label,
+        }}
+        resumeWorkbookId={generatingWorkbook.id}
+        resumeDaysCompleted={generatingWorkbook.days_completed}
+      />
+    </section>
+  ) : canCreate ? (
+    <section class="py-4 px-4">
+      <ChatBot
+        client:load
+        autoLevel={autoLevel}
+        autoLevelLabel={autoLevelLabel}
+      />
+    </section>
+  ) : (
+    <section class="py-20 px-4 text-center">
+      <div class="max-w-md mx-auto">
+        <div class="text-5xl mb-4">📚</div>
+        <h2 class="text-xl font-semibold text-gray-700 mb-2">{t(lang, 'workbook.create.monthlyLimit')}</h2>
+        <p class="text-gray-500 mb-6">{t(lang, 'workbook.create.monthlyLimitDesc')}</p>
+        <a href="/workbook" class="px-6 py-3 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition-colors">
+          {t(lang, 'workbook.create.backToList')}
+        </a>
+      </div>
+    </section>
+  )}
+</Layout>

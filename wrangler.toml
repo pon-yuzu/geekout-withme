@@ -1,5 +1,13 @@
 name = "geekout-withme"
 compatibility_date = "2024-01-01"
+pages_build_output_dir = "dist"
 
-[site]
-bucket = "./dist"
+# Workers AI binding (Llama 3.1 - no API key needed)
+[ai]
+binding = "AI"
+
+# Durable Objects — referencing the separate geekout-voice-room Worker
+[durable_objects]
+bindings = [
+  { name = "VOICE_ROOM", class_name = "VoiceRoom", script_name = "geekout-voice-room" }
+]

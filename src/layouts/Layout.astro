@@ -1,14 +1,25 @@
 ---
+import UserMenu from '../components/auth/UserMenu.tsx';
+import LanguageToggle from '../components/LanguageToggle.tsx';
+import LanguageSelector from '../components/LanguageSelector.tsx';
+import { t } from '../i18n/index';
+import type { Lang } from '../i18n/index';
+
 interface Props {
   title: string;
   description?: string;
+  user?: { email?: string; user_metadata?: { display_name?: string } } | null;
 }
 
-const { title, description = "Find your language level, discover resources, and connect with fellow language geeks!" } = Astro.props;
+const lang = Astro.locals.lang as Lang;
+const hasLangCookie = Astro.request.headers.get('cookie')?.includes('lang=');
+const buildId = __BUILD_ID__;
+
+const { title, description = "Find your language level, discover resources, and connect with fellow language geeks!", user } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="description" content={description} />
@@ -16,33 +27,95 @@ const { title, description = "Find your language level, discover resources, and 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title} | Geek Out With Me</title>
+    <script is:inline>if(!globalThis.process)globalThis.process={env:{NODE_ENV:"production"},browser:true,version:""};</script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   </head>
-  <body class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
-    <nav class="fixed top-0 w-full bg-slate-900/80 backdrop-blur-md z-50 border-b border-white/10">
+  <body class="min-h-screen bg-orange-50 text-gray-800">
+    {!hasLangCookie && (
+      <LanguageSelector client:load />
+    )}
+
+    <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-orange-100 shadow-sm">
       <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-        <a href="/" class="text-xl font-bold bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">
+        <a href="/" class="text-xl font-bold text-orange-500 whitespace-nowrap">
           Geek Out With Me
         </a>
-        <div class="flex gap-6">
-          <a href="/level-check" class="hover:text-primary-400 transition-colors">Level Check</a>
-          <a href="/resources" class="hover:text-primary-400 transition-colors">Resources</a>
-          <a href="/community" class="hover:text-primary-400 transition-colors">Community</a>
+
+        <!-- Desktop nav -->
+        <div class="hidden md:flex items-center gap-6">
+          <a href="/level-check" class="text-gray-600 hover:text-orange-500 transition-colors">{t(lang, 'nav.levelCheck')}</a>
+          <a href="/resources" class="text-gray-600 hover:text-orange-500 transition-colors">{t(lang, 'nav.resources')}</a>
+          <a href="/community" class="text-gray-600 hover:text-orange-500 transition-colors">{t(lang, 'nav.community')}</a>
+          <a href="/workbook" class="text-gray-600 hover:text-orange-500 transition-colors">{t(lang, 'nav.workbook')}</a>
+          <a href="/voice-lounge" class="text-gray-600 hover:text-orange-500 transition-colors">{t(lang, 'nav.voiceLounge')}</a>
+          <LanguageToggle lang={lang} client:load />
+          {user ? (
+            <UserMenu client:load email={user.email || ''} displayName={user.user_metadata?.display_name} />
+          ) : (
+            <div class="flex items-center gap-3">
+              <a href="/login" class="text-sm font-medium text-gray-600 hover:text-orange-500 transition-colors">{t(lang, 'nav.login')}</a>
+              <a href="/signup" class="text-sm font-medium px-4 py-2 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition-colors">{t(lang, 'nav.signup')}</a>
+            </div>
+          )}
+        </div>
+
+        <!-- Mobile: user menu + hamburger -->
+        <div class="flex items-center gap-3 md:hidden">
+          <LanguageToggle lang={lang} client:load />
+          {user && (
+            <UserMenu client:load email={user.email || ''} displayName={user.user_metadata?.display_name} />
+          )}
+          <button id="mobile-menu-btn" class="p-2 text-gray-600 hover:text-orange-500" aria-label="Menu">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path id="menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile dropdown -->
+      <div id="mobile-menu" class="hidden md:hidden border-t border-orange-100 bg-white">
+        <div class="px-4 py-3 space-y-3">
+          <a href="/level-check" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.levelCheck')}</a>
+          <a href="/resources" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.resources')}</a>
+          <a href="/community" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.community')}</a>
+          <a href="/workbook" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.workbook')}</a>
+          <a href="/voice-lounge" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.voiceLounge')}</a>
+          {!user && (
+            <div class="flex items-center gap-3 pt-2 border-t border-orange-100">
+              <a href="/login" class="text-sm font-medium text-gray-600 hover:text-orange-500 transition-colors">{t(lang, 'nav.login')}</a>
+              <a href="/signup" class="text-sm font-medium px-4 py-2 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition-colors">{t(lang, 'nav.signup')}</a>
+            </div>
+          )}
         </div>
       </div>
     </nav>
-    
+
+    <script is:inline>
+      document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+        const menu = document.getElementById('mobile-menu');
+        const icon = document.getElementById('menu-icon');
+        const open = menu?.classList.toggle('hidden');
+        if (icon) {
+          icon.setAttribute('d', open
+            ? 'M4 6h16M4 12h16M4 18h16'
+            : 'M6 18L18 6M6 6l12 12');
+        }
+      });
+    </script>
+
     <main class="pt-20">
       <slot />
     </main>
 
-    <footer class="border-t border-white/10 mt-20 py-8">
-      <div class="max-w-6xl mx-auto px-4 text-center text-slate-400">
-        <p>© 2026 Geek Out With Me. Learn languages through your passions.</p>
+    <footer class="border-t border-orange-100 mt-20 py-8">
+      <div class="max-w-6xl mx-auto px-4 text-center text-gray-500">
+        <p>{t(lang, 'footer.copyright')}</p>
       </div>
     </footer>
+    <div class="fixed bottom-1 right-2 text-[10px] text-gray-300 pointer-events-none select-none">{buildId}</div>
   </body>
 </html>
 

@@ -1,169 +1,400 @@
 import { useState } from 'react';
+import { useTranslation } from '../i18n/index';
 
 interface Props {
   language: 'english' | 'japanese';
   onComplete: (level: string) => void;
   onBack: () => void;
+  onFeedback?: (feedback: any) => void;
 }
 
 interface Question {
-  level: string;
   question: string;
   options: string[];
-  correct: number;
+  correct: number | number[];
 }
 
-const englishQuestions: Question[] = [
+interface LevelBlock {
+  level: string;
+  questions: Question[];
+}
+
+// ── English (CEFR A1–C1) ── 3 questions per level, all unambiguous
+const englishLevels: LevelBlock[] = [
   {
     level: 'A1',
-    question: 'Choose the correct word: "She ___ a student."',
-    options: ['is', 'are', 'am', 'be'],
-    correct: 0,
+    questions: [
+      {
+        question: 'Choose the correct word: "She ___ a student."',
+        options: ['is', 'are', 'am', 'be'],
+        correct: 0,
+      },
+      {
+        question: 'Choose the correct word: "They ___ from Japan."',
+        options: ['is', 'am', 'are', 'be'],
+        correct: 2,
+      },
+      {
+        question: 'Choose the correct word: "I have two ___."',
+        options: ['cat', 'cats', 'a cat', 'the cat'],
+        correct: 1,
+      },
+    ],
   },
   {
     level: 'A2',
-    question: 'What does "I\'m looking forward to meeting you" mean?',
-    options: [
-      'I don\'t want to meet you',
-      'I\'m excited to meet you',
-      'I forgot to meet you',
-      'I\'m tired of meeting you',
+    questions: [
+      {
+        question: 'What does "I\'m looking forward to meeting you" mean?',
+        options: [
+          "I don't want to meet you",
+          "I'm excited to meet you",
+          'I forgot to meet you',
+          "I'm tired of meeting you",
+        ],
+        correct: 1,
+      },
+      {
+        question: 'Choose the correct word: "Yesterday, I ___ to the store."',
+        options: ['go', 'going', 'went', 'gone'],
+        correct: 2,
+      },
+      {
+        question: 'Choose the correct word: "She can speak English ___ than her brother."',
+        options: ['good', 'better', 'best', 'more good'],
+        correct: 1,
+      },
     ],
-    correct: 1,
   },
   {
     level: 'B1',
-    question: 'Choose the correct sentence:',
-    options: [
-      'If I would have known, I would have come.',
-      'If I had known, I would have come.',
-      'If I knew, I would have came.',
-      'If I know, I would come.',
+    questions: [
+      {
+        question: 'Choose the correct sentence:',
+        options: [
+          'If I would have known, I would have come.',
+          'If I had known, I would have come.',
+          'If I knew, I would have came.',
+          'If I know, I would come.',
+        ],
+        correct: 1,
+      },
+      {
+        question: 'Choose the correct word: "By the time we arrived, the movie ___."',
+        options: [
+          'already started',
+          'had already started',
+          'has already started',
+          'is starting',
+        ],
+        correct: 1,
+      },
+      {
+        question: 'Choose the correct word: "I wish I ___ more time to travel."',
+        options: ['have', 'had', 'will have', 'having'],
+        correct: 1,
+      },
     ],
-    correct: 1,
   },
   {
     level: 'B2',
-    question: '"He tends to beat around the bush." This means he:',
-    options: [
-      'Likes gardening',
-      'Avoids saying things directly',
-      'Is very honest',
-      'Speaks too quickly',
+    questions: [
+      {
+        question: '"He tends to beat around the bush." This means he:',
+        options: [
+          'Likes gardening',
+          'Avoids saying things directly',
+          'Is very honest',
+          'Speaks too quickly',
+        ],
+        correct: 1,
+      },
+      {
+        question:
+          'Choose the correct form: "Not only ___ the project on time, but she also won an award."',
+        options: [
+          'she completed',
+          'did she complete',
+          'she has completed',
+          'she completing',
+        ],
+        correct: 1,
+      },
+      {
+        question:
+          'Choose the correct word: "Had I known about the delay, I ___ an earlier flight."',
+        options: [
+          'would book',
+          'would have booked',
+          'will book',
+          'had booked',
+        ],
+        correct: 1,
+      },
     ],
-    correct: 1,
   },
   {
     level: 'C1',
-    question: 'Which sentence uses the subjunctive mood correctly?',
-    options: [
-      'I wish I was taller.',
-      'I wish I were taller.',
-      'I wish I am taller.',
-      'I wish I being taller.',
+    questions: [
+      {
+        question:
+          'Choose the correct word: "The proposal, ___ merits are questionable, was nonetheless approved."',
+        options: ['who', 'whose', 'which', 'that'],
+        correct: 1,
+      },
+      {
+        question:
+          'Choose the correct word: "Scarcely had he arrived ___ the meeting began."',
+        options: ['when', 'than', 'that', 'then'],
+        correct: 0,
+      },
+      {
+        question:
+          'Choose the correct word: "So pervasive is the influence of media ___ it shapes public opinion unconsciously."',
+        options: ['that', 'which', 'what', 'where'],
+        correct: 0,
+      },
     ],
-    correct: 1,
   },
 ];
 
-const japaneseQuestions: Question[] = [
+// ── Japanese (JLPT N5–N1) ── 3 questions per level, all unambiguous
+const japaneseLevels: LevelBlock[] = [
   {
     level: 'N5',
-    question: '「わたしは がくせい ___。」正しいものを選んでください。',
-    options: ['だ', 'です', 'ます', 'いる'],
-    correct: 1,
+    questions: [
+      {
+        question: '「わたしは まいにち がっこう___いきます。」',
+        options: ['を', 'に', 'で', 'が'],
+        correct: 1,
+      },
+      {
+        question: '「きのう ともだちと えいがを ___。」',
+        options: ['みます', 'みません', 'みました', 'みて'],
+        correct: 2,
+      },
+      {
+        question: '「この りんごは ___ おいしいです。」',
+        options: ['とても', 'あまり', 'ぜんぜん', 'たくさん'],
+        correct: 0,
+      },
+    ],
   },
   {
     level: 'N4',
-    question: '「映画を見た___、レストランに行きました。」',
-    options: ['あとで', 'まえに', 'ながら', 'ために'],
-    correct: 0,
+    questions: [
+      {
+        question: '「しゅくだいを ___から、あそびに いきます。」',
+        options: ['して', 'した', 'する', 'します'],
+        correct: 0,
+      },
+      {
+        question: '「この かんじが ___か。」',
+        options: ['よむ', 'よめます', 'よみたい', 'よんだ'],
+        correct: 1,
+      },
+      {
+        question: '「母に プレゼントを ___もらいました。」',
+        options: ['かって', 'かいて', 'かった', 'かう'],
+        correct: 0,
+      },
+    ],
   },
   {
     level: 'N3',
-    question: '「彼は忙しい___、いつも手伝ってくれる。」',
-    options: ['のに', 'ので', 'から', 'けど'],
-    correct: 0,
+    questions: [
+      {
+        question: '「レポートは 金曜日___出してください。」',
+        options: ['まで', 'までに', 'ごろ', 'ぐらい'],
+        correct: 1,
+      },
+      {
+        question: '「彼女は うれしそう___笑った。」',
+        options: ['な', 'に', 'で', 'と'],
+        correct: 1,
+      },
+      {
+        question: '「説明書を 読んだ___、使い方が わからない。」',
+        options: ['のに', 'ので', 'ために', 'ところ'],
+        correct: 0,
+      },
+    ],
   },
   {
     level: 'N2',
-    question: '「この問題は難しい___、誰も解けなかった。」',
-    options: ['あまり', 'ほど', 'くらい', 'だけ'],
-    correct: 0,
+    questions: [
+      {
+        question: '「日本語を 3年 勉強した___、まだ 上手に 話せない。」',
+        options: ['ものの', 'ものだ', 'ものか', 'ものを'],
+        correct: 0,
+      },
+      {
+        question: '「終電が なくなったので、歩いて 帰る___。」',
+        options: ['しかない', 'つもりだ', 'ようにする', 'ことにした'],
+        correct: 0,
+      },
+      {
+        question:
+          '「明日は 大事な 試験だから、勉強___わけにはいかない。」',
+        options: ['する', 'した', 'しない', 'している'],
+        correct: 2,
+      },
+    ],
   },
   {
     level: 'N1',
-    question: '「彼の成功は努力の___だ。」',
-    options: ['たまもの', 'おかげ', 'せい', 'ゆえ'],
-    correct: 0,
+    questions: [
+      {
+        question:
+          '「この プロジェクトの 成功は、チーム全員の 協力の___だ。」',
+        options: ['たまもの', 'せい', 'くせ', 'すえ'],
+        correct: 0,
+      },
+      {
+        question: '「本日___、応募を 締め切らせていただきます。」',
+        options: ['をもって', 'において', 'にわたって', 'にかけて'],
+        correct: 0,
+      },
+      {
+        question: '「部長___、責任も 大きくなる。」',
+        options: ['ともなると', 'にしては', 'としても', 'ことから'],
+        correct: 0,
+      },
+    ],
   },
 ];
 
-export default function TextAssessment({ language, onComplete, onBack }: Props) {
-  const questions = language === 'english' ? englishQuestions : japaneseQuestions;
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [answers, setAnswers] = useState<number[]>([]);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+const PASS_THRESHOLD = 2; // 3問中2問正解でレベル通過
 
-  const currentQuestion = questions[currentIndex];
+export default function TextAssessment({
+  language,
+  onComplete,
+  onBack,
+  onFeedback,
+}: Props) {
+  const { t } = useTranslation();
+  const levels = language === 'english' ? englishLevels : japaneseLevels;
+  const [currentLevelIndex, setCurrentLevelIndex] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [levelCorrect, setLevelCorrect] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [allAnswers, setAllAnswers] = useState<
+    { level: string; correct: boolean }[]
+  >([]);
+
+  const currentLevel = levels[currentLevelIndex];
+  const currentQuestion = currentLevel.questions[currentQuestionIndex];
+  const totalQuestions = levels.reduce(
+    (sum, l) => sum + l.questions.length,
+    0,
+  );
+  const answeredSoFar =
+    levels
+      .slice(0, currentLevelIndex)
+      .reduce((sum, l) => sum + l.questions.length, 0) + currentQuestionIndex;
+
+  const checkCorrect = (
+    selected: number,
+    correct: number | number[],
+  ): boolean => {
+    if (Array.isArray(correct)) return correct.includes(selected);
+    return selected === correct;
+  };
 
   const handleSelect = (optionIndex: number) => {
     setSelectedOption(optionIndex);
   };
 
+  const sendFeedbackRequest = (
+    level: string,
+    answers: { level: string; correct: boolean }[],
+  ) => {
+    fetch('/api/analyze-text', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ language, level, answers }),
+    })
+      .then((res) => res.json())
+      .then((data) => onFeedback?.(data))
+      .catch(() => {});
+  };
+
   const handleNext = () => {
     if (selectedOption === null) return;
 
-    const newAnswers = [...answers, selectedOption];
-    setAnswers(newAnswers);
+    const correct = checkCorrect(selectedOption, currentQuestion.correct);
+    const newAnswer = { level: currentLevel.level, correct };
+    const updatedAnswers = [...allAnswers, newAnswer];
+    setAllAnswers(updatedAnswers);
 
-    // Check if answer is wrong - stop at current level
-    if (selectedOption !== currentQuestion.correct) {
-      // Calculate level based on where they stopped
-      const level = currentIndex === 0 
-        ? (language === 'english' ? 'Below A1' : 'Below N5')
-        : questions[currentIndex - 1].level;
+    const newLevelCorrect = correct ? levelCorrect + 1 : levelCorrect;
+
+    if (currentQuestionIndex < currentLevel.questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setLevelCorrect(newLevelCorrect);
+      setSelectedOption(null);
+      return;
+    }
+
+    const passed = newLevelCorrect >= PASS_THRESHOLD;
+
+    if (!passed) {
+      const level =
+        currentLevelIndex === 0
+          ? language === 'english'
+            ? 'Below A1'
+            : 'Below N5'
+          : levels[currentLevelIndex - 1].level;
+      sendFeedbackRequest(level, updatedAnswers);
       onComplete(level);
       return;
     }
 
-    // If last question answered correctly
-    if (currentIndex === questions.length - 1) {
-      onComplete(currentQuestion.level);
+    if (currentLevelIndex === levels.length - 1) {
+      sendFeedbackRequest(currentLevel.level, updatedAnswers);
+      onComplete(currentLevel.level);
       return;
     }
 
-    // Move to next question
-    setCurrentIndex(currentIndex + 1);
+    setCurrentLevelIndex(currentLevelIndex + 1);
+    setCurrentQuestionIndex(0);
+    setLevelCorrect(0);
     setSelectedOption(null);
   };
+
+  const isLastQuestion =
+    currentLevelIndex === levels.length - 1 &&
+    currentQuestionIndex === currentLevel.questions.length - 1;
 
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
         <button
           onClick={onBack}
-          className="text-slate-400 hover:text-white transition-colors"
+          className="text-gray-500 hover:text-gray-800 transition-colors"
         >
-          ← Back
+          {t('levelCheck.back')}
         </button>
-        <span className="text-sm text-slate-400">
-          Question {currentIndex + 1} / {questions.length}
+        <span className="text-sm text-gray-500">
+          {currentLevel.level} — {currentQuestionIndex + 1} /{' '}
+          {currentLevel.questions.length}
         </span>
       </div>
 
       {/* Progress bar */}
-      <div className="w-full bg-white/10 rounded-full h-2 mb-8">
+      <div className="w-full bg-gray-200 rounded-full h-2 mb-8">
         <div
-          className="bg-gradient-to-r from-primary-500 to-accent-500 h-2 rounded-full transition-all duration-300"
-          style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
+          className="bg-orange-500 h-2 rounded-full transition-all duration-300"
+          style={{
+            width: `${((answeredSoFar + 1) / totalQuestions) * 100}%`,
+          }}
         />
       </div>
 
       {/* Level indicator */}
       <div className="text-center mb-4">
-        <span className="inline-block px-3 py-1 bg-white/10 rounded-full text-sm">
-          Level: {currentQuestion.level}
+        <span className="inline-block px-3 py-1 bg-orange-50 border border-orange-200 rounded-full text-sm text-gray-700">
+          {t('levelCheck.level')} {currentLevel.level}
         </span>
       </div>
 
@@ -176,15 +407,15 @@ export default function TextAssessment({ language, onComplete, onBack }: Props) 
       <div className="space-y-3 max-w-lg mx-auto mb-8">
         {currentQuestion.options.map((option, index) => (
           <button
-            key={index}
+            key={`${currentLevelIndex}-${currentQuestionIndex}-${index}`}
             onClick={() => handleSelect(index)}
             className={`w-full px-6 py-4 rounded-xl text-left transition-all ${
               selectedOption === index
-                ? 'bg-primary-500/30 border-2 border-primary-500'
-                : 'bg-white/5 border-2 border-transparent hover:bg-white/10'
+                ? 'bg-orange-50 border-2 border-orange-500'
+                : 'bg-white border-2 border-gray-200 hover:bg-orange-50'
             }`}
           >
-            <span className="inline-block w-8 h-8 rounded-full bg-white/10 text-center leading-8 mr-3">
+            <span className="inline-block w-8 h-8 rounded-full bg-gray-100 text-center leading-8 mr-3">
               {String.fromCharCode(65 + index)}
             </span>
             {option}
@@ -199,11 +430,11 @@ export default function TextAssessment({ language, onComplete, onBack }: Props) 
           disabled={selectedOption === null}
           className={`px-8 py-3 rounded-full font-medium transition-all ${
             selectedOption !== null
-              ? 'bg-gradient-to-r from-primary-500 to-accent-500 hover:opacity-90'
-              : 'bg-white/10 text-slate-500 cursor-not-allowed'
+              ? 'bg-orange-500 text-white hover:bg-orange-600'
+              : 'bg-gray-100 text-gray-500 cursor-not-allowed'
           }`}
         >
-          {currentIndex === questions.length - 1 ? 'Finish' : 'Next →'}
+          {isLastQuestion ? t('levelCheck.finish') : t('levelCheck.next')}
         </button>
       </div>
     </div>

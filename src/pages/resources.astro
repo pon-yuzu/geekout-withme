@@ -1,83 +1,88 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { t } from '../i18n/index';
+import type { Lang } from '../i18n/index';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
 ---
 
-<Layout title="Resources" description="Free Japanese and English learning resources for all levels.">
+<Layout title={t(lang, 'resources.title')} description="Free Japanese and English learning resources for all levels." user={user}>
   <section class="py-12 px-4">
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-12">
         <h1 class="text-4xl md:text-5xl font-bold mb-4">
-          <span class="bg-gradient-to-r from-primary-400 to-accent-400 bg-clip-text text-transparent">
-            Free Resources
+          <span class="text-orange-500">
+            {t(lang, 'resources.title')}
           </span>
         </h1>
-        <p class="text-xl text-slate-300">
-          Curated learning materials for Japanese and English learners
+        <p class="text-xl text-gray-600">
+          {t(lang, 'resources.subtitle')}
         </p>
       </div>
 
       <!-- Japanese Resources -->
       <div class="mb-16">
-        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-          <span>🇯🇵</span> Japanese Learning Resources
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-800">
+          <span>🇯🇵</span> {t(lang, 'resources.japanese.title')}
         </h2>
-        
+
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <!-- N5-N4 -->
-          <div class="bg-white/5 border border-white/10 rounded-xl p-6">
-            <div class="text-sm text-primary-400 mb-2">Beginner (N5-N4)</div>
-            <h3 class="text-lg font-semibold mb-4">Tadoku Free Books</h3>
-            <p class="text-slate-400 text-sm mb-4">
-              Graded readers with illustrations and audio. Perfect for building reading confidence.
+          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <div class="text-sm text-orange-500 mb-2">{t(lang, 'resources.japanese.beginner')}</div>
+            <h3 class="text-lg font-semibold mb-4 text-gray-800">Tadoku Free Books</h3>
+            <p class="text-gray-500 text-sm mb-4">
+              {t(lang, 'resources.japanese.tadoku.desc')}
             </p>
-            <a href="https://tadoku.org/japanese/free-books/" target="_blank" rel="noopener" class="text-primary-400 hover:text-primary-300">
-              Visit site →
+            <a href="https://tadoku.org/japanese/free-books/" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
+              {t(lang, 'resources.visitSite')}
             </a>
           </div>
 
-          <div class="bg-white/5 border border-white/10 rounded-xl p-6">
-            <div class="text-sm text-primary-400 mb-2">Beginner (N5-N4)</div>
-            <h3 class="text-lg font-semibold mb-4">Yomujp (N5/N4)</h3>
-            <p class="text-slate-400 text-sm mb-4">
-              Level-based readings about Japanese culture, food, and daily life with furigana.
+          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <div class="text-sm text-orange-500 mb-2">{t(lang, 'resources.japanese.beginner')}</div>
+            <h3 class="text-lg font-semibold mb-4 text-gray-800">Yomujp (N5/N4)</h3>
+            <p class="text-gray-500 text-sm mb-4">
+              {t(lang, 'resources.japanese.yomujpN5.desc')}
             </p>
-            <a href="https://yomujp.com/" target="_blank" rel="noopener" class="text-primary-400 hover:text-primary-300">
-              Visit site →
+            <a href="https://yomujp.com/" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
+              {t(lang, 'resources.visitSite')}
             </a>
           </div>
 
           <!-- N3-N2 -->
-          <div class="bg-white/5 border border-white/10 rounded-xl p-6">
-            <div class="text-sm text-accent-400 mb-2">Intermediate (N3-N2)</div>
-            <h3 class="text-lg font-semibold mb-4">NHK NEWS WEB EASY</h3>
-            <p class="text-slate-400 text-sm mb-4">
-              Real news written in simple Japanese with audio and furigana support.
+          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <div class="text-sm text-teal-500 mb-2">{t(lang, 'resources.japanese.intermediate')}</div>
+            <h3 class="text-lg font-semibold mb-4 text-gray-800">NHK NEWS WEB EASY</h3>
+            <p class="text-gray-500 text-sm mb-4">
+              {t(lang, 'resources.japanese.nhkEasy.desc')}
             </p>
-            <a href="https://www3.nhk.or.jp/news/easy/" target="_blank" rel="noopener" class="text-primary-400 hover:text-primary-300">
-              Visit site →
+            <a href="https://www3.nhk.or.jp/news/easy/" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
+              {t(lang, 'resources.visitSite')}
             </a>
           </div>
 
-          <div class="bg-white/5 border border-white/10 rounded-xl p-6">
-            <div class="text-sm text-accent-400 mb-2">Intermediate (N3-N2)</div>
-            <h3 class="text-lg font-semibold mb-4">Yomujp (N3/N2)</h3>
-            <p class="text-slate-400 text-sm mb-4">
-              More complex topics covering society, culture, and current issues.
+          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <div class="text-sm text-teal-500 mb-2">{t(lang, 'resources.japanese.intermediate')}</div>
+            <h3 class="text-lg font-semibold mb-4 text-gray-800">Yomujp (N3/N2)</h3>
+            <p class="text-gray-500 text-sm mb-4">
+              {t(lang, 'resources.japanese.yomujpN3.desc')}
             </p>
-            <a href="https://yomujp.com/" target="_blank" rel="noopener" class="text-primary-400 hover:text-primary-300">
-              Visit site →
+            <a href="https://yomujp.com/" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
+              {t(lang, 'resources.visitSite')}
             </a>
           </div>
 
           <!-- N1 -->
-          <div class="bg-white/5 border border-white/10 rounded-xl p-6">
-            <div class="text-sm text-yellow-400 mb-2">Advanced (N1)</div>
-            <h3 class="text-lg font-semibold mb-4">Yomujp (N1)</h3>
-            <p class="text-slate-400 text-sm mb-4">
-              Advanced readings for those approaching native-level comprehension.
+          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <div class="text-sm text-yellow-700 mb-2">{t(lang, 'resources.japanese.advanced')}</div>
+            <h3 class="text-lg font-semibold mb-4 text-gray-800">Yomujp (N1)</h3>
+            <p class="text-gray-500 text-sm mb-4">
+              {t(lang, 'resources.japanese.yomujpN1.desc')}
             </p>
-            <a href="https://yomujp.com/" target="_blank" rel="noopener" class="text-primary-400 hover:text-primary-300">
-              Visit site →
+            <a href="https://yomujp.com/" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
+              {t(lang, 'resources.visitSite')}
             </a>
           </div>
         </div>
@@ -85,82 +90,82 @@ import Layout from '../layouts/Layout.astro';
 
       <!-- English Resources -->
       <div>
-        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-          <span>🇺🇸</span> English Learning Resources
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3 text-gray-800">
+          <span>🇺🇸</span> {t(lang, 'resources.english.title')}
         </h2>
-        
+
         <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           <!-- A1-A2 -->
-          <div class="bg-white/5 border border-white/10 rounded-xl p-6">
-            <div class="text-sm text-primary-400 mb-2">Beginner (A1-A2)</div>
-            <h3 class="text-lg font-semibold mb-4">VOA Learning English - Beginning</h3>
-            <p class="text-slate-400 text-sm mb-4">
-              Video lessons and news read at a slower pace. Great for building listening skills.
+          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <div class="text-sm text-orange-500 mb-2">{t(lang, 'resources.english.beginner')}</div>
+            <h3 class="text-lg font-semibold mb-4 text-gray-800">VOA Learning English - Beginning</h3>
+            <p class="text-gray-500 text-sm mb-4">
+              {t(lang, 'resources.english.voaBeginner.desc')}
             </p>
-            <a href="https://learningenglish.voanews.com/p/5609.html" target="_blank" rel="noopener" class="text-primary-400 hover:text-primary-300">
-              Visit site →
+            <a href="https://learningenglish.voanews.com/p/5609.html" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
+              {t(lang, 'resources.visitSite')}
             </a>
           </div>
 
-          <div class="bg-white/5 border border-white/10 rounded-xl p-6">
-            <div class="text-sm text-primary-400 mb-2">Beginner (A1-A2)</div>
-            <h3 class="text-lg font-semibold mb-4">ESOL Courses</h3>
-            <p class="text-slate-400 text-sm mb-4">
-              Simple reading materials on various topics with exercises.
+          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <div class="text-sm text-orange-500 mb-2">{t(lang, 'resources.english.beginner')}</div>
+            <h3 class="text-lg font-semibold mb-4 text-gray-800">ESOL Courses</h3>
+            <p class="text-gray-500 text-sm mb-4">
+              {t(lang, 'resources.english.esol.desc')}
             </p>
-            <a href="https://www.esolcourses.com/" target="_blank" rel="noopener" class="text-primary-400 hover:text-primary-300">
-              Visit site →
+            <a href="https://www.esolcourses.com/" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
+              {t(lang, 'resources.visitSite')}
             </a>
           </div>
 
           <!-- B1-B2 -->
-          <div class="bg-white/5 border border-white/10 rounded-xl p-6">
-            <div class="text-sm text-accent-400 mb-2">Intermediate (B1-B2)</div>
-            <h3 class="text-lg font-semibold mb-4">VOA Learning English</h3>
-            <p class="text-slate-400 text-sm mb-4">
-              News about health, science, technology, and culture at intermediate level.
+          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <div class="text-sm text-teal-500 mb-2">{t(lang, 'resources.english.intermediate')}</div>
+            <h3 class="text-lg font-semibold mb-4 text-gray-800">VOA Learning English</h3>
+            <p class="text-gray-500 text-sm mb-4">
+              {t(lang, 'resources.english.voaIntermediate.desc')}
             </p>
-            <a href="https://learningenglish.voanews.com/" target="_blank" rel="noopener" class="text-primary-400 hover:text-primary-300">
-              Visit site →
+            <a href="https://learningenglish.voanews.com/" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
+              {t(lang, 'resources.visitSite')}
             </a>
           </div>
 
-          <div class="bg-white/5 border border-white/10 rounded-xl p-6">
-            <div class="text-sm text-accent-400 mb-2">Intermediate (B1-B2)</div>
-            <h3 class="text-lg font-semibold mb-4">ER Central</h3>
-            <p class="text-slate-400 text-sm mb-4">
-              Short graded readings with progress tracking features.
+          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <div class="text-sm text-teal-500 mb-2">{t(lang, 'resources.english.intermediate')}</div>
+            <h3 class="text-lg font-semibold mb-4 text-gray-800">ER Central</h3>
+            <p class="text-gray-500 text-sm mb-4">
+              {t(lang, 'resources.english.erCentral.desc')}
             </p>
-            <a href="https://er-central.com/" target="_blank" rel="noopener" class="text-primary-400 hover:text-primary-300">
-              Visit site →
+            <a href="https://er-central.com/" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
+              {t(lang, 'resources.visitSite')}
             </a>
           </div>
 
           <!-- C1 -->
-          <div class="bg-white/5 border border-white/10 rounded-xl p-6">
-            <div class="text-sm text-yellow-400 mb-2">Advanced (C1)</div>
-            <h3 class="text-lg font-semibold mb-4">VOA - Words & Their Stories</h3>
-            <p class="text-slate-400 text-sm mb-4">
-              Deep dives into English idioms and expressions.
+          <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+            <div class="text-sm text-yellow-700 mb-2">{t(lang, 'resources.english.advanced')}</div>
+            <h3 class="text-lg font-semibold mb-4 text-gray-800">VOA - Words & Their Stories</h3>
+            <p class="text-gray-500 text-sm mb-4">
+              {t(lang, 'resources.english.voaAdvanced.desc')}
             </p>
-            <a href="https://learningenglish.voanews.com/" target="_blank" rel="noopener" class="text-primary-400 hover:text-primary-300">
-              Visit site →
+            <a href="https://learningenglish.voanews.com/" target="_blank" rel="noopener" class="text-orange-500 hover:text-orange-600">
+              {t(lang, 'resources.visitSite')}
             </a>
           </div>
         </div>
       </div>
 
       <!-- CTA -->
-      <div class="mt-16 text-center bg-gradient-to-r from-primary-900/50 to-accent-900/50 rounded-3xl p-12 border border-white/10">
-        <h2 class="text-2xl font-bold mb-4">Not sure which level to start?</h2>
-        <p class="text-slate-300 mb-6">
-          Take our free assessment to find resources matched to your level.
+      <div class="mt-16 text-center bg-orange-50 rounded-3xl p-12 border border-orange-100 shadow-sm">
+        <h2 class="text-2xl font-bold mb-4 text-gray-800">{t(lang, 'resources.cta.title')}</h2>
+        <p class="text-gray-600 mb-6">
+          {t(lang, 'resources.cta.desc')}
         </p>
-        <a 
-          href="/level-check" 
-          class="inline-block px-8 py-4 bg-white text-slate-900 rounded-full font-semibold hover:bg-slate-100 transition-colors"
+        <a
+          href="/level-check"
+          class="inline-block px-8 py-4 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition-colors"
         >
-          🎯 Check Your Level
+          {t(lang, 'resources.cta.button')}
         </a>
       </div>
     </div>

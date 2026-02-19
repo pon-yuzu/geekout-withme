@@ -1,71 +1,89 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { t } from '../i18n/index';
+import type { Lang } from '../i18n/index';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
 ---
 
-<Layout title="Home">
+<Layout title="Home" user={user}>
   <!-- Hero Section -->
   <section class="min-h-[80vh] flex items-center justify-center px-4">
     <div class="max-w-4xl mx-auto text-center">
       <h1 class="text-5xl md:text-7xl font-bold mb-6">
-        <span class="bg-gradient-to-r from-primary-400 via-accent-400 to-primary-400 bg-clip-text text-transparent">
-          Learn Languages
+        <span class="text-orange-500">
+          {t(lang, 'home.hero.title1')}
         </span>
         <br />
-        <span class="text-white">Through Your Passions</span>
+        <span class="text-gray-800">{t(lang, 'home.hero.title2')}</span>
       </h1>
-      
-      <p class="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
-        Whether you're into anime, cooking, tech, or music — 
-        find your level, discover the perfect resources, and connect with fellow geeks learning Japanese and English.
+
+      <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+        {t(lang, 'home.hero.subtitle')}
       </p>
 
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a 
-          href="/level-check" 
-          class="px-8 py-4 bg-gradient-to-r from-primary-500 to-accent-500 rounded-full font-semibold text-lg hover:opacity-90 transition-opacity"
+        <a
+          href="/level-check"
+          class="px-8 py-4 bg-orange-500 text-white rounded-full font-semibold text-lg hover:bg-orange-600 transition-colors"
         >
-          🎯 Check Your Level
+          {t(lang, 'home.hero.ctaLevel')}
         </a>
-        <a 
-          href="/resources" 
-          class="px-8 py-4 bg-white/10 border border-white/20 rounded-full font-semibold text-lg hover:bg-white/20 transition-colors"
+        <a
+          href="/resources"
+          class="px-8 py-4 border border-orange-500 text-orange-500 rounded-full font-semibold text-lg hover:bg-orange-50 transition-colors"
         >
-          📚 Browse Resources
+          {t(lang, 'home.hero.ctaResources')}
         </a>
       </div>
     </div>
   </section>
 
   <!-- Features Section -->
-  <section class="py-20 px-4">
-    <div class="max-w-6xl mx-auto">
-      <h2 class="text-3xl font-bold text-center mb-12">How It Works</h2>
-      
-      <div class="grid md:grid-cols-3 gap-8">
+  <section class="py-20 px-4 bg-orange-50 relative overflow-hidden">
+    <div class="absolute -top-10 -left-10 w-48 h-48 bg-teal-200 rounded-full opacity-20 pointer-events-none"></div>
+    <div class="absolute -bottom-10 -right-10 w-64 h-64 bg-teal-100 rounded-full opacity-25 pointer-events-none"></div>
+    <div class="max-w-6xl mx-auto relative z-10">
+      <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">
+        <span class="border-b-4 border-teal-400 pb-2">{t(lang, 'home.features.title')}</span>
+      </h2>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
         <!-- Feature 1 -->
-        <div class="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
-          <div class="text-4xl mb-4">🎤</div>
-          <h3 class="text-xl font-semibold mb-2">Level Check</h3>
-          <p class="text-slate-400">
-            Take our text and voice assessment to discover your reading, writing, and speaking levels in Japanese or English.
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-teal-300 transition-all">
+          <div class="w-14 h-14 bg-teal-50 border border-teal-200 rounded-full flex items-center justify-center text-2xl mb-4">🎤</div>
+          <h3 class="text-xl font-semibold mb-2 text-gray-800">{t(lang, 'home.features.levelCheck.title')}</h3>
+          <p class="text-gray-500">
+            {t(lang, 'home.features.levelCheck.desc')}
           </p>
         </div>
 
         <!-- Feature 2 -->
-        <div class="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
-          <div class="text-4xl mb-4">💡</div>
-          <h3 class="text-xl font-semibold mb-2">Personalized Resources</h3>
-          <p class="text-slate-400">
-            Tell us your interests — we'll recommend free resources matched to your level and passions.
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-teal-300 transition-all">
+          <div class="w-14 h-14 bg-teal-50 border border-teal-200 rounded-full flex items-center justify-center text-2xl mb-4">📚</div>
+          <h3 class="text-xl font-semibold mb-2 text-gray-800">{t(lang, 'home.features.resources.title')}</h3>
+          <p class="text-gray-500">
+            {t(lang, 'home.features.resources.desc')}
           </p>
         </div>
 
-        <!-- Feature 3 -->
-        <div class="bg-white/5 border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-colors">
-          <div class="text-4xl mb-4">🌏</div>
-          <h3 class="text-xl font-semibold mb-2">Community</h3>
-          <p class="text-slate-400">
-            Join our weekly language exchange and voice lounges to practice with fellow learners and native speakers.
+        <!-- Feature 3: Workbook -->
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-teal-300 transition-all">
+          <div class="w-14 h-14 bg-teal-50 border border-teal-200 rounded-full flex items-center justify-center text-2xl mb-4">📖</div>
+          <h3 class="text-xl font-semibold mb-2 text-gray-800">{t(lang, 'home.features.workbook.title')}</h3>
+          <p class="text-gray-500">
+            {t(lang, 'home.features.workbook.desc')}
+          </p>
+          <span class="inline-block mt-2 text-xs font-medium px-2 py-1 bg-teal-100 text-teal-600 rounded-full">{t(lang, 'home.features.workbook.premium')}</span>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-teal-300 transition-all">
+          <div class="w-14 h-14 bg-teal-50 border border-teal-200 rounded-full flex items-center justify-center text-2xl mb-4">🌏</div>
+          <h3 class="text-xl font-semibold mb-2 text-gray-800">{t(lang, 'home.features.community.title')}</h3>
+          <p class="text-gray-500">
+            {t(lang, 'home.features.community.desc')}
           </p>
         </div>
       </div>
@@ -74,16 +92,16 @@ import Layout from '../layouts/Layout.astro';
 
   <!-- CTA Section -->
   <section class="py-20 px-4">
-    <div class="max-w-4xl mx-auto text-center bg-gradient-to-r from-primary-900/50 to-accent-900/50 rounded-3xl p-12 border border-white/10">
-      <h2 class="text-3xl font-bold mb-4">Ready to Geek Out?</h2>
-      <p class="text-slate-300 mb-8">
-        Start with a free level check — no sign-up required.
+    <div class="max-w-4xl mx-auto text-center bg-orange-50 rounded-3xl p-12 border border-orange-100 shadow-sm">
+      <h2 class="text-3xl font-bold mb-4 text-gray-800">{t(lang, 'home.cta.title')}</h2>
+      <p class="text-gray-600 mb-8">
+        {t(lang, 'home.cta.subtitle')}
       </p>
-      <a 
-        href="/level-check" 
-        class="inline-block px-8 py-4 bg-white text-slate-900 rounded-full font-semibold text-lg hover:bg-slate-100 transition-colors"
+      <a
+        href="/level-check"
+        class="inline-block px-8 py-4 bg-orange-500 text-white rounded-full font-semibold text-lg hover:bg-orange-600 transition-colors"
       >
-        Get Started →
+        {t(lang, 'home.cta.button')}
       </a>
     </div>
   </section>

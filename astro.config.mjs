@@ -7,4 +7,12 @@ export default defineConfig({
   output: 'server',
   adapter: cloudflare(),
   integrations: [react(), tailwind()],
+  vite: {
+    define: {
+      __BUILD_ID__: JSON.stringify(
+        'b-' + Date.now().toString(36).slice(-6)
+      ),
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    },
+  },
 });
