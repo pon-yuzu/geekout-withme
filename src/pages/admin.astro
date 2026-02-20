@@ -7,9 +7,10 @@ import type { Lang } from '../i18n/index';
 const user = Astro.locals.user;
 const lang = Astro.locals.lang as Lang;
 
-if (!user?.email) return Astro.redirect('/');
+if (!user?.email) return Astro.redirect('/login');
 
-const adminEmails = (import.meta.env.ADMIN_EMAILS || '')
+const runtime = (Astro.locals as any).runtime;
+const adminEmails = (runtime?.env?.ADMIN_EMAILS || import.meta.env.ADMIN_EMAILS || '')
   .split(',')
   .map((e: string) => e.trim().toLowerCase())
   .filter(Boolean);
