@@ -5,7 +5,9 @@ import tailwind from '@astrojs/tailwind';
 
 export default defineConfig({
   output: 'server',
-  adapter: cloudflare(),
+  adapter: cloudflare({
+    routes: { strategy: 'exclude', exclude: ['/audio/*', '/_astro/*', '/favicon.svg', '/instagram-qr.png'] },
+  }),
   integrations: [react(), tailwind()],
   vite: {
     define: {
