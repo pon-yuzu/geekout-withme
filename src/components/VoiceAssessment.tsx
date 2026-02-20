@@ -5,6 +5,7 @@ interface Props {
   language: 'english' | 'japanese';
   onComplete: (level: string) => void;
   onBack: () => void;
+  onQuit?: () => void;
   onFeedback?: (feedback: any) => void;
 }
 
@@ -156,15 +157,21 @@ function fallbackAnalysis(
   const sentences = countSentences(text, lang);
   const avgSentenceLen = words / sentences;
 
+  // Hard minimum: must produce at least 50% of expected words
+  if (words < question.minWords * 0.5) {
+    return { passed: false, isFallback: true };
+  }
+
   // Score components (0-1 each)
-  const wordScore = Math.min(words / question.minWords, 1.5) / 1.5;
-  const sentenceScore = Math.min(sentences / 2, 1);
-  const complexityScore = Math.min(avgSentenceLen / 8, 1);
+  const wordScore = Math.min(words / question.minWords, 1);
+  const minSentences = Math.max(Math.ceil(question.minWords / 12), 2);
+  const sentenceScore = Math.min(sentences / minSentences, 1);
+  const complexityScore = Math.min(avgSentenceLen / 10, 1);
 
-  // Weighted composite
-  const composite = wordScore * 0.5 + sentenceScore * 0.25 + complexityScore * 0.25;
+  // Weighted composite — stricter threshold
+  const composite = wordScore * 0.6 + sentenceScore * 0.2 + complexityScore * 0.2;
 
-  return { passed: composite >= 0.4, isFallback: true };
+  return { passed: composite >= 0.65, isFallback: true };
 }
 
 function formatTime(seconds: number): string {
@@ -173,7 +180,7 @@ function formatTime(seconds: number): string {
   return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 }
 
-export default function VoiceAssessment({ language, onComplete, onBack, onFeedback }: Props) {
+export default function VoiceAssessment({ language, onComplete, onBack, onQuit, onFeedback }: Props) {
   const { t } = useTranslation();
   const questions = language === 'english' ? englishVoiceQuestions : japaneseVoiceQuestions;
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -368,6 +375,14 @@ export default function VoiceAssessment({ language, onComplete, onBack, onFeedba
         <span className="text-sm text-gray-500">
           {t('levelCheck.question')} {currentIndex + 1} / {questions.length}
         </span>
+        {onQuit && (
+          <button
+            onClick={() => { if (confirm(t('levelCheck.quitConfirm'))) onQuit(); }}
+            className="text-xs text-red-400 hover:text-red-600 transition-colors"
+          >
+            {t('levelCheck.quit')}
+          </button>
+        )}
       </div>
 
       {/* Progress bar */}

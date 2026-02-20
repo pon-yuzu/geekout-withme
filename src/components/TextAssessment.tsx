@@ -13,6 +13,7 @@ interface Props {
   language: 'english' | 'japanese';
   onComplete: (level: string) => void;
   onBack: () => void;
+  onQuit?: () => void;
   onFeedback?: (feedback: any) => void;
 }
 
@@ -20,6 +21,7 @@ export default function TextAssessment({
   language,
   onComplete,
   onBack,
+  onQuit,
   onFeedback,
 }: Props) {
   const { t } = useTranslation();
@@ -172,6 +174,15 @@ export default function TextAssessment({
           {currentLevel.level} — {currentQuestionIndex + 1} /{' '}
           {currentLevel.questions.length}
         </span>
+        {onQuit && (
+          <button
+            onClick={() => { if (confirm(t('levelCheck.quitConfirm'))) onQuit(); }}
+            disabled={showingFeedback}
+            className="text-xs text-red-400 hover:text-red-600 transition-colors disabled:opacity-50"
+          >
+            {t('levelCheck.quit')}
+          </button>
+        )}
       </div>
 
       {/* Level Stepper */}

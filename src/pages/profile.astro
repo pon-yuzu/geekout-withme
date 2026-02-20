@@ -13,6 +13,17 @@ const supabase = Astro.locals.supabase;
 const displayName = user.user_metadata?.display_name || '';
 const email = user.email || '';
 
+// Fetch avatar_url from profiles table
+let avatarUrl: string | null = null;
+if (supabase) {
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('avatar_url')
+    .eq('id', user.id)
+    .single();
+  avatarUrl = profile?.avatar_url ?? null;
+}
+
 // Fetch subscription info
 let isPremium = false;
 let subscriptionStatus: string | null = null;
@@ -50,6 +61,7 @@ if (supabase) {
         client:load
         displayName={displayName}
         email={email}
+        avatarUrl={avatarUrl}
         isPremium={isPremium}
         subscriptionStatus={subscriptionStatus}
         currentPeriodEnd={currentPeriodEnd}

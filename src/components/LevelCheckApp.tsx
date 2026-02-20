@@ -104,6 +104,11 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
     }));
   };
 
+  const handleQuit = () => {
+    setStep('select-mode');
+    setResults({});
+  };
+
   const handleRestart = () => {
     setStep('select-language');
     setLanguage(null);
@@ -201,6 +206,13 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
               <span className="block text-sm text-gray-500 ml-9">{t('levelCheck.selectMode.bothSub')}</span>
             </button>
           </div>
+          {!isLoggedIn && (
+            <div className="mt-6 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 max-w-md mx-auto">
+              <p className="text-blue-700 text-sm">
+                <a href="/login" className="underline underline-offset-2 font-medium hover:text-blue-900">{t('levelCheck.loginForAccuracy')}</a>
+              </p>
+            </div>
+          )}
           <button
             onClick={() => setStep('select-language')}
             className="mt-6 text-gray-500 hover:text-gray-800 transition-colors"
@@ -216,6 +228,7 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
           language={language}
           onComplete={handleTextComplete}
           onBack={() => setStep('select-mode')}
+          onQuit={handleQuit}
           onFeedback={handleTextFeedback}
         />
       )}
@@ -241,6 +254,14 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
           >
             {t('levelCheck.transition.listeningContinue')}
           </button>
+          <div className="mt-4">
+            <button
+              onClick={() => { if (confirm(t('levelCheck.quitConfirm'))) handleQuit(); }}
+              className="text-sm text-red-400 hover:text-red-600 transition-colors"
+            >
+              {t('levelCheck.quit')}
+            </button>
+          </div>
         </div>
       )}
 
@@ -250,6 +271,7 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
           language={language}
           onComplete={handleListeningComplete}
           onBack={() => mode === 'both' ? setStep('transition-listening') : setStep('select-mode')}
+          onQuit={handleQuit}
           onFeedback={handleListeningFeedback}
         />
       )}
@@ -284,6 +306,14 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
           >
             {t('levelCheck.transition.continue')}
           </button>
+          <div className="mt-4">
+            <button
+              onClick={() => { if (confirm(t('levelCheck.quitConfirm'))) handleQuit(); }}
+              className="text-sm text-red-400 hover:text-red-600 transition-colors"
+            >
+              {t('levelCheck.quit')}
+            </button>
+          </div>
         </div>
       )}
 
@@ -293,6 +323,7 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
           language={language}
           onComplete={handleVoiceComplete}
           onBack={() => mode === 'both' ? setStep('transition-voice') : setStep('select-mode')}
+          onQuit={handleQuit}
           onFeedback={handleVoiceFeedback}
         />
       )}

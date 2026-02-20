@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/Layout.astro';
+import AdminDashboard from '../components/AdminDashboard.tsx';
+import { t } from '../i18n/index';
+import type { Lang } from '../i18n/index';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+
+if (!user?.email) return Astro.redirect('/');
+
+const adminEmails = (import.meta.env.ADMIN_EMAILS || '')
+  .split(',')
+  .map((e: string) => e.trim().toLowerCase())
+  .filter(Boolean);
+
+if (!adminEmails.includes(user.email.toLowerCase())) {
+  return Astro.redirect('/');
+}
+---
+
+<Layout title={t(lang, 'admin.title')} user={user}>
+  <section class="py-12 px-4">
+    <div class="max-w-6xl mx-auto">
+      <AdminDashboard client:load lang={lang} />
+    </div>
+  </section>
+</Layout>

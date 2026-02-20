@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { createSupabaseBrowserClient } from '../lib/supabase';
 import { useTranslation } from '../i18n/index';
 
 interface Props {
   displayName: string;
   email: string;
+  avatarUrl: string | null;
   isPremium: boolean;
   subscriptionStatus: string | null;
   currentPeriodEnd: string | null;
@@ -14,6 +15,7 @@ interface Props {
 export default function ProfileEditor({
   displayName: initialName,
   email,
+  avatarUrl: initialAvatarUrl,
   isPremium,
   subscriptionStatus,
   currentPeriodEnd,
@@ -27,6 +29,12 @@ export default function ProfileEditor({
   const [editingName, setEditingName] = useState(false);
   const [nameSaving, setNameSaving] = useState(false);
   const [nameMsg, setNameMsg] = useState('');
+
+  // Avatar
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(initialAvatarUrl);
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarMsg, setAvatarMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Password change
   const [showPasswordForm, setShowPasswordForm] = useState(false);
@@ -54,6 +62,89 @@ export default function ProfileEditor({
       setEditingName(false);
     }
     setNameSaving(false);
+  };
+
+  const compressToWebP = (file: File | Blob): Promise<Blob> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const size = 256;
+          canvas.width = size;
+          canvas.height = size;
+          const ctx = canvas.getContext('2d')!;
+          const min = Math.min(img.width, img.height);
+          const sx = (img.width - min) / 2;
+          const sy = (img.height - min) / 2;
+          ctx.drawImage(img, sx, sy, min, min, 0, 0, size, size);
+          canvas.toBlob(
+            (blob) => (blob ? resolve(blob) : reject(new Error('Canvas toBlob failed'))),
+            'image/webp',
+            0.8,
+          );
+        };
+        img.onerror = reject;
+        img.src = reader.result as string;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setAvatarUploading(true);
+    setAvatarMsg(null);
+
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Not authenticated');
+
+      let imageFile: File | Blob = file;
+
+      if (file.type === 'image/heic' || file.type === 'image/heif' || file.name.toLowerCase().endsWith('.heic')) {
+        const heic2any = (await import('heic2any')).default;
+        imageFile = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.8 }) as Blob;
+      }
+
+      const webpBlob = await compressToWebP(imageFile);
+      const filePath = `${user.id}/avatar.webp`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, webpBlob, {
+          contentType: 'image/webp',
+          upsert: true,
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      const cacheBustedUrl = `${publicUrl}?t=${Date.now()}`;
+
+      const { error: dbError } = await supabase
+        .from('profiles')
+        .update({ avatar_url: cacheBustedUrl })
+        .eq('id', user.id);
+
+      if (dbError) throw dbError;
+
+      setAvatarUrl(cacheBustedUrl);
+      setAvatarMsg({ type: 'success', text: t('profile.avatarUpdated') });
+    } catch (err: any) {
+      console.error('Avatar upload error:', err);
+      setAvatarMsg({ type: 'error', text: t('profile.avatarError') });
+    } finally {
+      setAvatarUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
   };
 
   const handlePasswordChange = async (e: React.FormEvent) => {
@@ -111,12 +202,58 @@ export default function ProfileEditor({
       {/* Avatar + Name */}
       <div className="bg-white rounded-2xl shadow-sm border border-orange-100 p-8">
         <div className="flex items-center gap-6 mb-8 pb-8 border-b border-gray-100">
-          <div className="w-20 h-20 rounded-full bg-orange-500 text-white flex items-center justify-center text-3xl font-bold shrink-0">
-            {initial}
-          </div>
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={avatarUploading}
+            className="relative w-20 h-20 rounded-full shrink-0 group focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-70"
+            title={t('profile.changeAvatar')}
+          >
+            {avatarUrl ? (
+              <img
+                src={avatarUrl}
+                alt=""
+                className="w-20 h-20 rounded-full object-cover"
+              />
+            ) : (
+              <div className="w-20 h-20 rounded-full bg-orange-500 text-white flex items-center justify-center text-3xl font-bold">
+                {initial}
+              </div>
+            )}
+            <div className="absolute inset-0 rounded-full bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={2}
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            {avatarUploading && (
+              <div className="absolute inset-0 rounded-full bg-black/50 flex items-center justify-center">
+                <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+              </div>
+            )}
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleAvatarChange}
+          />
           <div>
             {displayName && <p className="text-2xl font-bold text-gray-800">{displayName}</p>}
             <p className="text-gray-500">{email}</p>
+            {avatarMsg && (
+              <p className={`text-sm mt-1 ${avatarMsg.type === 'success' ? 'text-teal-500' : 'text-red-500'}`}>
+                {avatarMsg.text}
+              </p>
+            )}
           </div>
         </div>
 
