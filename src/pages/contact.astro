@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ContactForm from '../components/ContactForm.tsx';
+import { t } from '../i18n/index';
+import type { Lang } from '../i18n/index';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+---
+
+<Layout title={t(lang, 'contact.title')} user={user}>
+  <section class="py-12 px-4">
+    <div class="max-w-2xl mx-auto">
+      <div class="text-center mb-10">
+        <h1 class="text-4xl md:text-5xl font-bold mb-3">
+          <span class="text-orange-500">{t(lang, 'contact.title')}</span>
+        </h1>
+        <p class="text-gray-500">{t(lang, 'contact.subtitle')}</p>
+      </div>
+      <ContactForm client:load />
+    </div>
+  </section>
+</Layout>

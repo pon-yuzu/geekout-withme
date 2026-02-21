@@ -78,7 +78,8 @@ export async function analyze(opts: {
   throw new Error('No AI backend available. Set CLAUDE_API_KEY or enable Workers AI binding.');
 }
 
-export function buildVoiceAnalysisPrompt(language: string, level: string): string {
+export function buildVoiceAnalysisPrompt(language: string, level: string, uiLang?: string): string {
+  const feedbackLang = uiLang === 'ja' ? 'Japanese' : 'English';
   const levelCriteria: Record<string, string> = {
     // CEFR
     A1: 'Can produce simple phrases about themselves (name, origin). Basic vocabulary and simple sentence patterns are sufficient.',
@@ -112,22 +113,23 @@ Evaluate the transcript and return a JSON object with this exact structure:
 {
   "assessedLevel": "<the level you assess, e.g. A1, B2, N3, etc.>",
   "passed": <true if they demonstrate ${level}-level competency or above>,
-  "feedback": "<2-3 sentences of constructive feedback in English>",
-  "strengths": ["<strength 1>", "<strength 2>"],
-  "improvements": ["<area to improve 1>", "<area to improve 2>"]
+  "feedback": "<2-3 sentences of constructive feedback in ${feedbackLang}>",
+  "strengths": ["<strength 1 in ${feedbackLang}>", "<strength 2 in ${feedbackLang}>"],
+  "improvements": ["<area to improve 1 in ${feedbackLang}>", "<area to improve 2 in ${feedbackLang}>"]
 }
 
 Return ONLY the JSON object, no other text.`;
 }
 
-export function buildTextAnalysisPrompt(language: string): string {
+export function buildTextAnalysisPrompt(language: string, uiLang?: string): string {
+  const feedbackLang = uiLang === 'ja' ? 'Japanese' : 'English';
   return `You are a language learning coach. A ${language} learner just completed a reading/writing assessment. Based on their answer history, provide personalized feedback.
 
 Return a JSON object with this exact structure:
 {
-  "feedback": "<2-3 sentences of encouraging, constructive feedback>",
-  "studyTips": ["<tip 1>", "<tip 2>", "<tip 3>"],
-  "focusAreas": ["<area 1>", "<area 2>"]
+  "feedback": "<2-3 sentences of encouraging, constructive feedback in ${feedbackLang}>",
+  "studyTips": ["<tip 1 in ${feedbackLang}>", "<tip 2 in ${feedbackLang}>", "<tip 3 in ${feedbackLang}>"],
+  "focusAreas": ["<area 1 in ${feedbackLang}>", "<area 2 in ${feedbackLang}>"]
 }
 
 Return ONLY the JSON object, no other text.`;

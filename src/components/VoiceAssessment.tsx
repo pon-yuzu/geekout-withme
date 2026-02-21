@@ -181,7 +181,7 @@ function formatTime(seconds: number): string {
 }
 
 export default function VoiceAssessment({ language, onComplete, onBack, onQuit, onFeedback }: Props) {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const questions = language === 'english' ? englishVoiceQuestions : japaneseVoiceQuestions;
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
@@ -317,6 +317,7 @@ export default function VoiceAssessment({ language, onComplete, onBack, onQuit, 
           transcript: transcript.trim(),
           language,
           level: currentQuestion.level,
+          uiLang: lang,
         }),
       });
 

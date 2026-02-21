@@ -24,7 +24,7 @@ export default function TextAssessment({
   onQuit,
   onFeedback,
 }: Props) {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const pool = language === 'english' ? englishQuestionPool : japaneseQuestionPool;
 
   // Build levels with randomly selected questions (memoized on mount)
@@ -77,7 +77,7 @@ export default function TextAssessment({
     fetch('/api/analyze-text', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ language, level, answers }),
+      body: JSON.stringify({ language, level, answers, uiLang: lang }),
     })
       .then((res) => res.json())
       .then((data) => onFeedback?.(data))

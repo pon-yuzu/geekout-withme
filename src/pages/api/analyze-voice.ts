@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import { analyze, buildVoiceAnalysisPrompt } from '../../lib/claude';
+import { analyze, buildVoiceAnalysisPrompt, extractJSON } from '../../lib/claude';
 
 const MONTHLY_LIMIT = 1;
 
@@ -23,7 +23,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400 });
   }
 
-  const { transcript, language, level } = body;
+  const { transcript, language, level, uiLang } = body;
 
   if (!transcript || !language || !level || typeof transcript !== 'string' || typeof language !== 'string' || typeof level !== 'string') {
     return new Response(JSON.stringify({ error: 'Missing required fields' }), { status: 400 });
@@ -36,7 +36,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
   // Determine AI backend: Claude for logged-in within rate limit, Workers AI otherwise
   let useClaudeApi = false;
   let rateLimited = false;
-  if (user && import.meta.env.CLAUDE_API_KEY) {
+  const runtime = (locals as any).runtime;
+  const claudeApiKey = runtime?.env?.CLAUDE_API_KEY || import.meta.env.CLAUDE_API_KEY;
+
+  if (user && claudeApiKey) {
     const exceeded = await hasRecentAssessment(locals.supabase!, user.id);
     if (!exceeded) {
       useClaudeApi = true;
@@ -46,17 +49,17 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   try {
-    const systemPrompt = buildVoiceAnalysisPrompt(language, level);
+    const systemPrompt = buildVoiceAnalysisPrompt(language, level, uiLang);
     const result = await analyze({
-      ai: (locals as any).runtime?.env?.AI,
-      claudeApiKey: useClaudeApi ? import.meta.env.CLAUDE_API_KEY : undefined,
+      ai: runtime?.env?.AI,
+      claudeApiKey: useClaudeApi ? claudeApiKey : undefined,
       systemPrompt,
       userMessage: `Spoken response transcript: "${transcript}"`,
     });
 
     let analysis;
     try {
-      analysis = JSON.parse(result);
+      analysis = extractJSON(result);
     } catch {
       analysis = { assessedLevel: level, passed: false, feedback: result, strengths: [], improvements: [] };
     }

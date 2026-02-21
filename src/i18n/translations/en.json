@@ -4,9 +4,11 @@
   "nav.community": "Community",
   "nav.workbook": "Workbook",
   "nav.voiceLounge": "Voice Lounge",
+  "nav.contact": "Contact",
   "nav.login": "Log in",
   "nav.signup": "Sign up",
 
+  "footer.contact": "Contact Us",
   "footer.copyright": "© 2026 Geek Out With Me. Passion Breaks Language Barrier.",
 
   "home.hero.title1": "Learn Languages",
@@ -427,5 +429,21 @@
   "admin.japanese": "Japanese",
   "admin.newSignups": "New signups (last 30 days)",
   "admin.cfAnalytics": "Cloudflare Web Analytics",
-  "admin.error": "Error loading data"
+  "admin.error": "Error loading data",
+
+  "contact.title": "Contact",
+  "contact.subtitle": "Bug reports, feedback, or free trial requests — we'd love to hear from you!",
+  "contact.name": "Name",
+  "contact.email": "Email",
+  "contact.categoryLabel": "Category",
+  "contact.selectCategory": "Select a category",
+  "contact.category.bug": "Bug Report",
+  "contact.category.feedback": "Feedback & Suggestions",
+  "contact.category.trial": "Free Trial (English / AI / Life Coaching)",
+  "contact.message": "Message",
+  "contact.submit": "Send",
+  "contact.sending": "Sending...",
+  "contact.sent": "Message Sent!",
+  "contact.sentDesc": "Thank you for reaching out. We'll get back to you soon.",
+  "contact.error": "Failed to send. Please try again."
 }

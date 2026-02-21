@@ -24,7 +24,7 @@ export default function ListeningAssessment({
   onQuit,
   onFeedback,
 }: Props) {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const pool = language === 'english' ? englishListeningPool : japaneseListeningPool;
 
   const levels: ListeningLevelBlock[] = useMemo(
@@ -105,7 +105,7 @@ export default function ListeningAssessment({
     fetch('/api/analyze-text', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ language, level, answers, assessmentType: 'listening' }),
+      body: JSON.stringify({ language, level, answers, assessmentType: 'listening', uiLang: lang }),
     })
       .then((res) => res.json())
       .then((data) => onFeedback?.(data))

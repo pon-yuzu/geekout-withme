@@ -4,9 +4,11 @@
   "nav.community": "コミュニティ",
   "nav.workbook": "ワークブック",
   "nav.voiceLounge": "ボイスラウンジ",
+  "nav.contact": "お問い合わせ",
   "nav.login": "ログイン",
   "nav.signup": "新規登録",
 
+  "footer.contact": "お問い合わせ",
   "footer.copyright": "© 2026 Geek Out With Me. 情熱が言葉の壁を壊す。",
 
   "home.hero.title1": "好きなことで",
@@ -427,5 +429,21 @@
   "admin.japanese": "日本語",
   "admin.newSignups": "新規登録（過去30日間）",
   "admin.cfAnalytics": "Cloudflare Web Analytics",
-  "admin.error": "データ読み込みエラー"
+  "admin.error": "データ読み込みエラー",
+
+  "contact.title": "お問い合わせ",
+  "contact.subtitle": "バグ報告、ご意見・ご要望、無料体験のお申し込みなど、お気軽にどうぞ！",
+  "contact.name": "お名前",
+  "contact.email": "メールアドレス",
+  "contact.categoryLabel": "カテゴリ",
+  "contact.selectCategory": "カテゴリを選択してください",
+  "contact.category.bug": "バグ報告",
+  "contact.category.feedback": "ご意見・ご要望",
+  "contact.category.trial": "無料体験（英語・AI・ライフコーチ）",
+  "contact.message": "メッセージ",
+  "contact.submit": "送信",
+  "contact.sending": "送信中...",
+  "contact.sent": "送信完了！",
+  "contact.sentDesc": "お問い合わせありがとうございます。折り返しご連絡いたします。",
+  "contact.error": "送信に失敗しました。もう一度お試しください。"
 }
