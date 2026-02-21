@@ -15,6 +15,8 @@ export default function ContactForm() {
     { value: 'bug', label: t('contact.category.bug') },
     { value: 'feedback', label: t('contact.category.feedback') },
     { value: 'trial', label: t('contact.category.trial') },
+    { value: 'resource', label: t('contact.category.resource') },
+    { value: 'other', label: t('contact.category.other') },
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {

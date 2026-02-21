@@ -1,0 +1,184 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { t } from '../i18n/index';
+import type { Lang } from '../i18n/index';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+
+// Fetch latest YouTube videos from RSS
+const YT_CHANNEL_ID = 'UCQGr0AXdkMqqMV05xvYsq4g';
+let ytVideos: { id: string; title: string; thumbnail: string }[] = [];
+try {
+  const rss = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${YT_CHANNEL_ID}`, {
+    headers: { 'User-Agent': 'Mozilla/5.0' },
+  });
+  const xml = await rss.text();
+  const entries = xml.split('<entry>').slice(1, 4); // latest 3
+  ytVideos = entries.map((entry) => {
+    const id = entry.match(/<yt:videoId>([^<]+)/)?.[1] ?? '';
+    const title = entry.match(/<title>([^<]+)/)?.[1] ?? '';
+    return { id, title, thumbnail: `https://i.ytimg.com/vi/${id}/mqdefault.jpg` };
+  }).filter((v) => v.id);
+} catch {}
+
+// Fetch latest note articles from RSS
+let noteArticles: { title: string; url: string }[] = [];
+try {
+  const rss = await fetch('https://note.com/ponglish_in_aus/rss', {
+    headers: { 'User-Agent': 'Mozilla/5.0' },
+  });
+  const xml = await rss.text();
+  const items = xml.split('<item>').slice(1, 4); // latest 3
+  noteArticles = items.map((item) => {
+    const title = item.match(/<title><!\[CDATA\[([^\]]+)/)?.[1]
+      ?? item.match(/<title>([^<]+)/)?.[1] ?? '';
+    const url = item.match(/<link>([^<]+)/)?.[1] ?? '';
+    return { title, url };
+  }).filter((a) => a.url);
+} catch {}
+
+const socialLinks = [
+  {
+    name: 'Instagram',
+    url: 'https://www.instagram.com/rebellious1124/',
+    description: lang === 'ja' ? '日常・言語学習のヒント' : 'Daily life & language tips',
+    icon: `<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>`,
+    color: 'from-pink-500 to-purple-500',
+  },
+  {
+    name: 'Threads',
+    url: 'https://www.threads.net/@rebellious1124',
+    description: lang === 'ja' ? 'つぶやき・考え' : 'Thoughts & discussions',
+    icon: `<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.59 12c.025 3.086.718 5.496 2.057 7.164 1.432 1.781 3.632 2.695 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.711-.163 1.7-.678 3.018-1.545 3.94-1.09 1.159-2.678 1.748-4.72 1.748h-.101c-1.627-.02-2.95-.64-3.826-1.794-.78-1.03-1.192-2.42-1.192-4.022 0-1.601.413-2.993 1.192-4.022.876-1.153 2.2-1.773 3.826-1.794h.101c1.662.012 3.043.534 4.104 1.55.5.48.902 1.05 1.2 1.695.396-.196.822-.35 1.273-.453.91-.207 1.775-.135 2.504.207.97.455 1.678 1.302 2.078 2.396.715 1.952.518 4.39-1.41 6.278-1.809 1.77-4.078 2.574-7.147 2.596zM11.29 9.698c-1.2.016-2.127.422-2.755 1.249-.576.757-.88 1.81-.88 3.053s.304 2.296.88 3.053c.628.827 1.555 1.234 2.755 1.249h.082c1.506 0 2.637-.42 3.362-1.249.587-.672.95-1.628 1.078-2.84a4.003 4.003 0 00-.15-.98c-.216-.76-.655-1.393-1.293-1.87-.778-.583-1.816-.88-3.085-.888z"/></svg>`,
+    color: 'from-gray-800 to-gray-900',
+  },
+  {
+    name: 'X (Twitter)',
+    url: 'https://x.com/rebellious1124',
+    description: lang === 'ja' ? '最新情報・シェア' : 'Updates & shares',
+    icon: `<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`,
+    color: 'from-gray-700 to-black',
+  },
+];
+---
+
+<Layout title={t(lang, 'links.title')} user={user}>
+  <section class="py-12 px-4">
+    <div class="max-w-2xl mx-auto">
+      <div class="text-center mb-10">
+        <div class="w-20 h-20 bg-orange-500 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">S</div>
+        <h1 class="text-2xl font-bold text-gray-800">Sayaka</h1>
+        <p class="text-gray-500 mt-1">{t(lang, 'links.subtitle')}</p>
+      </div>
+
+      <!-- Social Links -->
+      <div class="flex justify-center gap-4 mb-10">
+        {socialLinks.map((link) => (
+          <a
+            href={link.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            class={`w-12 h-12 rounded-xl bg-gradient-to-br ${link.color} flex items-center justify-center text-white hover:scale-110 transition-transform`}
+            aria-label={link.name}
+            title={link.name}
+          >
+            <Fragment set:html={link.icon} />
+          </a>
+        ))}
+      </div>
+
+      <!-- YouTube: Latest Videos -->
+      {ytVideos.length > 0 && (
+        <div class="bg-white rounded-2xl border border-orange-100 shadow-sm p-6 mb-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <svg class="w-6 h-6 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+              <h2 class="text-lg font-semibold text-gray-800">YouTube</h2>
+            </div>
+            <a href="https://www.youtube.com/@cairsen1000" target="_blank" rel="noopener noreferrer" class="text-sm text-orange-500 hover:text-orange-600 font-medium">
+              {t(lang, 'links.viewAll')} &rarr;
+            </a>
+          </div>
+          <div class="space-y-3">
+            {ytVideos.map((video) => (
+              <a
+                href={`https://www.youtube.com/watch?v=${video.id}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="flex gap-3 p-2 -mx-2 rounded-xl hover:bg-orange-50 transition-colors"
+              >
+                <img
+                  src={video.thumbnail}
+                  alt={video.title}
+                  class="w-36 h-20 object-cover rounded-lg shrink-0"
+                  loading="lazy"
+                />
+                <p class="text-sm font-medium text-gray-700 line-clamp-3 pt-1">{video.title}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- note: Latest Articles -->
+      {noteArticles.length > 0 && (
+        <div class="bg-white rounded-2xl border border-orange-100 shadow-sm p-6 mb-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M22.904 6.738c-.489-1.632-1.895-2.87-3.64-3.218a3.856 3.856 0 00-.795-.082H5.531c-.271 0-.538.028-.795.082C2.99 3.868 1.585 5.106 1.096 6.738.947 7.234.875 7.758.875 8.293v7.414c0 .535.072 1.059.221 1.555.489 1.632 1.895 2.87 3.64 3.218.257.054.524.082.795.082h12.938c.271 0 .538-.028.795-.082 1.745-.348 3.151-1.586 3.64-3.218.149-.496.221-1.02.221-1.555V8.293c0-.535-.072-1.059-.221-1.555zM12 16.5c-2.485 0-4.5-2.015-4.5-4.5s2.015-4.5 4.5-4.5 4.5 2.015 4.5 4.5-2.015 4.5-4.5 4.5zm0-7a2.5 2.5 0 100 5 2.5 2.5 0 000-5z"/></svg>
+              <h2 class="text-lg font-semibold text-gray-800">note</h2>
+            </div>
+            <a href="https://note.com/ponglish_in_aus" target="_blank" rel="noopener noreferrer" class="text-sm text-orange-500 hover:text-orange-600 font-medium">
+              {t(lang, 'links.viewAll')} &rarr;
+            </a>
+          </div>
+          <div class="space-y-2">
+            {noteArticles.map((article) => (
+              <a
+                href={article.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="block p-3 -mx-1 rounded-xl hover:bg-orange-50 transition-colors"
+              >
+                <p class="text-sm font-medium text-gray-700">{article.title}</p>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- Save My 12 Weeks -->
+      <a
+        href="https://savemy12weeks.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="block bg-gradient-to-r from-orange-400 to-pink-500 rounded-2xl p-6 mb-6 text-white hover:shadow-lg transition-shadow"
+      >
+        <div class="flex items-center gap-3">
+          <svg class="w-8 h-8 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
+          <div>
+            <p class="font-bold text-lg">Save My 12 Weeks</p>
+            <p class="text-white/80 text-sm">{lang === 'ja' ? 'ライフバランス診断 - 無料' : 'Life balance assessment - Free'}</p>
+          </div>
+        </div>
+      </a>
+
+      <!-- Contact -->
+      <div class="text-center">
+        <a href="/contact" class="text-orange-500 hover:text-orange-600 font-medium transition-colors">
+          {t(lang, 'footer.contact')} &rarr;
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

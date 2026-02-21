@@ -26,6 +26,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     bug: 'Bug Report / バグ報告',
     feedback: 'Feedback / ご意見・ご要望',
     trial: 'Free Trial / 無料体験申し込み',
+    resource: 'Resource Recommendation / おすすめ教材',
+    other: 'Other / その他',
   };
 
   const categoryLabel = categoryLabels[category] || category;

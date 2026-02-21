@@ -46,11 +46,49 @@ const { title, description = "Find your language level, discover resources, and 
         <!-- Desktop nav -->
         <div class="hidden md:flex items-center gap-6">
           <a href="/level-check" class="text-gray-600 hover:text-orange-500 transition-colors">{t(lang, 'nav.levelCheck')}</a>
-          <a href="/resources" class="text-gray-600 hover:text-orange-500 transition-colors">{t(lang, 'nav.resources')}</a>
-          <a href="/community" class="text-gray-600 hover:text-orange-500 transition-colors">{t(lang, 'nav.community')}</a>
-          <a href="/workbook" class="text-gray-600 hover:text-orange-500 transition-colors">{t(lang, 'nav.workbook')}</a>
-          <a href="/voice-lounge" class="text-gray-600 hover:text-orange-500 transition-colors">{t(lang, 'nav.voiceLounge')}</a>
-          <a href="/contact" class="text-gray-600 hover:text-orange-500 transition-colors">{t(lang, 'nav.contact')}</a>
+
+          <!-- Learn dropdown -->
+          <div class="relative group">
+            <button class="text-gray-600 hover:text-orange-500 transition-colors flex items-center gap-1">
+              {t(lang, 'nav.learn')}
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="absolute top-full left-0 pt-2 hidden group-hover:block">
+              <div class="bg-white border border-orange-100 rounded-xl shadow-lg py-2 min-w-[180px]">
+                <a href="/resources" class="block px-4 py-2 text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">{t(lang, 'nav.resources')}</a>
+                <a href="/workbook" class="block px-4 py-2 text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">{t(lang, 'nav.workbook')}</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Practice dropdown -->
+          <div class="relative group">
+            <button class="text-gray-600 hover:text-orange-500 transition-colors flex items-center gap-1">
+              {t(lang, 'nav.practice')}
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="absolute top-full left-0 pt-2 hidden group-hover:block">
+              <div class="bg-white border border-orange-100 rounded-xl shadow-lg py-2 min-w-[180px]">
+                <a href="/community" class="block px-4 py-2 text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">{t(lang, 'nav.community')}</a>
+                <a href="/voice-lounge" class="block px-4 py-2 text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">{t(lang, 'nav.voiceLounge')}</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- More dropdown -->
+          <div class="relative group">
+            <button class="text-gray-600 hover:text-orange-500 transition-colors flex items-center gap-1">
+              {t(lang, 'nav.more')}
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div class="absolute top-full right-0 pt-2 hidden group-hover:block">
+              <div class="bg-white border border-orange-100 rounded-xl shadow-lg py-2 min-w-[180px]">
+                <a href="/links" class="block px-4 py-2 text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">{t(lang, 'nav.links')}</a>
+                <a href="/contact" class="block px-4 py-2 text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">{t(lang, 'nav.contact')}</a>
+              </div>
+            </div>
+          </div>
+
           <LanguageToggle lang={lang} client:load />
           {user ? (
             <UserMenu client:load email={user.email || ''} displayName={user.user_metadata?.display_name} />
@@ -78,13 +116,18 @@ const { title, description = "Find your language level, discover resources, and 
 
       <!-- Mobile dropdown -->
       <div id="mobile-menu" class="hidden md:hidden border-t border-orange-100 bg-white">
-        <div class="px-4 py-3 space-y-3">
+        <div class="px-4 py-3 space-y-1">
           <a href="/level-check" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.levelCheck')}</a>
-          <a href="/resources" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.resources')}</a>
-          <a href="/community" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.community')}</a>
-          <a href="/workbook" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.workbook')}</a>
-          <a href="/voice-lounge" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.voiceLounge')}</a>
-          <a href="/contact" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.contact')}</a>
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide pt-3 pb-1">{t(lang, 'nav.learn')}</p>
+          <a href="/resources" class="block text-gray-600 hover:text-orange-500 transition-colors py-2 pl-3">{t(lang, 'nav.resources')}</a>
+          <a href="/workbook" class="block text-gray-600 hover:text-orange-500 transition-colors py-2 pl-3">{t(lang, 'nav.workbook')}</a>
+          <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide pt-3 pb-1">{t(lang, 'nav.practice')}</p>
+          <a href="/community" class="block text-gray-600 hover:text-orange-500 transition-colors py-2 pl-3">{t(lang, 'nav.community')}</a>
+          <a href="/voice-lounge" class="block text-gray-600 hover:text-orange-500 transition-colors py-2 pl-3">{t(lang, 'nav.voiceLounge')}</a>
+          <div class="border-t border-orange-100 mt-2 pt-2">
+            <a href="/links" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.links')}</a>
+            <a href="/contact" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.contact')}</a>
+          </div>
           {!user && (
             <div class="flex items-center gap-3 pt-2 border-t border-orange-100">
               <a href="/login" class="text-sm font-medium text-gray-600 hover:text-orange-500 transition-colors">{t(lang, 'nav.login')}</a>
