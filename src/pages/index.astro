@@ -8,7 +8,7 @@ const lang = Astro.locals.lang as Lang;
 ---
 
 <Layout title="Home" user={user}>
-  <!-- Hero Section -->
+  <!-- Section 1: Hero — Main CTA -->
   <section class="min-h-[80vh] flex items-center justify-center px-4">
     <div class="max-w-4xl mx-auto text-center">
       <h1 class="text-5xl md:text-7xl font-bold mb-6">
@@ -40,57 +40,134 @@ const lang = Astro.locals.lang as Lang;
     </div>
   </section>
 
-  <!-- Features Section -->
+  <!-- Section 2: Learn — Self-study Resources -->
   <section class="py-20 px-4 bg-orange-50 relative overflow-hidden">
     <div class="absolute -top-10 -left-10 w-48 h-48 bg-teal-200 rounded-full opacity-20 pointer-events-none"></div>
     <div class="absolute -bottom-10 -right-10 w-64 h-64 bg-teal-100 rounded-full opacity-25 pointer-events-none"></div>
     <div class="max-w-6xl mx-auto relative z-10">
       <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">
-        <span class="border-b-4 border-teal-400 pb-2">{t(lang, 'home.features.title')}</span>
+        <span class="border-b-4 border-teal-400 pb-2">{t(lang, 'home.learn.title')}</span>
       </h2>
 
-      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-        <!-- Feature 1 -->
-        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-teal-300 transition-all">
-          <div class="w-14 h-14 bg-teal-50 border border-teal-200 rounded-full flex items-center justify-center text-2xl mb-4">🎤</div>
-          <h3 class="text-xl font-semibold mb-2 text-gray-800">{t(lang, 'home.features.levelCheck.title')}</h3>
-          <p class="text-gray-500">
-            {t(lang, 'home.features.levelCheck.desc')}
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Learning Tools -->
+        <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-teal-300 transition-all">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-14 h-14 bg-teal-50 border border-teal-200 rounded-full flex items-center justify-center text-2xl">📚</div>
+            <div>
+              <h3 class="text-xl font-semibold text-gray-800">{t(lang, 'home.learn.tools.title')}</h3>
+              <span class="inline-block text-xs font-medium px-2 py-0.5 bg-teal-100 text-teal-700 rounded-full">{t(lang, 'home.learn.tools.badge')}</span>
+            </div>
+          </div>
+          <p class="text-gray-500 mb-6">
+            {t(lang, 'home.learn.tools.desc')}
           </p>
+          <a href="/resources" class="inline-flex items-center gap-1 text-orange-500 font-semibold hover:text-orange-600 transition-colors">
+            {t(lang, 'home.learn.tools.cta')} →
+          </a>
         </div>
 
-        <!-- Feature 2 -->
-        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-teal-300 transition-all">
-          <div class="w-14 h-14 bg-teal-50 border border-teal-200 rounded-full flex items-center justify-center text-2xl mb-4">📚</div>
-          <h3 class="text-xl font-semibold mb-2 text-gray-800">{t(lang, 'home.features.resources.title')}</h3>
-          <p class="text-gray-500">
-            {t(lang, 'home.features.resources.desc')}
+        <!-- AI Workbook -->
+        <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-teal-300 transition-all">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-14 h-14 bg-teal-50 border border-teal-200 rounded-full flex items-center justify-center text-2xl">📖</div>
+            <div>
+              <h3 class="text-xl font-semibold text-gray-800">{t(lang, 'home.learn.workbook.title')}</h3>
+              <span class="inline-block text-xs font-medium px-2 py-0.5 bg-orange-100 text-orange-700 rounded-full">{t(lang, 'home.learn.workbook.badge')}</span>
+            </div>
+          </div>
+          <p class="text-gray-500 mb-6">
+            {t(lang, 'home.learn.workbook.desc')}
           </p>
-        </div>
-
-        <!-- Feature 3: Workbook -->
-        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-teal-300 transition-all">
-          <div class="w-14 h-14 bg-teal-50 border border-teal-200 rounded-full flex items-center justify-center text-2xl mb-4">📖</div>
-          <h3 class="text-xl font-semibold mb-2 text-gray-800">{t(lang, 'home.features.workbook.title')}</h3>
-          <p class="text-gray-500">
-            {t(lang, 'home.features.workbook.desc')}
-          </p>
-          <span class="inline-block mt-2 text-xs font-medium px-2 py-1 bg-teal-100 text-teal-600 rounded-full">{t(lang, 'home.features.workbook.premium')}</span>
-        </div>
-
-        <!-- Feature 4 -->
-        <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm hover:shadow-md hover:border-teal-300 transition-all">
-          <div class="w-14 h-14 bg-teal-50 border border-teal-200 rounded-full flex items-center justify-center text-2xl mb-4">🌏</div>
-          <h3 class="text-xl font-semibold mb-2 text-gray-800">{t(lang, 'home.features.community.title')}</h3>
-          <p class="text-gray-500">
-            {t(lang, 'home.features.community.desc')}
-          </p>
+          <a href="/workbook" class="inline-flex items-center gap-1 text-orange-500 font-semibold hover:text-orange-600 transition-colors">
+            {t(lang, 'home.learn.workbook.cta')} →
+          </a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA Section -->
+  <!-- Section 3: Practice — Community & Voice -->
+  <section class="py-20 px-4 bg-white">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">
+        <span class="border-b-4 border-teal-400 pb-2">{t(lang, 'home.practice.title')}</span>
+      </h2>
+
+      <div class="grid md:grid-cols-2 gap-8">
+        <!-- Community -->
+        <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-teal-300 transition-all">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-14 h-14 bg-teal-50 border border-teal-200 rounded-full flex items-center justify-center text-2xl">🌏</div>
+            <div>
+              <h3 class="text-xl font-semibold text-gray-800">{t(lang, 'home.practice.community.title')}</h3>
+              <span class="inline-block text-xs font-medium px-2 py-0.5 bg-teal-100 text-teal-700 rounded-full">{t(lang, 'home.practice.community.badge')}</span>
+            </div>
+          </div>
+          <p class="text-gray-500 mb-6">
+            {t(lang, 'home.practice.community.desc')}
+          </p>
+          <a href="/community" class="inline-flex items-center gap-1 text-orange-500 font-semibold hover:text-orange-600 transition-colors">
+            {t(lang, 'home.practice.community.cta')} →
+          </a>
+        </div>
+
+        <!-- Voice Lounge -->
+        <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-teal-300 transition-all">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-14 h-14 bg-teal-50 border border-teal-200 rounded-full flex items-center justify-center text-2xl">🎤</div>
+            <div>
+              <h3 class="text-xl font-semibold text-gray-800">{t(lang, 'home.practice.voiceLounge.title')}</h3>
+            </div>
+          </div>
+          <p class="text-gray-500 mb-6">
+            {t(lang, 'home.practice.voiceLounge.desc')}
+          </p>
+          <a href="/voice-lounge" class="inline-flex items-center gap-1 text-orange-500 font-semibold hover:text-orange-600 transition-colors">
+            {t(lang, 'home.practice.voiceLounge.cta')} →
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section 4: Premium CTA -->
+  <section class="py-20 px-4 bg-gradient-to-br from-orange-50 to-teal-50">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="text-3xl font-bold mb-4 text-gray-800">{t(lang, 'home.premium.title')}</h2>
+      <p class="text-lg text-gray-600 mb-8">
+        {t(lang, 'home.premium.subtitle')}
+      </p>
+
+      <ul class="text-left max-w-md mx-auto space-y-3 mb-10">
+        <li class="flex items-start gap-2 text-gray-700">
+          <span class="text-teal-500 mt-0.5 flex-shrink-0">✓</span>
+          {t(lang, 'home.premium.feature1')}
+        </li>
+        <li class="flex items-start gap-2 text-gray-700">
+          <span class="text-teal-500 mt-0.5 flex-shrink-0">✓</span>
+          {t(lang, 'home.premium.feature2')}
+        </li>
+        <li class="flex items-start gap-2 text-gray-700">
+          <span class="text-teal-500 mt-0.5 flex-shrink-0">✓</span>
+          {t(lang, 'home.premium.feature3')}
+        </li>
+        <li class="flex items-start gap-2 text-gray-700">
+          <span class="text-teal-500 mt-0.5 flex-shrink-0">✓</span>
+          {t(lang, 'home.premium.feature4')}
+        </li>
+      </ul>
+
+      <a
+        href="/community"
+        class="inline-block px-8 py-4 bg-orange-500 text-white rounded-full font-semibold text-lg hover:bg-orange-600 transition-colors"
+      >
+        {t(lang, 'home.premium.cta')}
+      </a>
+    </div>
+  </section>
+
+  <!-- Section 5: Final CTA -->
   <section class="py-20 px-4">
     <div class="max-w-4xl mx-auto text-center bg-orange-50 rounded-3xl p-12 border border-orange-100 shadow-sm">
       <h2 class="text-3xl font-bold mb-4 text-gray-800">{t(lang, 'home.cta.title')}</h2>
