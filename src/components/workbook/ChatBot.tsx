@@ -11,11 +11,13 @@ const INITIAL_SESSION: ChatSession = {
 };
 
 interface Props {
-  autoLevel?: string | null;
-  autoLevelLabel?: string | null;
+  autoLevelEnglish?: string | null;
+  autoLevelLabelEnglish?: string | null;
+  autoLevelJapanese?: string | null;
+  autoLevelLabelJapanese?: string | null;
 }
 
-export function ChatBot({ autoLevel, autoLevelLabel }: Props) {
+export function ChatBot({ autoLevelEnglish, autoLevelLabelEnglish, autoLevelJapanese, autoLevelLabelJapanese }: Props) {
   const { t } = useTranslation();
   const [session, setSession] = useState<ChatSession>(INITIAL_SESSION);
   const [input, setInput] = useState('');
@@ -23,6 +25,11 @@ export function ChatBot({ autoLevel, autoLevelLabel }: Props) {
   const [initialized, setInitialized] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Determine the correct autoLevel based on selected language
+  const selectedLanguage = session.slots.language;
+  const autoLevel = selectedLanguage === 'japanese' ? autoLevelJapanese : autoLevelEnglish;
+  const autoLevelLabel = selectedLanguage === 'japanese' ? autoLevelLabelJapanese : autoLevelLabelEnglish;
 
   useEffect(() => {
     if (!initialized) {
@@ -44,7 +51,6 @@ export function ChatBot({ autoLevel, autoLevelLabel }: Props) {
         body: JSON.stringify({
           message: '__greeting__',
           session: INITIAL_SESSION,
-          autoLevel: autoLevel ?? undefined,
         }),
       });
       const data = await res.json();
@@ -108,14 +114,14 @@ export function ChatBot({ autoLevel, autoLevelLabel }: Props) {
   return (
     <div className="flex flex-col h-[calc(100vh-8rem)] max-w-2xl mx-auto">
       {/* Auto-level hint */}
-      {autoLevel && autoLevelLabel && !session.slots.level && (
+      {autoLevel && autoLevelLabel && !session.slots.level && selectedLanguage && (
         <div className="mx-4 mt-2 px-3 py-2 bg-orange-50 border border-orange-200 rounded-lg text-sm text-orange-600">
           {t('workbook.chat.autoLevel')} <strong>{autoLevelLabel}</strong>
         </div>
       )}
 
       {/* Slot Preview */}
-      {(session.slots.topic || session.slots.level || session.slots.destination) && (
+      {(session.slots.language || session.slots.topic || session.slots.level || session.slots.destination) && (
         <SlotPreview slots={session.slots} />
       )}
 

@@ -4,8 +4,12 @@ import { getTopicConfig } from '../slots';
 export function buildTopicItemsPrompt(config: GenerationConfig): string {
   const topicConfig = getTopicConfig(config.topic);
   const itemDescription = topicConfig?.itemPrompt ?? `${config.topicLabel}に関連するアイテム30個`;
+  const isJapanese = config.language === 'japanese';
 
-  return `あなたは英語教材の専門家です。以下のテーマで30日間の英語学習ワークブック用のアイテムリストを作成してください。
+  const expertRole = isJapanese ? '日本語教材の専門家' : '英語教材の専門家';
+  const langLabel = isJapanese ? '日本語学習' : '英語学習';
+
+  return `あなたは${expertRole}です。以下のテーマで30日間の${langLabel}ワークブック用のアイテムリストを作成してください。
 
 # テーマ
 ${config.topicLabel}

@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import type { ChatState, ChatSession, SlotValues } from '../../../lib/workbook/types';
 import { claudeChat } from '../../../lib/claude';
 import { getChatSystemPrompt } from '../../../lib/workbook/prompts/chat-system';
-import { TOPICS, LEVELS } from '../../../lib/workbook/slots';
+import { TOPICS, LEVELS, JLPT_LEVELS } from '../../../lib/workbook/slots';
 
 interface ChatRequest {
   message: string;
@@ -18,6 +18,7 @@ interface SlotData {
 
 const EXPECTED_SLOT: Record<string, string | null> = {
   GREETING: null,
+  ASK_LANGUAGE: 'language',
   ASK_TOPIC: 'topic',
   ASK_LEVEL: 'level',
   ASK_DESTINATION: 'destination',
@@ -38,16 +39,20 @@ function extractSlotFromResponse(text: string): { cleanText: string; slot: SlotD
   }
 }
 
-function validateSlot(state: ChatState, slot: SlotData): boolean {
+function validateSlot(state: ChatState, slot: SlotData, slots: SlotValues): boolean {
   const expected = EXPECTED_SLOT[state];
   if (!expected) return false;
   if (slot.type !== expected) return false;
 
   switch (slot.type) {
+    case 'language':
+      return slot.value === 'english' || slot.value === 'japanese';
     case 'topic':
       return typeof slot.value === 'string' && slot.value.length > 0;
-    case 'level':
-      return typeof slot.value === 'string' && slot.value in LEVELS;
+    case 'level': {
+      const levelSet = slots.language === 'japanese' ? JLPT_LEVELS : LEVELS;
+      return typeof slot.value === 'string' && slot.value in levelSet;
+    }
     case 'destination':
       return typeof slot.value === 'string' && slot.value.length > 0;
     case 'preferences':
@@ -60,10 +65,12 @@ function validateSlot(state: ChatState, slot: SlotData): boolean {
 }
 
 function getNextState(current: ChatState, slot: SlotData | null): ChatState {
-  if (current === 'GREETING') return 'ASK_TOPIC';
+  if (current === 'GREETING') return 'ASK_LANGUAGE';
   if (!slot) return current;
 
   switch (slot.type) {
+    case 'language':
+      return 'ASK_TOPIC';
     case 'topic':
       return 'ASK_LEVEL';
     case 'level':
@@ -82,14 +89,19 @@ function getNextState(current: ChatState, slot: SlotData | null): ChatState {
 function applySlot(slots: SlotValues, slot: SlotData): SlotValues {
   const updated = { ...slots };
   switch (slot.type) {
+    case 'language':
+      updated.language = slot.value;
+      break;
     case 'topic':
       updated.topic = slot.value;
       updated.topicLabel = slot.label ?? TOPICS[slot.value]?.labelJa ?? slot.value;
       break;
-    case 'level':
+    case 'level': {
+      const levelSet = slots.language === 'japanese' ? JLPT_LEVELS : LEVELS;
       updated.level = slot.value;
-      updated.levelLabel = slot.label ?? LEVELS[slot.value]?.labelJa ?? slot.value;
+      updated.levelLabel = slot.label ?? levelSet[slot.value]?.labelJa ?? slot.value;
       break;
+    }
     case 'destination':
       updated.destination = slot.value;
       updated.destLabel = slot.label ?? slot.value;
@@ -129,7 +141,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const responseText = await claudeChat(systemPrompt, aiMessages, apiKey, { maxTokens: 1024 });
   const { cleanText, slot } = extractSlotFromResponse(responseText);
 
-  const validSlot = slot && validateSlot(currentState, slot) ? slot : null;
+  const validSlot = slot && validateSlot(currentState, slot, session.slots) ? slot : null;
   const nextState = getNextState(currentState, validSlot);
   const updatedSlots = validSlot ? applySlot(session.slots, validSlot) : session.slots;
 

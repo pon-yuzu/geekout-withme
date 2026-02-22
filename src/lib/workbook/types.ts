@@ -1,6 +1,9 @@
 // === Chat State Machine ===
+export type WorkbookLanguage = 'english' | 'japanese';
+
 export type ChatState =
   | 'GREETING'
+  | 'ASK_LANGUAGE'
   | 'ASK_TOPIC'
   | 'ASK_LEVEL'
   | 'ASK_DESTINATION'
@@ -15,6 +18,7 @@ export interface ChatMessage {
 }
 
 export interface SlotValues {
+  language?: WorkbookLanguage;
   topic?: string;
   topicLabel?: string;
   level?: string;
@@ -50,6 +54,7 @@ export interface SlotExtraction {
 export interface Workbook {
   id: string;
   user_id: string;
+  language: string;
   topic: string;
   topic_label: string;
   level: string;
@@ -135,6 +140,7 @@ export interface WorkbookDay {
 
 // === Generation ===
 export interface GenerationConfig {
+  language: WorkbookLanguage;
   topic: string;
   topicLabel: string;
   level: string;

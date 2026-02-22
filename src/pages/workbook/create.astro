@@ -62,16 +62,16 @@ if (supabase) {
   }
 }
 
-// Get auto-level from latest assessment
-let autoLevel: string | null = null;
-let autoLevelLabel: string | null = null;
+// Get auto-level from latest assessment (English)
+let autoLevelEnglish: string | null = null;
+let autoLevelLabelEnglish: string | null = null;
 
 try {
-  const levelMap: Record<string, string> = {
+  const englishLevelMap: Record<string, string> = {
     A1: 'eiken5', A2: 'eiken4', B1: 'eiken3', B2: 'toeic400', C1: 'toeic600',
     N5: 'eiken5', N4: 'eiken4', N3: 'eiken3', N2: 'toeic400', N1: 'toeic600',
   };
-  const levelLabels: Record<string, string> = {
+  const englishLevelLabels: Record<string, string> = {
     eiken5: '英検5級（中1程度）', eiken4: '英検4級（中2程度）', eiken3: '英検3級（中3程度）',
     toeic400: 'TOEIC 400点レベル', toeic600: 'TOEIC 600点レベル',
   };
@@ -87,13 +87,47 @@ try {
 
   if (assessment) {
     const bestLevel = (assessment.text_level ?? assessment.voice_level) as string | null;
-    if (bestLevel && levelMap[bestLevel]) {
-      autoLevel = levelMap[bestLevel];
-      autoLevelLabel = levelLabels[autoLevel] ?? null;
+    if (bestLevel && englishLevelMap[bestLevel]) {
+      autoLevelEnglish = englishLevelMap[bestLevel];
+      autoLevelLabelEnglish = englishLevelLabels[autoLevelEnglish] ?? null;
     }
   }
 } catch {
-  // No assessment found, that's fine
+  // No English assessment found
+}
+
+// Get auto-level from latest assessment (Japanese)
+let autoLevelJapanese: string | null = null;
+let autoLevelLabelJapanese: string | null = null;
+
+try {
+  const japaneseLevelMap: Record<string, string> = {
+    N5: 'jlpt_n5', N4: 'jlpt_n4', N3: 'jlpt_n3', N2: 'jlpt_n2', N1: 'jlpt_n1',
+    A1: 'jlpt_n5', A2: 'jlpt_n4', B1: 'jlpt_n3', B2: 'jlpt_n2', C1: 'jlpt_n1',
+  };
+  const japaneseLevelLabels: Record<string, string> = {
+    jlpt_n5: 'JLPT N5（入門）', jlpt_n4: 'JLPT N4（初級）', jlpt_n3: 'JLPT N3（中級）',
+    jlpt_n2: 'JLPT N2（上級前半）', jlpt_n1: 'JLPT N1（上級）',
+  };
+
+  const { data: assessment } = await supabase
+    .from('assessment_results')
+    .select('text_level, voice_level')
+    .eq('user_id', user.id)
+    .eq('language', 'japanese')
+    .order('created_at', { ascending: false })
+    .limit(1)
+    .single();
+
+  if (assessment) {
+    const bestLevel = (assessment.text_level ?? assessment.voice_level) as string | null;
+    if (bestLevel && japaneseLevelMap[bestLevel]) {
+      autoLevelJapanese = japaneseLevelMap[bestLevel];
+      autoLevelLabelJapanese = japaneseLevelLabels[autoLevelJapanese] ?? null;
+    }
+  }
+} catch {
+  // No Japanese assessment found
 }
 ---
 
@@ -115,8 +149,10 @@ try {
     <section class="py-4 px-4">
       <ChatBot
         client:load
-        autoLevel={autoLevel}
-        autoLevelLabel={autoLevelLabel}
+        autoLevelEnglish={autoLevelEnglish}
+        autoLevelLabelEnglish={autoLevelLabelEnglish}
+        autoLevelJapanese={autoLevelJapanese}
+        autoLevelLabelJapanese={autoLevelLabelJapanese}
       />
     </section>
   ) : (

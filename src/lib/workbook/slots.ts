@@ -196,6 +196,78 @@ export const LEVELS: Record<string, LevelConfig> = {
   },
 };
 
+// === JLPT Level Mappings (Japanese) ===
+export const JLPT_LEVELS: Record<string, LevelConfig> = {
+  jlpt_n5: {
+    id: 'jlpt_n5',
+    label: 'JLPT N5',
+    labelJa: 'JLPT N5（入門）',
+    cefr: 'A1',
+    vocabSize: '800語',
+    grammarConstraints: 'です・ます形、基本助詞',
+    promptRules: `1. JLPT N5レベルの日本語（基礎レベル）
+2. 語彙は800語以内、漢字100字以内（全てふりがな付き）
+3. 文は短くシンプル（1文15文字以内）
+4. です・ます形のみ`,
+  },
+  jlpt_n4: {
+    id: 'jlpt_n4',
+    label: 'JLPT N4',
+    labelJa: 'JLPT N4（初級）',
+    cefr: 'A2',
+    vocabSize: '1500語',
+    grammarConstraints: 'て形、ない形、辞書形、可能形',
+    promptRules: `1. JLPT N4レベルの日本語（初級レベル）
+2. 語彙は1500語以内、漢字300字以内（N5以上にはふりがな付き）
+3. 文はやや長くてもOK（1文25文字以内）
+4. て形・ない形・辞書形・可能形を使ってよい
+5. 敬語や複雑な受身・使役は避ける`,
+  },
+  jlpt_n3: {
+    id: 'jlpt_n3',
+    label: 'JLPT N3',
+    labelJa: 'JLPT N3（中級）',
+    cefr: 'B1',
+    vocabSize: '3750語',
+    grammarConstraints: '受身形、使役形、条件形、敬語の基本',
+    promptRules: `1. JLPT N3レベルの日本語（中級レベル）
+2. 語彙は3750語以内、漢字600字以内
+3. 受身形、使役形、条件形を使ってよい
+4. 基本的な敬語を使ってよい
+5. 自然な日本語表現を心がける`,
+  },
+  jlpt_n2: {
+    id: 'jlpt_n2',
+    label: 'JLPT N2',
+    labelJa: 'JLPT N2（上級前半）',
+    cefr: 'B2',
+    vocabSize: '6000語',
+    grammarConstraints: '複合動詞、形式名詞、慣用表現',
+    promptRules: `1. JLPT N2レベルの日本語（上級前半）
+2. 語彙は6000語レベル、漢字1000字以内
+3. 複合動詞、形式名詞、慣用表現を使ってよい
+4. 新聞・ビジネス日本語も含めてよい
+5. より自然で洗練された表現を心がける`,
+  },
+  jlpt_n1: {
+    id: 'jlpt_n1',
+    label: 'JLPT N1',
+    labelJa: 'JLPT N1（上級）',
+    cefr: 'C1',
+    vocabSize: '10000語',
+    grammarConstraints: '全文法使用可、文語的表現も可',
+    promptRules: `1. JLPT N1レベルの日本語（上級）
+2. 語彙は10000語レベル、漢字2000字以内
+3. 全文法を自然に使用してよい
+4. 文語的表現、ビジネス敬語、慣用句も使ってよい
+5. ネイティブに近い自然で流暢な日本語表現を心がける`,
+  },
+};
+
+export function getJlptLevelConfig(id: string): LevelConfig | undefined {
+  return JLPT_LEVELS[id];
+}
+
 // === Destination (Goal) Mappings ===
 export interface DestinationConfig {
   id: string;

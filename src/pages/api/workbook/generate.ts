@@ -1,10 +1,10 @@
 import type { APIRoute } from 'astro';
-import type { SlotValues, GenerationConfig, TopicItem } from '../../../lib/workbook/types';
+import type { SlotValues, GenerationConfig, TopicItem, WorkbookLanguage } from '../../../lib/workbook/types';
 import { nanoid } from 'nanoid';
 import { claudeGenerate, extractJSON } from '../../../lib/claude';
 import { createWorkbook } from '../../../lib/workbook/db';
 import { buildTopicItemsPrompt } from '../../../lib/workbook/prompts/topic-items';
-import { getTopicConfig, getLevelConfig } from '../../../lib/workbook/slots';
+import { getTopicConfig, getLevelConfig, getJlptLevelConfig } from '../../../lib/workbook/slots';
 
 export const POST: APIRoute = async ({ request, locals }) => {
   const user = locals.user;
@@ -39,14 +39,20 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return new Response(JSON.stringify({ error: 'Missing slots' }), { status: 400 });
   }
 
+  const language: WorkbookLanguage = slots.language ?? 'english';
+  const isJapanese = language === 'japanese';
+
   const topicConfig = getTopicConfig(slots.topic);
-  const levelConfig = getLevelConfig(slots.level);
+  const levelConfig = isJapanese
+    ? getJlptLevelConfig(slots.level)
+    : getLevelConfig(slots.level);
 
   if (!topicConfig || !levelConfig) {
     return new Response(JSON.stringify({ error: 'Invalid topic or level' }), { status: 400 });
   }
 
   const config: GenerationConfig = {
+    language,
     topic: slots.topic,
     topicLabel: slots.topicLabel ?? topicConfig.labelJa,
     level: slots.level,
@@ -70,12 +76,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   // Create workbook record
   const workbookId = nanoid(12);
-  const title = `30日間${topicConfig.labelJa}英語`;
+  const langSuffix = isJapanese ? '日本語' : '英語';
+  const title = `30日間${topicConfig.labelJa}${langSuffix}`;
   const subtitle = `${levelConfig.labelJa} → ${config.destLabel}`;
 
   await createWorkbook(locals.supabase!, {
     id: workbookId,
     user_id: user.id,
+    language,
     topic: slots.topic,
     topic_label: topicConfig.labelJa,
     level: slots.level,

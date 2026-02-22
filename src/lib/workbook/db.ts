@@ -6,6 +6,7 @@ export async function createWorkbook(
   data: {
     id: string;
     user_id: string;
+    language?: string;
     topic: string;
     topic_label: string;
     level: string;

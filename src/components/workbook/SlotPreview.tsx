@@ -7,8 +7,16 @@ interface Props {
 
 export function SlotPreview({ slots }: Props) {
   const { t } = useTranslation();
+  const languageDisplay = slots.language === 'japanese' ? '日本語' : slots.language === 'english' ? '英語' : undefined;
+
   return (
     <div className="flex gap-2 p-4 overflow-x-auto">
+      <SlotChip
+        label={t('workbook.slot.language')}
+        value={languageDisplay}
+        emoji="🌐"
+        color="bg-teal-100 text-teal-800"
+      />
       <SlotChip
         label={t('workbook.slot.theme')}
         value={slots.topicLabel}

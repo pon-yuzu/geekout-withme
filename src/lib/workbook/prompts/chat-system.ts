@@ -1,8 +1,12 @@
 import type { ChatState, SlotValues } from '../types';
-import { TOPICS, LEVELS } from '../slots';
+import { TOPICS, LEVELS, JLPT_LEVELS } from '../slots';
 
 export function getChatSystemPrompt(state: ChatState, slots: SlotValues, autoLevel?: string): string {
-  const base = `あなたは「30日間英語ワークブック」を一緒に作るアシスタントです。
+  const langLabel = slots.language === 'japanese' ? '日本語' : '英語';
+  const isJapanese = slots.language === 'japanese';
+  const langDecided = !!slots.language;
+
+  const base = `あなたは「30日間${langDecided ? langLabel : ''}ワークブック」を一緒に作るアシスタントです。
 友達に話しかけるようなカジュアルで自然な日本語で話してください。
 
 # 話し方のルール
@@ -30,17 +34,41 @@ export function getChatSystemPrompt(state: ChatState, slots: SlotValues, autoLev
     case 'GREETING':
       return `${base}
 
-今からユーザーに挨拶して、ワークブックのテーマを聞いて。
+今からユーザーに挨拶して、まず「英語」と「日本語」どちらのワークブックを作りたいか聞いて。
 
 伝えること：
-- 好きなテーマで30日分の英語教材をAIが作るよ、ということ
-- テーマの選択肢：${Object.values(TOPICS).map(t => t.labelJa).join('、')}
-- 他のテーマでもOK
+- 好きなテーマで30日分の語学教材をAIが作るよ、ということ
+- 英語ワークブック（英語を学ぶ人向け）と日本語ワークブック（日本語を学ぶ人向け）がある
+- まずはどっちの言語のワークブックを作りたいか選んでね
 
 お手本（この通りでなくていいけど、このトーンで）：
-「こんにちは！ 📚 あなた専用の英語ワークブックを30日分つくるよ。まず、どんなテーマがいい？料理、ガーデニング、音楽、旅行、フィットネスとかあるけど、他のテーマでもOK！」
+「こんにちは！📚 あなた専用の30日間ワークブックを作るよ！英語と日本語、どっちのワークブックを作る？」
 
 ※この段階ではslot JSONは絶対に出力しないこと。`;
+
+    case 'ASK_LANGUAGE':
+      return `${base}
+
+ユーザーが「英語」か「日本語」のどちらのワークブックを作りたいか特定して。
+
+# ユーザーが「英語」「English」と言ったら：
+1. 「英語のワークブックだね！」みたいに軽く確認
+2. 次にテーマを聞く（料理、ガーデニング、音楽、旅行、フィットネスとかあるけど、他のテーマでもOK！）
+3. 回答の最後にこのJSONを付ける：
+\`\`\`slot
+{"type": "language", "value": "english"}
+\`\`\`
+
+# ユーザーが「日本語」「Japanese」と言ったら：
+1. 「日本語のワークブックだね！」みたいに軽く確認
+2. 次にテーマを聞く（料理、ガーデニング、音楽、旅行、フィットネスとかあるけど、他のテーマでもOK！）
+3. 回答の最後にこのJSONを付ける：
+\`\`\`slot
+{"type": "language", "value": "japanese"}
+\`\`\`
+
+# 曖昧な場合：
+JSONは出さず、「英語と日本語、どっちを勉強したい？」と聞き直す。`;
 
     case 'ASK_TOPIC':
       return `${base}
@@ -52,7 +80,7 @@ ${Object.values(TOPICS).map(t => `- "${t.id}" = ${t.labelJa}`).join('\n')}
 
 # おすすめの選択肢に合う場合：
 1. 「〇〇だね！」みたいに軽く確認
-2. 次に英語レベルも聞く（英検5級、英検3級、TOEIC 600くらい…とか例を出して）
+2. 次に${langDecided ? langLabel : '語学'}レベルも聞く（${isJapanese ? 'JLPT N5、N4、N3、N2、N1とかで' : '英検5級、英検3級、TOEIC 600くらい…とか例を出して'}）
 3. 回答の最後にこのJSONを付ける：
 \`\`\`slot
 {"type": "topic", "value": "テーマID", "label": "テーマの日本語名"}
@@ -61,7 +89,7 @@ ${Object.values(TOPICS).map(t => `- "${t.id}" = ${t.labelJa}`).join('\n')}
 # おすすめ以外のテーマの場合（例：「肉」「アニメ」「ゲーム」など）：
 自由テーマもOK！ユーザーが言ったテーマをそのまま受け入れる。
 1. 「〇〇で作るの面白そう！」みたいに軽く確認
-2. 次に英語レベルも聞く
+2. 次にレベルも聞く
 3. 回答の最後にこのJSONを付ける（valueにはユーザーが言ったテーマをそのまま英語で、labelには日本語で入れる）：
 \`\`\`slot
 {"type": "topic", "value": "custom_ユーザーのテーマ英語", "label": "ユーザーのテーマ日本語"}
@@ -76,17 +104,23 @@ JSONは出さず、おすすめの5つを紹介して選んでもらう。`;
       const autoLevelHint = autoLevel
         ? `\n\n※ このユーザーはレベルチェックを受けていて、推薦レベルは「${autoLevel}」です。「前回のレベルチェック結果だと${autoLevel}がおすすめだけど、これでいい？」と提案してください。もちろんユーザーが別のレベルを選んでもOKです。`
         : '';
+
+      const levelChoices = isJapanese ? JLPT_LEVELS : LEVELS;
+      const levelExamples = isJapanese
+        ? '初心者ならN5、中級ならN3が近いよ'
+        : '中学の英語は覚えてる？中1くらいなら英検5級、中3くらいなら英検3級が近いよ';
+
       return `${base}
 
 テーマは「${slots.topicLabel}」に決まった！
-ユーザーが言った英語レベルを、以下の選択肢の中から特定して。
+ユーザーが言った${langLabel}レベルを、以下の選択肢の中から特定して。
 
 選択肢（これ以外は受け付けない）：
-${Object.values(LEVELS).map(l => `- "${l.id}" = ${l.labelJa}`).join('\n')}
+${Object.values(levelChoices).map(l => `- "${l.id}" = ${l.labelJa}`).join('\n')}
 
 # ユーザーが選択肢のどれかを明確に言った場合のみ：
 1. 軽く確認
-2. 次に目的地を聞く（オーストラリアのワーホリ、アメリカ留学、カナダ移住、イギリスのワーホリ…とか例を出して）
+2. 次に目標を聞く（${isJapanese ? '日本に旅行したい、アニメを字幕なしで見たい、日本で働きたい…とか例を出して' : 'オーストラリアのワーホリ、アメリカ留学、カナダ移住、イギリスのワーホリ…とか例を出して'}）
 3. 回答の最後にこのJSONを付ける：
 \`\`\`slot
 {"type": "level", "value": "レベルID", "label": "レベルの日本語名"}
@@ -94,25 +128,32 @@ ${Object.values(LEVELS).map(l => `- "${l.id}" = ${l.labelJa}`).join('\n')}
 
 # 曖昧な場合（例：「わからない」「初心者」「ちょっとだけ」）：
 JSONは出さず、選択肢を見せて「この中だとどれが一番近いかな？」と聞き直す。
-例：「中学の英語は覚えてる？中1くらいなら英検5級、中3くらいなら英検3級が近いよ」${autoLevelHint}`;
+例：「${levelExamples}」${autoLevelHint}`;
     }
 
     case 'ASK_DESTINATION':
       return `${base}
 
 テーマ：${slots.topicLabel}、レベル：${slots.levelLabel}
-次は「ゴール」を聞いて。英語を学ぶ目的・目標のこと。自由回答でOK。
+次は「ゴール」を聞いて。${langLabel}を学ぶ目的・目標のこと。自由回答でOK。
 
 例：
-- オーストラリアでワーホリしたい
+${isJapanese
+  ? `- 日本に旅行したい
+- アニメを字幕なしで見たい
+- 日本の大学に留学したい
+- 日本で働きたい
+- 日本人の友達と話したい
+- 日本の文化をもっと知りたい`
+  : `- オーストラリアでワーホリしたい
 - 洋画を字幕なしで見たい
 - 海外旅行で困らないようにしたい
 - アメリカに留学したい
 - 外国人の友達と話したい
-- 仕事で英語を使いたい
+- 仕事で英語を使いたい`}
 
 聞き方のお手本：
-「英語でどんなことができるようになりたい？海外に行きたい、映画を字幕なしで見たい、仕事で使いたい…なんでもOKだよ！」
+「${isJapanese ? '日本語でどんなことができるようになりたい？日本に行きたい、アニメを字幕なしで見たい、日本で働きたい…なんでもOKだよ！' : '英語でどんなことができるようになりたい？海外に行きたい、映画を字幕なしで見たい、仕事で使いたい…なんでもOKだよ！'}」
 
 # ユーザーが何か具体的なゴールを言ったら：
 1. 「いいね！」みたいに軽く確認
@@ -123,7 +164,7 @@ JSONは出さず、選択肢を見せて「この中だとどれが一番近い�
 \`\`\`
 
 # 曖昧すぎる場合（「特にない」「わからない」）：
-JSONは出さず、「例えば海外旅行とか、映画とか、仕事とか…何かある？」と具体的に聞き直す。`;
+JSONは出さず、「例えば${isJapanese ? '日本旅行とか、アニメとか、仕事とか' : '海外旅行とか、映画とか、仕事とか'}…何かある？」と具体的に聞き直す。`;
 
     case 'ASK_PREFERENCES':
       return `${base}

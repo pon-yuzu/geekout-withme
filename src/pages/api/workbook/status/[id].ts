@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import type { TopicItem, GenerationConfig, DayContent } from '../../../../lib/workbook/types';
+import type { TopicItem, GenerationConfig, DayContent, WorkbookLanguage } from '../../../../lib/workbook/types';
 import { claudeGenerate, extractJSON } from '../../../../lib/claude';
 import { getWorkbook, updateWorkbookStatus, insertDay } from '../../../../lib/workbook/db';
 import { buildContentPrompt } from '../../../../lib/workbook/prompts/content-generation';
@@ -70,6 +70,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
 
   try {
     const config: GenerationConfig = {
+      language: (workbook.language ?? profileData.language ?? 'english') as WorkbookLanguage,
       topic: workbook.topic,
       topicLabel: workbook.topic_label,
       level: workbook.level,
