@@ -194,21 +194,23 @@ const { title, description = "Find your language level, discover resources, and 
     </footer>
     <div class="fixed bottom-1 right-2 text-[10px] text-gray-300 pointer-events-none select-none">{buildId}</div>
 
-    <!-- Floating bug report button -->
+    <!-- Floating bug report button — inline styles guarantee visibility regardless of CSS load order -->
     <a
       id="feedback-btn"
       href={FEEDBACK_FORM_URL}
       target="_blank"
       rel="noopener noreferrer"
-      class="fixed bottom-6 left-6 z-50 w-12 h-12 bg-gray-800 hover:bg-gray-700 text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-underline"
+      style="position:fixed;bottom:1.5rem;left:1.5rem;z-index:9999;display:flex;align-items:center;justify-content:center;width:3rem;height:3rem;background:#1f2937;border-radius:9999px;box-shadow:0 10px 15px -3px rgba(0,0,0,.1);text-decoration:none;transition:transform .15s;"
       title={t(lang, 'header.report')}
       aria-label={t(lang, 'header.report')}
+      onmouseover="this.style.transform='scale(1.1)';this.style.background='#374151'"
+      onmouseout="this.style.transform='scale(1)';this.style.background='#1f2937'"
     >
-      <span class="text-lg">🐛</span>
+      <span style="font-size:1.125rem;line-height:1;">🐛</span>
     </a>
 
     <script is:inline>
-      document.addEventListener('DOMContentLoaded', function() {
+      (function() {
         var btn = document.getElementById('feedback-btn');
         if (btn) {
           btn.addEventListener('click', function(e) {
@@ -218,7 +220,7 @@ const { title, description = "Find your language level, discover resources, and 
             window.open(base + '?entry.1677210818=' + page, '_blank');
           });
         }
-      });
+      })();
     </script>
   </body>
 </html>
