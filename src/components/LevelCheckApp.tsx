@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from '../i18n/index';
 import TextAssessment from './TextAssessment';
 import ListeningAssessment from './ListeningAssessment';
@@ -45,6 +45,39 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
   const [language, setLanguage] = useState<Language | null>(null);
   const [mode, setMode] = useState<AssessmentMode | null>(null);
   const [results, setResults] = useState<AssessmentResult>({});
+
+  // Save results to sessionStorage for post-signup recovery
+  useEffect(() => {
+    if (step === 'results' && language && !isLoggedIn) {
+      try {
+        sessionStorage.setItem('pendingAssessment', JSON.stringify({
+          language,
+          mode,
+          textLevel: results.textLevel,
+          listeningLevel: results.listeningLevel,
+          voiceLevel: results.voiceLevel,
+          feedback: results.feedback,
+        }));
+      } catch {}
+    }
+  }, [step, language, mode, results, isLoggedIn]);
+
+  // On mount, check for pending assessment and auto-save if logged in
+  useEffect(() => {
+    if (!isLoggedIn) return;
+    try {
+      const pending = sessionStorage.getItem('pendingAssessment');
+      if (!pending) return;
+      const data = JSON.parse(pending);
+      fetch('/api/save-assessment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      }).then(res => {
+        if (res.ok) sessionStorage.removeItem('pendingAssessment');
+      }).catch(() => {});
+    } catch {}
+  }, [isLoggedIn]);
 
   const handleLanguageSelect = (lang: Language) => {
     setLanguage(lang);
@@ -114,6 +147,7 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
     setLanguage(null);
     setMode(null);
     setResults({});
+    try { sessionStorage.removeItem('pendingAssessment'); } catch {}
   };
 
   const isAssessmentStep =

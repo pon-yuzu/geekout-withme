@@ -502,5 +502,21 @@
   "contact.sending": "送信中...",
   "contact.sent": "送信完了！",
   "contact.sentDesc": "お問い合わせありがとうございます。折り返しご連絡いたします。",
-  "contact.error": "送信に失敗しました。もう一度お試しください。"
+  "contact.error": "送信に失敗しました。もう一度お試しください。",
+
+  "convCards.anonymous.signupTitle": "もっとカードを見たい？",
+  "convCards.anonymous.signupDesc": "無料登録で全カテゴリ・全レベル・無制限のカードにアクセス！",
+  "convCards.anonymous.signupBtn": "無料で登録",
+  "convCards.anonymous.loginLink": "アカウントをお持ちですか？ログイン",
+  "convCards.anonymous.previewNote": "プレビュー — 1カテゴリから3枚",
+  "convCards.free.upgradeCta": "ボイスチャットでこのカードを使おう！プレミアムにアップグレード",
+  "convCards.free.upgradeBtn": "プレミアムにアップグレード",
+
+  "results.autoSaved": "結果を自動保存しました",
+  "results.autoSaving": "結果を保存中...",
+  "results.retry": "再試行",
+  "results.signupBanner.title": "結果を保存して学習を記録しよう！",
+  "results.signupBanner.desc": "無料アカウントを作成して、レベルチェックの結果を保存し、学習の進捗を追跡しましょう。",
+  "results.signupBanner.btn": "無料登録して保存",
+  "results.signupBanner.login": "アカウントをお持ちですか？ログイン"
 }

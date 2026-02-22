@@ -7,6 +7,7 @@ import {
   type ConversationLevelId,
   type CategoryKey,
 } from '../data/conversationData';
+import { useTranslation } from '../i18n/index';
 
 function shuffleArray<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -21,36 +22,54 @@ interface DeckCard extends ConversationCard {
   category: CategoryKey;
 }
 
+type AccessTier = 'anonymous' | 'free' | 'premium';
+
+const ANONYMOUS_CARD_LIMIT = 3;
+
 interface Props {
   autoLevel?: ConversationLevelId | null;
   lang?: string;
+  accessTier?: AccessTier;
 }
 
-export default function ConversationCardsStandalone({ autoLevel, lang = 'ja' }: Props) {
+export default function ConversationCardsStandalone({ autoLevel, lang = 'ja', accessTier = 'anonymous' }: Props) {
+  const { t } = useTranslation();
   const isEn = lang === 'en';
+  const isAnonymous = accessTier === 'anonymous';
+  const catKeys = Object.keys(CATEGORIES) as CategoryKey[];
+  const firstCat = catKeys[0];
+
   const [level, setLevel] = useState<ConversationLevelId>(autoLevel || 'beginner');
   const [selectedCats, setSelectedCats] = useState<CategoryKey[]>(
-    Object.keys(CATEGORIES) as CategoryKey[]
+    isAnonymous ? [firstCat] : catKeys
   );
   const [started, setStarted] = useState(false);
 
   const toggleCat = (cat: CategoryKey) => {
+    if (isAnonymous) return;
     setSelectedCats(prev =>
       prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
     );
   };
 
-  const selectAll = () => setSelectedCats(Object.keys(CATEGORIES) as CategoryKey[]);
-  const selectNone = () => setSelectedCats([]);
+  const selectAll = () => { if (!isAnonymous) setSelectedCats(catKeys); };
+  const selectNone = () => { if (!isAnonymous) setSelectedCats([]); };
 
   if (!started) {
     return (
       <div className="max-w-xl mx-auto">
+        {/* Preview note for anonymous */}
+        {isAnonymous && (
+          <div className="bg-orange-100 border border-orange-300 rounded-xl p-4 mb-6 text-sm text-orange-700 text-center font-medium">
+            {t('convCards.anonymous.previewNote')}
+          </div>
+        )}
+
         {/* How to use */}
         <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-6 text-sm text-gray-600">
           {isEn
-            ? '💡 How to use: Pick a card, then try writing about it in your journal, talking to yourself, or preparing for your next language exchange!'
-            : '💡 使い方：カードを選んで、日記に書いたり、独り言で話してみたり、次の言語交換の準備に使おう！'}
+            ? 'How to use: Pick a card, then try writing about it in your journal, talking to yourself, or preparing for your next language exchange!'
+            : '使い方：カードを選んで、日記に書いたり、独り言で話してみたり、次の言語交換の準備に使おう！'}
         </div>
 
         <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-6">
@@ -63,12 +82,13 @@ export default function ConversationCardsStandalone({ autoLevel, lang = 'ja' }: 
               {CONVERSATION_LEVELS.map(l => (
                 <button
                   key={l.id}
-                  onClick={() => setLevel(l.id)}
+                  onClick={() => !isAnonymous && setLevel(l.id)}
+                  disabled={isAnonymous}
                   className={`flex-1 py-3 px-2 rounded-xl border-2 text-center text-sm font-medium transition-colors ${
                     level === l.id
                       ? 'border-orange-400 bg-orange-50 text-orange-700'
                       : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300'
-                  }`}
+                  } ${isAnonymous ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   <div className="text-xl mb-1">{l.emoji}</div>
                   <div>{l.label}</div>
@@ -84,29 +104,33 @@ export default function ConversationCardsStandalone({ autoLevel, lang = 'ja' }: 
               <h3 className="text-xs font-medium text-gray-500 uppercase tracking-wider">
                 {isEn ? 'Topics' : 'トピック'}
               </h3>
-              <div className="flex gap-2 text-xs">
-                <button onClick={selectAll} className="text-orange-500 hover:text-orange-600">
-                  {isEn ? 'All' : '全選択'}
-                </button>
-                <span className="text-gray-300">|</span>
-                <button onClick={selectNone} className="text-gray-400 hover:text-gray-500">
-                  {isEn ? 'None' : '解除'}
-                </button>
-              </div>
+              {!isAnonymous && (
+                <div className="flex gap-2 text-xs">
+                  <button onClick={selectAll} className="text-orange-500 hover:text-orange-600">
+                    {isEn ? 'All' : '全選択'}
+                  </button>
+                  <span className="text-gray-300">|</span>
+                  <button onClick={selectNone} className="text-gray-400 hover:text-gray-500">
+                    {isEn ? 'None' : '解除'}
+                  </button>
+                </div>
+              )}
             </div>
             <div className="flex flex-wrap gap-2">
-              {(Object.keys(CATEGORIES) as CategoryKey[]).map(key => {
+              {catKeys.map(key => {
                 const cat = CATEGORIES[key];
                 const selected = selectedCats.includes(key);
+                const disabled = isAnonymous && key !== firstCat;
                 return (
                   <button
                     key={key}
                     onClick={() => toggleCat(key)}
+                    disabled={disabled}
                     className={`px-4 py-2 rounded-full text-sm font-medium border-2 transition-colors ${
                       selected
                         ? 'border-orange-400 bg-orange-50 text-orange-700'
                         : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300'
-                    }`}
+                    } ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {cat.label}
                   </button>
@@ -134,6 +158,7 @@ export default function ConversationCardsStandalone({ autoLevel, lang = 'ja' }: 
       selectedCats={selectedCats}
       onBack={() => setStarted(false)}
       lang={lang}
+      accessTier={accessTier}
     />
   );
 }
@@ -145,13 +170,17 @@ function CardBrowser({
   selectedCats,
   onBack,
   lang,
+  accessTier,
 }: {
   level: ConversationLevelId;
   selectedCats: CategoryKey[];
   onBack: () => void;
   lang: string;
+  accessTier: AccessTier;
 }) {
+  const { t } = useTranslation();
   const isEn = lang === 'en';
+  const isAnonymous = accessTier === 'anonymous';
 
   const allCards: DeckCard[] = [];
   selectedCats.forEach(catKey => {
@@ -167,13 +196,30 @@ function CardBrowser({
   const [deck, setDeck] = useState(() => shuffleArray(allCards));
   const [cardIdx, setCardIdx] = useState(0);
   const [icebreaker, setIcebreaker] = useState(() => Math.floor(Math.random() * ICEBREAKERS.length));
+  const [showSignupCta, setShowSignupCta] = useState(false);
 
   useEffect(() => {
     setDeck(shuffleArray(allCards));
     setCardIdx(0);
+    setShowSignupCta(false);
   }, [level, selectedCats.join(',')]);
 
+  const effectiveTotal = isAnonymous ? Math.min(deck.length, ANONYMOUS_CARD_LIMIT) : deck.length;
   const currentCard = deck[cardIdx % deck.length];
+
+  const handleNext = () => {
+    if (isAnonymous && cardIdx + 1 >= ANONYMOUS_CARD_LIMIT) {
+      setShowSignupCta(true);
+      return;
+    }
+    setCardIdx(i => i + 1);
+  };
+
+  const handleShuffle = () => {
+    if (isAnonymous) return;
+    setDeck(shuffleArray(allCards));
+    setCardIdx(0);
+  };
 
   return (
     <div className="max-w-xl mx-auto">
@@ -191,20 +237,46 @@ function CardBrowser({
         className="w-full text-left p-4 bg-gradient-to-r from-orange-50 to-yellow-50 border border-orange-200 rounded-xl mb-4"
       >
         <div className="text-[10px] uppercase tracking-widest text-orange-400 font-semibold mb-1">
-          {isEn ? '🎲 Icebreaker — tap for next!' : '🎲 アイスブレイカー — タップで次！'}
+          {isEn ? 'Icebreaker — tap for next!' : 'アイスブレイカー — タップで次！'}
         </div>
         <div className="text-sm text-gray-700 leading-snug">{ICEBREAKERS[icebreaker].en}</div>
         <div className="text-xs text-gray-500 mt-0.5">{ICEBREAKERS[icebreaker].ja}</div>
       </button>
 
+      {/* Signup CTA overlay for anonymous users */}
+      {showSignupCta && (
+        <div className="bg-white border-2 border-orange-300 rounded-2xl p-8 shadow-lg text-center mb-4">
+          <div className="text-4xl mb-4">🔓</div>
+          <h3 className="text-xl font-bold text-gray-800 mb-2">
+            {t('convCards.anonymous.signupTitle')}
+          </h3>
+          <p className="text-gray-600 mb-6">
+            {t('convCards.anonymous.signupDesc')}
+          </p>
+          <a
+            href="/signup"
+            className="inline-block w-full py-3 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 transition-colors mb-3"
+          >
+            {t('convCards.anonymous.signupBtn')}
+          </a>
+          <a
+            href="/login"
+            className="text-sm text-gray-500 hover:text-orange-500 transition-colors"
+          >
+            {t('convCards.anonymous.loginLink')}
+          </a>
+        </div>
+      )}
+
       {/* Topic Card */}
-      {currentCard && (
+      {!showSignupCta && currentCard && (
         <TopicCardStandalone
           card={currentCard}
-          cardIndex={cardIdx % deck.length}
-          totalCards={deck.length}
-          onNext={() => setCardIdx(i => i + 1)}
-          onShuffle={() => { setDeck(shuffleArray(allCards)); setCardIdx(0); }}
+          cardIndex={cardIdx % effectiveTotal}
+          totalCards={effectiveTotal}
+          onNext={handleNext}
+          onShuffle={handleShuffle}
+          disableShuffle={isAnonymous}
         />
       )}
     </div>
@@ -219,12 +291,14 @@ function TopicCardStandalone({
   totalCards,
   onNext,
   onShuffle,
+  disableShuffle,
 }: {
   card: DeckCard;
   cardIndex: number;
   totalCards: number;
   onNext: () => void;
   onShuffle: () => void;
+  disableShuffle?: boolean;
 }) {
   const [showVocab, setShowVocab] = useState(false);
   const [currentPrompt, setCurrentPrompt] = useState(0);
@@ -298,7 +372,10 @@ function TopicCardStandalone({
       <div className="flex gap-2">
         <button
           onClick={onShuffle}
-          className="flex-1 py-2.5 text-sm font-medium text-gray-500 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
+          disabled={disableShuffle}
+          className={`flex-1 py-2.5 text-sm font-medium text-gray-500 border border-gray-200 rounded-xl transition-colors ${
+            disableShuffle ? 'opacity-40 cursor-not-allowed' : 'hover:bg-gray-50'
+          }`}
         >
           Shuffle
         </button>

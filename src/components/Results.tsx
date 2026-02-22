@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from '../i18n/index';
 
 interface AssessmentFeedback {
@@ -89,6 +89,7 @@ export default function Results({ language, textLevel, listeningLevel, voiceLeve
   const [showInterests, setShowInterests] = useState(false);
   const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
   const [saveState, setSaveState] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const autoSaveAttempted = useRef(false);
 
   const mainLevel = textLevel || listeningLevel || voiceLevel || 'A1';
   const displayTextLevel = getDisplayLevel(textLevel, t);
@@ -96,6 +97,53 @@ export default function Results({ language, textLevel, listeningLevel, voiceLeve
   const displayVoiceLevel = getDisplayLevel(voiceLevel, t);
 
   const cardCount = [textLevel, listeningLevel, voiceLevel].filter(Boolean).length;
+
+  // Auto-save for logged-in users
+  useEffect(() => {
+    if (!isLoggedIn || autoSaveAttempted.current) return;
+    autoSaveAttempted.current = true;
+
+    const doSave = async () => {
+      setSaveState('saving');
+      try {
+        const res = await fetch('/api/save-assessment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ language, mode, textLevel, listeningLevel, voiceLevel, feedback }),
+        });
+        if (res.ok) {
+          setSaveState('saved');
+          // Clear any pending session data
+          try { sessionStorage.removeItem('pendingAssessment'); } catch {}
+        } else {
+          setSaveState('error');
+        }
+      } catch {
+        setSaveState('error');
+      }
+    };
+
+    doSave();
+  }, [isLoggedIn]);
+
+  const handleRetry = async () => {
+    setSaveState('saving');
+    try {
+      const res = await fetch('/api/save-assessment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ language, mode, textLevel, listeningLevel, voiceLevel, feedback }),
+      });
+      if (res.ok) {
+        setSaveState('saved');
+        try { sessionStorage.removeItem('pendingAssessment'); } catch {}
+      } else {
+        setSaveState('error');
+      }
+    } catch {
+      setSaveState('error');
+    }
+  };
 
   const getLevelDescription = (level: string): string => {
     if (level === 'Starter') {
@@ -197,6 +245,52 @@ export default function Results({ language, textLevel, listeningLevel, voiceLeve
         )}
       </div>
 
+      {/* Auto-save indicator for logged-in users */}
+      {isLoggedIn && (
+        <div className="text-center mb-4">
+          {saveState === 'saving' && (
+            <span className="text-sm text-gray-500">{t('results.autoSaving')}</span>
+          )}
+          {saveState === 'saved' && (
+            <span className="text-sm text-green-600">{t('results.autoSaved')}</span>
+          )}
+          {saveState === 'error' && (
+            <button
+              onClick={handleRetry}
+              className="text-sm text-red-600 hover:text-red-700 underline underline-offset-2"
+            >
+              {t('results.saveError')} — {t('results.retry') || 'Retry'}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Signup banner for non-logged-in users */}
+      {!isLoggedIn && (
+        <div className="bg-orange-50 border-2 border-orange-200 rounded-2xl p-6 mb-8 text-center">
+          <div className="text-3xl mb-3">💾</div>
+          <h3 className="text-lg font-bold text-gray-800 mb-2">
+            {t('results.signupBanner.title')}
+          </h3>
+          <p className="text-gray-600 text-sm mb-5">
+            {t('results.signupBanner.desc')}
+          </p>
+          <a
+            href="/signup"
+            className="inline-block w-full max-w-xs py-3 bg-orange-500 text-white rounded-xl font-semibold hover:bg-orange-600 transition-colors mb-3"
+          >
+            {t('results.signupBanner.btn')}
+          </a>
+          <br />
+          <a
+            href="/login"
+            className="text-sm text-gray-500 hover:text-orange-500 transition-colors"
+          >
+            {t('results.signupBanner.login')}
+          </a>
+        </div>
+      )}
+
       {/* Skill Gap Notice */}
       {(() => {
         const levels = [textLevel, listeningLevel, voiceLevel].filter(Boolean);
@@ -204,7 +298,7 @@ export default function Results({ language, textLevel, listeningLevel, voiceLeve
         return hasGap ? (
           <div className="bg-yellow-50 border border-yellow-300 rounded-xl p-4 mb-8">
             <p className="text-yellow-700">
-              💡 {t('results.skillGap')}
+              {t('results.skillGap')}
             </p>
           </div>
         ) : null;
@@ -276,7 +370,7 @@ export default function Results({ language, textLevel, listeningLevel, voiceLeve
 
       {/* Recommended Resources */}
       <div className="mb-8">
-        <h3 className="text-xl font-semibold mb-4">📚 {t('results.resources')}</h3>
+        <h3 className="text-xl font-semibold mb-4">{t('results.resources')}</h3>
         <div className="space-y-3">
           {resources.map((resource, index) => (
             <a
@@ -299,7 +393,7 @@ export default function Results({ language, textLevel, listeningLevel, voiceLeve
           onClick={() => setShowInterests(true)}
           className="w-full py-4 bg-white border border-gray-200 rounded-xl hover:bg-orange-50 transition-colors mb-8 shadow-sm"
         >
-          ✨ {t('results.personalizeBtn')}
+          {t('results.personalizeBtn')}
         </button>
       ) : (
         <div className="bg-white border border-gray-200 rounded-xl p-6 mb-8 shadow-sm">
@@ -322,7 +416,7 @@ export default function Results({ language, textLevel, listeningLevel, voiceLeve
           </div>
           {selectedInterests.length > 0 && (
             <p className="text-sm text-gray-500 text-center">
-              🚧 {t('results.comingSoon')}<br />
+              {t('results.comingSoon')}<br />
               {t('results.comingSoonSub')}
             </p>
           )}
@@ -335,59 +429,14 @@ export default function Results({ language, textLevel, listeningLevel, voiceLeve
           onClick={onRestart}
           className="px-6 py-3 bg-white border border-gray-200 rounded-full hover:bg-orange-50 transition-colors shadow-sm"
         >
-          🔄 {t('results.takeAgain')}
+          {t('results.takeAgain')}
         </button>
         <a
           href="/community"
           className="px-6 py-3 bg-orange-500 text-white rounded-full text-center hover:bg-orange-600 transition-colors"
         >
-          🌏 {t('results.joinCommunity')}
+          {t('results.joinCommunity')}
         </a>
-      </div>
-
-      {/* Save Results */}
-      <div className="mt-6 text-center">
-        {isLoggedIn ? (
-          <button
-            onClick={async () => {
-              setSaveState('saving');
-              try {
-                const res = await fetch('/api/save-assessment', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ language, mode, textLevel, listeningLevel, voiceLevel, feedback }),
-                });
-                if (res.ok) {
-                  setSaveState('saved');
-                } else {
-                  setSaveState('error');
-                }
-              } catch {
-                setSaveState('error');
-              }
-            }}
-            disabled={saveState === 'saving' || saveState === 'saved'}
-            className={`px-6 py-3 rounded-full transition-all ${
-              saveState === 'saved'
-                ? 'bg-green-50 border border-green-300 text-green-700 cursor-default'
-                : saveState === 'error'
-                  ? 'bg-red-50 border border-red-300 text-red-600 hover:bg-red-100'
-                  : 'bg-white border border-gray-200 hover:bg-orange-50'
-            }`}
-          >
-            {saveState === 'idle' && `💾 ${t('results.saveResults')}`}
-            {saveState === 'saving' && t('results.saving')}
-            {saveState === 'saved' && `✅ ${t('results.saved')}`}
-            {saveState === 'error' && `❌ ${t('results.saveError')}`}
-          </button>
-        ) : (
-          <a
-            href="/login"
-            className="text-gray-500 hover:text-gray-800 transition-colors underline underline-offset-4"
-          >
-            {t('results.loginToSave')}
-          </a>
-        )}
       </div>
     </div>
   );

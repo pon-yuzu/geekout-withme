@@ -502,5 +502,21 @@
   "contact.sending": "Sending...",
   "contact.sent": "Message Sent!",
   "contact.sentDesc": "Thank you for reaching out. We'll get back to you soon.",
-  "contact.error": "Failed to send. Please try again."
+  "contact.error": "Failed to send. Please try again.",
+
+  "convCards.anonymous.signupTitle": "Want more cards?",
+  "convCards.anonymous.signupDesc": "Sign up free to unlock all categories, levels, and unlimited cards!",
+  "convCards.anonymous.signupBtn": "Sign Up Free",
+  "convCards.anonymous.loginLink": "Already have an account? Log in",
+  "convCards.anonymous.previewNote": "Preview — 3 cards from 1 category",
+  "convCards.free.upgradeCta": "Use these cards in live voice chat! Upgrade to Premium",
+  "convCards.free.upgradeBtn": "Upgrade to Premium",
+
+  "results.autoSaved": "Results saved automatically",
+  "results.autoSaving": "Saving results...",
+  "results.retry": "Retry",
+  "results.signupBanner.title": "Save your results & track progress!",
+  "results.signupBanner.desc": "Create a free account to save your level check results and track your learning journey.",
+  "results.signupBanner.btn": "Sign Up Free to Save",
+  "results.signupBanner.login": "Already have an account? Log in"
 }
