@@ -14,10 +14,16 @@ export default function ResetPasswordForm() {
   const supabase = createSupabaseBrowserClient();
 
   useEffect(() => {
-    // Supabase automatically picks up the recovery token from the URL hash
-    // and establishes a session. We listen for that event.
+    // Check if we already have a session (set by /auth/callback)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        setSessionReady(true);
+      }
+    });
+
+    // Also listen for recovery event (hash-based flow fallback)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
-      if (event === 'PASSWORD_RECOVERY') {
+      if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
         setSessionReady(true);
       }
     });

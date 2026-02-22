@@ -5,12 +5,20 @@ const responseHeaders = new Headers();
 const supabase = createSupabaseServerClient(Astro.request, responseHeaders);
 
 const code = Astro.url.searchParams.get('code');
+const type = Astro.url.searchParams.get('type');
+
+let redirectPath = '/';
+
 if (code) {
   await supabase.auth.exchangeCodeForSession(code);
+
+  if (type === 'recovery') {
+    redirectPath = '/auth/reset-password';
+  }
 }
 
 // Copy cookies then redirect
-const response = Astro.redirect('/');
+const response = Astro.redirect(redirectPath);
 responseHeaders.forEach((value, key) => {
   response.headers.append(key, value);
 });
