@@ -11,7 +11,7 @@ DELETE FROM workbooks WHERE id IN ('sample_ja_01','sample_ja_02','sample_ja_03')
 INSERT INTO workbooks (id, user_id, language, topic, topic_label, level, level_label, destination, dest_label, profile_json, theme_color, title, subtitle, is_public, status, days_completed, completed_at)
 VALUES (
   'sample_ja_01',
-  '00000000-0000-0000-0000-000000000000',
+  '48094704-91da-41ab-b57e-99fdab996cfa',
   'japanese',
   'cooking', '料理',
   'jlpt_n5', 'JLPT N5（入門）',
@@ -408,7 +408,7 @@ VALUES ('sample_ja_01', 5, 'Curry Rice', 'カレーライス', '🍛', '{
 INSERT INTO workbooks (id, user_id, language, topic, topic_label, level, level_label, destination, dest_label, profile_json, theme_color, title, subtitle, is_public, status, days_completed, completed_at)
 VALUES (
   'sample_ja_02',
-  '00000000-0000-0000-0000-000000000000',
+  '48094704-91da-41ab-b57e-99fdab996cfa',
   'japanese',
   'travel', '旅行',
   'jlpt_n4', 'JLPT N4（初級）',
@@ -805,7 +805,7 @@ VALUES ('sample_ja_02', 5, 'Hot Spring', '温泉', '♨️', '{
 INSERT INTO workbooks (id, user_id, language, topic, topic_label, level, level_label, destination, dest_label, profile_json, theme_color, title, subtitle, is_public, status, days_completed, completed_at)
 VALUES (
   'sample_ja_03',
-  '00000000-0000-0000-0000-000000000000',
+  '48094704-91da-41ab-b57e-99fdab996cfa',
   'japanese',
   'music', '音楽',
   'jlpt_n3', 'JLPT N3（中級）',
