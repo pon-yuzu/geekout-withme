@@ -10,15 +10,18 @@ const lang = Astro.locals.lang as Lang;
 const supabase = Astro.locals.supabase;
 
 const tab = Astro.url.searchParams.get('tab') === 'public' ? 'public' : 'mine';
+const wbLang = Astro.url.searchParams.get('lang') === 'japanese' ? 'japanese' : 'english';
 
 let myWorkbooks: Awaited<ReturnType<typeof getUserWorkbooks>> = [];
 let publicWorkbooks: Awaited<ReturnType<typeof getPublicWorkbooks>> = [];
-let sampleWorkbooks: Awaited<ReturnType<typeof getSampleWorkbooks>> = [];
+let sampleEnglish: Awaited<ReturnType<typeof getSampleWorkbooks>> = [];
+let sampleJapanese: Awaited<ReturnType<typeof getSampleWorkbooks>> = [];
 let isPremium = false;
 
 if (supabase) {
-  // Always fetch sample workbooks for non-premium display
-  sampleWorkbooks = await getSampleWorkbooks(supabase);
+  // Fetch samples for both languages
+  sampleEnglish = await getSampleWorkbooks(supabase, 'english');
+  sampleJapanese = await getSampleWorkbooks(supabase, 'japanese');
 
   if (user) {
     const { data: subs } = await supabase
@@ -39,7 +42,12 @@ if (supabase) {
   }
 }
 
-const workbooks = tab === 'mine' ? myWorkbooks : publicWorkbooks;
+// Filter my workbooks by language
+const myEnglish = myWorkbooks.filter(wb => (wb.language || 'english') === 'english');
+const myJapanese = myWorkbooks.filter(wb => wb.language === 'japanese');
+const filteredWorkbooks = tab === 'mine'
+  ? (wbLang === 'japanese' ? myJapanese : myEnglish)
+  : publicWorkbooks;
 ---
 
 <Layout title={t(lang, 'nav.workbook')} user={user}>
@@ -62,8 +70,8 @@ const workbooks = tab === 'mine' ? myWorkbooks : publicWorkbooks;
 
       {isPremium ? (
         <>
-          {/* Tabs */}
-          <div class="flex gap-1 mb-6 bg-gray-100 rounded-xl p-1 max-w-xs">
+          {/* Main Tabs: Mine / Public */}
+          <div class="flex gap-1 mb-4 bg-gray-100 rounded-xl p-1 max-w-xs">
             <a
               href="/workbook"
               class:list={[
@@ -84,7 +92,35 @@ const workbooks = tab === 'mine' ? myWorkbooks : publicWorkbooks;
             </a>
           </div>
 
-          {workbooks.length === 0 ? (
+          {/* Language sub-tabs (mine tab only) */}
+          {tab === 'mine' && (
+            <div class="flex gap-2 mb-6">
+              <a
+                href="/workbook"
+                class:list={[
+                  'px-4 py-1.5 rounded-full text-sm font-medium border-2 transition-colors',
+                  wbLang === 'english'
+                    ? 'border-orange-400 bg-orange-50 text-orange-700'
+                    : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300',
+                ]}
+              >
+                {t(lang, 'workbook.lang.english')}
+              </a>
+              <a
+                href="/workbook?lang=japanese"
+                class:list={[
+                  'px-4 py-1.5 rounded-full text-sm font-medium border-2 transition-colors',
+                  wbLang === 'japanese'
+                    ? 'border-orange-400 bg-orange-50 text-orange-700'
+                    : 'border-gray-200 bg-white text-gray-500 hover:border-gray-300',
+                ]}
+              >
+                {t(lang, 'workbook.lang.japanese')}
+              </a>
+            </div>
+          )}
+
+          {filteredWorkbooks.length === 0 ? (
             <div class="text-center py-20">
               <div class="text-5xl mb-4">{tab === 'mine' ? '📚' : '🌍'}</div>
               <h2 class="text-xl font-semibold text-gray-700 mb-2">
@@ -101,7 +137,7 @@ const workbooks = tab === 'mine' ? myWorkbooks : publicWorkbooks;
             </div>
           ) : (
             <div class="grid md:grid-cols-2 gap-6">
-              {workbooks.map(wb => (
+              {filteredWorkbooks.map(wb => (
                 <WorkbookCard client:load workbook={wb} showAuthor={tab === 'public'} />
               ))}
             </div>
@@ -109,13 +145,26 @@ const workbooks = tab === 'mine' ? myWorkbooks : publicWorkbooks;
         </>
       ) : (
         <>
-          {/* Sample workbooks for non-premium users */}
-          {sampleWorkbooks.length > 0 && (
-            <div class="mb-8">
-              <h2 class="text-xl font-semibold text-gray-700 mb-2">{t(lang, 'workbook.samples.title')}</h2>
-              <p class="text-gray-500 mb-6">{t(lang, 'workbook.samples.desc')}</p>
+          {/* Sample workbooks for non-premium users — English */}
+          {sampleEnglish.length > 0 && (
+            <div class="mb-10">
+              <h2 class="text-xl font-semibold text-gray-700 mb-1">{t(lang, 'workbook.samples.englishTitle')}</h2>
+              <p class="text-gray-500 mb-4 text-sm">{t(lang, 'workbook.samples.desc')}</p>
               <div class="grid md:grid-cols-2 gap-6">
-                {sampleWorkbooks.map(wb => (
+                {sampleEnglish.map(wb => (
+                  <WorkbookCard client:load workbook={wb} showAuthor={false} />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Sample workbooks for non-premium users — Japanese */}
+          {sampleJapanese.length > 0 && (
+            <div class="mb-10">
+              <h2 class="text-xl font-semibold text-gray-700 mb-1">{t(lang, 'workbook.samples.japaneseTitle')}</h2>
+              <p class="text-gray-500 mb-4 text-sm">{t(lang, 'workbook.samples.desc')}</p>
+              <div class="grid md:grid-cols-2 gap-6">
+                {sampleJapanese.map(wb => (
                   <WorkbookCard client:load workbook={wb} showAuthor={false} />
                 ))}
               </div>
@@ -124,7 +173,7 @@ const workbooks = tab === 'mine' ? myWorkbooks : publicWorkbooks;
 
           {/* Premium upsell */}
           <div class="text-center py-12 bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl border border-orange-200">
-            <div class="text-5xl mb-4">⭐</div>
+            <div class="text-5xl mb-4">&#11088;</div>
             <h2 class="text-xl font-semibold text-gray-700 mb-2">{t(lang, 'workbook.premiumFeature')}</h2>
             <p class="text-gray-500 mb-6">{t(lang, 'workbook.premiumDesc')}</p>
             {!user ? (

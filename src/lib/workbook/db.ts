@@ -126,14 +126,19 @@ export async function getPublicWorkbooks(
 }
 
 export async function getSampleWorkbooks(
-  supabase: SupabaseClient
+  supabase: SupabaseClient,
+  language?: string
 ): Promise<Workbook[]> {
-  const { data, error } = await supabase
+  let query = supabase
     .from('workbooks')
     .select('*')
     .eq('is_public', true)
     .eq('status', 'completed')
-    .lte('days_completed', 5)
+    .lte('days_completed', 5);
+  if (language) {
+    query = query.eq('language', language);
+  }
+  const { data, error } = await query
     .order('created_at', { ascending: false })
     .limit(3);
   if (error) return [];
