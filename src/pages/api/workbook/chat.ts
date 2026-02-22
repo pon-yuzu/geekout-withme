@@ -120,7 +120,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   const { data: subs } = await locals.supabase!
     .from('subscriptions').select('status')
-    .eq('user_id', user.id).eq('status', 'active').limit(1);
+    .eq('user_id', user.id).in('status', ['active', 'trialing']).limit(1);
   if (!subs?.length) return new Response('Premium required', { status: 403 });
 
   const apiKey = import.meta.env.CLAUDE_API_KEY ?? locals.runtime?.env?.CLAUDE_API_KEY;

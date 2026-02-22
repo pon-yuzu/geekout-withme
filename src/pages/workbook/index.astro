@@ -27,7 +27,7 @@ if (supabase) {
       .from('subscriptions')
       .select('status')
       .eq('user_id', user.id)
-      .eq('status', 'active')
+      .in('status', ['active', 'trialing'])
       .limit(1);
     isPremium = (subs?.length ?? 0) > 0;
 

@@ -16,7 +16,7 @@ export async function isPremiumUser(
     .from('subscriptions')
     .select('status, stripe_subscription_id')
     .eq('user_id', userId)
-    .eq('status', 'active')
+    .in('status', ['active', 'trialing'])
     .single();
 
   if (!data) return false;

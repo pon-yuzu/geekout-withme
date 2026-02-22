@@ -12,7 +12,7 @@ export const GET: APIRoute = async ({ params, request, locals }) => {
     .from('subscriptions')
     .select('status')
     .eq('user_id', user.id)
-    .eq('status', 'active')
+    .in('status', ['active', 'trialing'])
     .limit(1);
 
   if (!subs?.length) {
