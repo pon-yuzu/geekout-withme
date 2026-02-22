@@ -381,7 +381,7 @@ export default function ProfileEditor({
             {currentPeriodEnd && (
               <p className="text-gray-500 mb-4">
                 {cancelAtPeriodEnd ? t('profile.accessUntil') : t('profile.renewsOn')}{' '}
-                <span className="text-gray-800 font-medium">{formatDate(currentPeriodEnd)}</span>
+                <span className="text-gray-800 font-medium" suppressHydrationWarning>{formatDate(currentPeriodEnd)}</span>
               </p>
             )}
             <button
