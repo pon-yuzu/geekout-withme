@@ -345,20 +345,23 @@ export default function ChatRoom({ roomId, roomName, userId, userName, onLeave, 
             </div>
           )}
 
-          {/* Tab content */}
-          {activeTab === 'chat' ? (
+          {/* Tab content — both rendered, toggled via display to preserve state */}
+          <div style={{ display: activeTab === 'chat' ? 'block' : 'none' }}>
             <ChatPanel
               messages={messages}
               onSendMessage={sendMessage}
               onSendImage={sendImage}
               currentUserId={userId}
             />
-          ) : (
-            <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm" style={{ height: '400px' }}>
-              <ConversationCards
-                onShareToChat={handleShareToChat}
-                autoLevel={autoLevel}
-              />
+          </div>
+          {showCardsTab && (
+            <div style={{ display: activeTab === 'cards' ? 'block' : 'none' }}>
+              <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm" style={{ height: '550px' }}>
+                <ConversationCards
+                  onShareToChat={handleShareToChat}
+                  autoLevel={autoLevel}
+                />
+              </div>
             </div>
           )}
         </div>

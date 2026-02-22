@@ -16,7 +16,7 @@ export interface ConversationCategory {
   cards: Record<ConversationLevelId, ConversationCard[]>;
 }
 
-export type CategoryKey = 'anime' | 'cooking' | 'tech' | 'travel' | 'music';
+export type CategoryKey = 'anime' | 'cooking' | 'tech' | 'travel' | 'music' | 'other';
 
 export interface ConversationLevel {
   id: ConversationLevelId;
@@ -65,14 +65,14 @@ export const CATEGORIES: Record<CategoryKey, ConversationCategory> = {
           vocab: ["genre (ジャンル)", "recommend (おすすめする)", "manga (漫画)"],
         },
         {
-          topic: "Anime Characters I Relate To",
-          ja: "共感するアニメキャラ",
+          topic: "Anime Characters",
+          ja: "好きなアニメキャラ",
           prompts: [
-            "Is there a character that reminds you of yourself? / 自分に似てるキャラクターいる？",
+            "Who is your favorite anime character? / 好きなアニメキャラは誰？",
             "Which character would you want as a friend? / 友達にしたいキャラクターは？",
             "Who is the funniest anime character you know? / 一番おもしろいアニメキャラは？",
           ],
-          vocab: ["relate to (共感する)", "personality (性格)", "remind (思い出させる)"],
+          vocab: ["character (キャラクター)", "funny (おもしろい)", "friend (友達)"],
         },
         {
           topic: "Anime & Daily Life",
@@ -97,24 +97,24 @@ export const CATEGORIES: Record<CategoryKey, ConversationCategory> = {
       ],
       intermediate: [
         {
-          topic: "Anime vs Reality",
-          ja: "アニメと現実の違い",
+          topic: "Anime Worlds",
+          ja: "アニメの世界観",
           prompts: [
-            "How does anime portray school life differently from reality? / アニメの学校生活と現実はどう違う？",
             "Which anime world would you want to live in? / どのアニメの世界に住みたい？",
+            "Is anime school life different from real school life? / アニメの学校生活と実際の学校生活は違う？",
             "Do you think anime influences how people see Japan? / アニメは日本のイメージに影響してると思う？",
           ],
-          vocab: ["portrayal (描写)", "influence (影響)", "stereotype (ステレオタイプ)"],
+          vocab: ["world (世界)", "real life (現実)", "imagine (想像する)"],
         },
         {
-          topic: "Anime Industry",
-          ja: "アニメ業界について",
+          topic: "Anime Studios & Quality",
+          ja: "アニメスタジオと作画",
           prompts: [
-            "What do you know about working conditions in the anime industry? / アニメ業界の労働環境について知ってる？",
             "Which studio makes the best animation? / どのスタジオのアニメーションが一番いい？",
-            "How has anime changed over the last 10 years? / アニメはこの10年でどう変わった？",
+            "Have you noticed how anime art styles have changed? / アニメの絵柄が変わってきたの気づいた？",
+            "What makes good animation — story or visuals? / 良いアニメを作るのはストーリー？映像？",
           ],
-          vocab: ["studio (スタジオ)", "animation quality (作画)", "industry (業界)"],
+          vocab: ["studio (スタジオ)", "animation quality (作画)", "art style (画風)"],
         },
         {
           topic: "Cosplay & Fan Culture",
@@ -217,14 +217,14 @@ export const CATEGORIES: Record<CategoryKey, ConversationCategory> = {
           vocab: ["ingredient (材料)", "recipe (レシピ)", "delicious (おいしい)"],
         },
         {
-          topic: "Food Culture Shock",
-          ja: "食文化のカルチャーショック",
+          topic: "Breakfast Around the World",
+          ja: "世界の朝ごはん",
           prompts: [
-            "What surprised you about food in another country? / 他の国の食べ物で驚いたことは？",
-            "Is there a food you can't eat? / 食べられない食べ物はある？",
             "Do you eat breakfast? What kind? / 朝ごはんは食べる？どんなの？",
+            "What's a typical breakfast in your country? / あなたの国の普通の朝ごはんは？",
+            "Is there a food you can't eat? / 食べられない食べ物はある？",
           ],
-          vocab: ["culture shock (カルチャーショック)", "texture (食感)", "seasoning (味付け)"],
+          vocab: ["breakfast (朝ごはん)", "toast (トースト)", "cereal (シリアル)"],
         },
         {
           topic: "Sweet Tooth or Savory?",
@@ -379,14 +379,14 @@ export const CATEGORIES: Record<CategoryKey, ConversationCategory> = {
           vocab: ["app (アプリ)", "download (ダウンロード)", "notification (通知)"],
         },
         {
-          topic: "Social Media Life",
+          topic: "Social Media",
           ja: "SNSの話",
           prompts: [
-            "Which social media do you use most? / 一番使うSNSは？",
-            "Do you post a lot or just look at other people's posts? / よく投稿する？見る専？",
-            "What kind of content do you like to see? / どんなコンテンツを見るのが好き？",
+            "Which social media do you use? / どのSNSを使ってる？",
+            "Do you post a lot or just look? / よく投稿する？見るだけ？",
+            "What kind of videos do you watch online? / ネットでどんな動画を見る？",
           ],
-          vocab: ["post (投稿する)", "follow (フォロー)", "feed (フィード)"],
+          vocab: ["post (投稿する)", "follow (フォロー)", "video (動画)"],
         },
         {
           topic: "Video Games I Love",
@@ -399,24 +399,24 @@ export const CATEGORIES: Record<CategoryKey, ConversationCategory> = {
           vocab: ["console (ゲーム機)", "controller (コントローラー)", "level (レベル)"],
         },
         {
-          topic: "Internet Habits",
-          ja: "ネットの習慣",
+          topic: "YouTube & Online Videos",
+          ja: "YouTubeと動画",
           prompts: [
-            "What's the first thing you do when you go online? / ネットを開いて最初にすることは？",
-            "How many hours do you spend on the internet daily? / 1日何時間ネットを使う？",
-            "Have you learned anything useful from YouTube? / YouTubeで役に立つことを学んだことある？",
+            "What YouTube channels do you watch? / どのYouTubeチャンネルを見る？",
+            "How many hours do you spend online every day? / 1日何時間ネットを使う？",
+            "Have you learned something from YouTube? / YouTubeで何か学んだことある？",
           ],
-          vocab: ["browse (ネットサーフィンする)", "search (検索する)", "bookmark (ブックマーク)"],
+          vocab: ["channel (チャンネル)", "subscribe (登録する)", "video (動画)"],
         },
         {
-          topic: "Tech in Daily Life",
-          ja: "日常のテクノロジー",
+          topic: "Online Shopping",
+          ja: "ネットでお買い物",
           prompts: [
-            "What technology could you not live without? / なくては生きていけないテクノロジーは？",
-            "Do you use any smart home devices? / スマートホームデバイスは使ってる？",
-            "What was the last thing you bought online? / 最後にネットで買ったものは何？",
+            "Do you shop online often? / よくネットで買い物する？",
+            "What was the last thing you bought online? / 最後にネットで買ったものは？",
+            "Which online store do you use most? / 一番使うネットのお店は？",
           ],
-          vocab: ["smart device (スマートデバイス)", "online shopping (ネット通販)", "gadget (ガジェット)"],
+          vocab: ["delivery (配達)", "online shopping (ネット通販)", "cart (カート)"],
         },
       ],
       intermediate: [
@@ -544,11 +544,11 @@ export const CATEGORIES: Record<CategoryKey, ConversationCategory> = {
           topic: "Travel Memories",
           ja: "旅の思い出",
           prompts: [
-            "What's the best trip you've ever taken? / 今までで最高の旅は？",
-            "Did anything funny happen while traveling? / 旅行中に面白いことあった？",
-            "Do you like to plan everything or be spontaneous? / 全部計画する派？その場のノリ派？",
+            "What's the best trip you've taken? / 今まで一番よかった旅行は？",
+            "Did anything funny happen on a trip? / 旅行中に面白いことあった？",
+            "Do you like to plan trips or go without a plan? / 旅行は計画する派？しない派？",
           ],
-          vocab: ["trip (旅行)", "spontaneous (spontaneous/思いつきの)", "memorable (記憶に残る)"],
+          vocab: ["trip (旅行)", "plan (計画する)", "fun (楽しい)"],
         },
         {
           topic: "How Do You Travel?",
@@ -723,14 +723,14 @@ export const CATEGORIES: Record<CategoryKey, ConversationCategory> = {
           vocab: ["karaoke (カラオケ)", "sing (歌う)", "microphone (マイク)"],
         },
         {
-          topic: "Celebrity & Fan Life",
-          ja: "推し活",
+          topic: "My Favorite Singer",
+          ja: "好きな歌手",
           prompts: [
-            "Do you have a favorite celebrity or idol? / 推しはいる？",
-            "Have you ever been to a concert or fan event? / コンサートやファンイベントに行ったことある？",
-            "What do you like most about your favorite artist? / 推しの一番好きなところは？",
+            "Who is your favorite singer or band? / 好きな歌手やバンドは誰？",
+            "Have you been to a concert? / コンサートに行ったことある？",
+            "What do you like about them? / その人のどこが好き？",
           ],
-          vocab: ["fan (ファン)", "idol (アイドル)", "support (応援する)"],
+          vocab: ["singer (歌手)", "band (バンド)", "concert (コンサート)"],
         },
         {
           topic: "Weekend Entertainment",
@@ -845,6 +845,168 @@ export const CATEGORIES: Record<CategoryKey, ConversationCategory> = {
             "What form of entertainment do you think will dominate in 10 years? / 10年後に支配的なエンタメの形は何だと思う？",
           ],
           vocab: ["virtual reality (バーチャルリアリティ)", "fragmented (細分化された)", "immersive (没入型の)"],
+        },
+      ],
+    },
+  },
+  other: {
+    label: "🎯 Other / その他",
+    color: "#8B5CF6",
+    cards: {
+      beginner: [
+        {
+          topic: "My Daily Routine",
+          ja: "毎日のルーティン",
+          prompts: [
+            "What time do you usually wake up? / いつも何時に起きる？",
+            "What do you do after work or school? / 仕事や学校の後は何する？",
+            "Do you have a bedtime routine? / 寝る前のルーティンはある？",
+          ],
+          vocab: ["routine (ルーティン)", "wake up (起きる)", "habit (習慣)"],
+        },
+        {
+          topic: "Shopping",
+          ja: "買い物について",
+          prompts: [
+            "Do you prefer shopping online or in stores? / ネットと店、どっちが好き？",
+            "What was the last thing you bought? / 最後に買ったものは？",
+            "Are you good at finding bargains? / お得な買い物は得意？",
+          ],
+          vocab: ["bargain (お買い得)", "receipt (レシート)", "discount (割引)"],
+        },
+        {
+          topic: "Weather Talk",
+          ja: "天気の話",
+          prompts: [
+            "What's your favorite season? Why? / 好きな季節は？なんで？",
+            "What do you do on rainy days? / 雨の日は何する？",
+            "Is the weather different from your hometown? / 地元と天気は違う？",
+          ],
+          vocab: ["sunny (晴れ)", "rainy (雨の)", "temperature (気温)"],
+        },
+        {
+          topic: "Pets & Animals",
+          ja: "ペットと動物",
+          prompts: [
+            "Do you have any pets? / ペットは飼ってる？",
+            "What's your favorite animal? / 好きな動物は？",
+            "Have you ever been to a zoo? / 動物園に行ったことある？",
+          ],
+          vocab: ["pet (ペット)", "feed (エサをあげる)", "cute (かわいい)"],
+        },
+        {
+          topic: "Holidays & Celebrations",
+          ja: "祝日とお祝い",
+          prompts: [
+            "What's your favorite holiday? / 好きな祝日は？",
+            "How do you celebrate your birthday? / 誕生日はどうやってお祝いする？",
+            "What holiday food do you love? / お祝いの時の好きな食べ物は？",
+          ],
+          vocab: ["celebrate (お祝いする)", "holiday (祝日)", "tradition (伝統)"],
+        },
+      ],
+      intermediate: [
+        {
+          topic: "Work-Life Balance",
+          ja: "ワークライフバランス",
+          prompts: [
+            "How do you separate work from personal time? / 仕事とプライベートの時間をどう分けてる？",
+            "Do you think remote work is better for balance? / リモートワークはバランスに良いと思う？",
+            "What's your ideal work schedule? / 理想の勤務スケジュールは？",
+          ],
+          vocab: ["overtime (残業)", "flexible (柔軟な)", "burnout (燃え尽き症候群)"],
+        },
+        {
+          topic: "Social Media & Online Life",
+          ja: "SNSとネット生活",
+          prompts: [
+            "Which social media do you use most? Why? / 一番使うSNSは？なんで？",
+            "Do you think social media helps or hurts communication? / SNSはコミュニケーションに良い？悪い？",
+            "Have you ever taken a social media detox? / SNS断ちしたことある？",
+          ],
+          vocab: ["algorithm (アルゴリズム)", "influencer (インフルエンサー)", "scroll (スクロールする)"],
+        },
+        {
+          topic: "Health & Wellness",
+          ja: "健康とウェルネス",
+          prompts: [
+            "What do you do to stay healthy? / 健康のために何してる？",
+            "Do you think mental health awareness has improved? / メンタルヘルスの意識は向上したと思う？",
+            "What's a health trend you've tried? / 試した健康トレンドは？",
+          ],
+          vocab: ["wellness (ウェルネス)", "meditation (瞑想)", "nutrition (栄養)"],
+        },
+        {
+          topic: "Learning New Skills",
+          ja: "新しいスキルを学ぶ",
+          prompts: [
+            "What skill are you currently learning? / 今何のスキルを学んでる？",
+            "How do you stay motivated when learning something difficult? / 難しいことを学ぶ時のモチベーション維持法は？",
+            "Online courses vs. learning from books — which do you prefer? / オンラインコースと本、どっちが好き？",
+          ],
+          vocab: ["self-taught (独学の)", "practice (練習する)", "progress (上達)"],
+        },
+        {
+          topic: "Dreams & Goals",
+          ja: "夢と目標",
+          prompts: [
+            "What's a goal you're working toward right now? / 今取り組んでいる目標は？",
+            "Did your childhood dream come true? / 子どもの頃の夢は叶った？",
+            "Do you set New Year's resolutions? / 新年の抱負は立てる？",
+          ],
+          vocab: ["ambition (野望)", "achieve (達成する)", "milestone (マイルストーン)"],
+        },
+      ],
+      advanced: [
+        {
+          topic: "Cultural Identity",
+          ja: "文化的アイデンティティ",
+          prompts: [
+            "How has living abroad (or learning another language) changed your sense of identity? / 海外生活（や外国語学習）でアイデンティティはどう変わった？",
+            "Can you belong to multiple cultures at once? / 複数の文化に同時に属せると思う？",
+            "What aspects of your culture are you most proud of? / 自分の文化で最も誇りに思う部分は？",
+          ],
+          vocab: ["identity (アイデンティティ)", "assimilate (同化する)", "heritage (遺産)"],
+        },
+        {
+          topic: "Ethics of Technology",
+          ja: "テクノロジーの倫理",
+          prompts: [
+            "Should there be limits on what AI can do? / AIにできることに制限を設けるべき？",
+            "Who should be responsible when self-driving cars cause accidents? / 自動運転車の事故は誰の責任？",
+            "Is digital privacy a right or a privilege? / デジタルプライバシーは権利？それとも特権？",
+          ],
+          vocab: ["ethics (倫理)", "autonomous (自律的な)", "surveillance (監視)"],
+        },
+        {
+          topic: "Philosophy of Happiness",
+          ja: "幸福の哲学",
+          prompts: [
+            "Is happiness a choice or a circumstance? / 幸福は選択？それとも環境次第？",
+            "Does the pursuit of happiness actually make people less happy? / 幸福の追求はかえって人を不幸にする？",
+            "How do different cultures define happiness? / 文化によって幸福の定義はどう違う？",
+          ],
+          vocab: ["fulfillment (充実感)", "contentment (満足)", "philosophy (哲学)"],
+        },
+        {
+          topic: "Globalization & Local Culture",
+          ja: "グローバル化とローカル文化",
+          prompts: [
+            "Is globalization erasing local cultures or enriching them? / グローバル化はローカル文化を消している？豊かにしている？",
+            "Should countries protect their language from foreign influence? / 国は外国語の影響から自国語を守るべき？",
+            "What's a local tradition that you think the world should know about? / 世界に知ってほしいローカルな伝統は？",
+          ],
+          vocab: ["globalization (グローバル化)", "preserve (保存する)", "homogenization (均質化)"],
+        },
+        {
+          topic: "The Meaning of Success",
+          ja: "成功の意味",
+          prompts: [
+            "Has your definition of success changed over the years? / 成功の定義は年齢とともに変わった？",
+            "Is financial success overrated in modern society? / 経済的成功は現代社会で過大評価されてる？",
+            "Can failure be more valuable than success? / 失敗は成功より価値がある？",
+          ],
+          vocab: ["ambition (野心)", "redefine (再定義する)", "perspective (視点)"],
         },
       ],
     },

@@ -8,6 +8,7 @@ interface ChatRequest {
   message: string;
   session: ChatSession;
   autoLevel?: string;
+  uiLang?: string;
 }
 
 interface SlotData {
@@ -125,10 +126,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const apiKey = import.meta.env.CLAUDE_API_KEY ?? locals.runtime?.env?.CLAUDE_API_KEY;
   if (!apiKey) return new Response('AI not configured', { status: 500 });
 
-  const { message, session, autoLevel } = (await request.json()) as ChatRequest;
+  const { message, session, autoLevel, uiLang } = (await request.json()) as ChatRequest;
 
   const currentState = session.state;
-  const systemPrompt = getChatSystemPrompt(currentState, session.slots, autoLevel);
+  const systemPrompt = getChatSystemPrompt(currentState, session.slots, autoLevel, uiLang);
 
   const aiMessages = [
     ...session.messages.map(m => ({

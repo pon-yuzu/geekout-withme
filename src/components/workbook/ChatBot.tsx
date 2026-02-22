@@ -11,13 +11,14 @@ const INITIAL_SESSION: ChatSession = {
 };
 
 interface Props {
+  lang?: string;
   autoLevelEnglish?: string | null;
   autoLevelLabelEnglish?: string | null;
   autoLevelJapanese?: string | null;
   autoLevelLabelJapanese?: string | null;
 }
 
-export function ChatBot({ autoLevelEnglish, autoLevelLabelEnglish, autoLevelJapanese, autoLevelLabelJapanese }: Props) {
+export function ChatBot({ lang: uiLang = 'ja', autoLevelEnglish, autoLevelLabelEnglish, autoLevelJapanese, autoLevelLabelJapanese }: Props) {
   const { t } = useTranslation();
   const [session, setSession] = useState<ChatSession>(INITIAL_SESSION);
   const [input, setInput] = useState('');
@@ -51,6 +52,7 @@ export function ChatBot({ autoLevelEnglish, autoLevelLabelEnglish, autoLevelJapa
         body: JSON.stringify({
           message: '__greeting__',
           session: INITIAL_SESSION,
+          uiLang,
         }),
       });
       const data = await res.json();
@@ -84,6 +86,7 @@ export function ChatBot({ autoLevelEnglish, autoLevelLabelEnglish, autoLevelJapa
           message: text,
           session: { ...session, messages: updatedMessages },
           autoLevel: autoLevel ?? undefined,
+          uiLang,
         }),
       });
       const data = await res.json();

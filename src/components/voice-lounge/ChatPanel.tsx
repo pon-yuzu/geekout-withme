@@ -100,7 +100,7 @@ export default function ChatPanel({ messages, onSendMessage, onSendImage, curren
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl flex flex-col shadow-sm" style={{ height: '400px' }}>
+    <div className="bg-white border border-gray-200 rounded-xl flex flex-col shadow-sm" style={{ height: '550px' }}>
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.length === 0 && (
