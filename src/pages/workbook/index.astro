@@ -42,7 +42,7 @@ if (supabase) {
 }
 
 // Filter by selected language
-const filteredMy = myWorkbooks.filter(wb => (wb.language || 'english') === wbLang);
+const filteredMy = myWorkbooks.filter(wb => (wb.language || 'english') === wbLang && !wb.is_public);
 const filteredPublic = publicWorkbooks.filter(wb => (wb.language || 'english') === wbLang);
 const filteredWorkbooks = tab === 'mine' ? filteredMy : filteredPublic;
 const samples = wbLang === 'japanese' ? sampleJapanese : sampleEnglish;
