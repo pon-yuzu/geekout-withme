@@ -194,20 +194,30 @@ const { title, description = "Find your language level, discover resources, and 
     </footer>
     <div class="fixed bottom-1 right-2 text-[10px] text-gray-300 pointer-events-none select-none">{buildId}</div>
 
-    {/* Floating bug report button */}
-    <button
+    <!-- Floating bug report button -->
+    <a
       id="feedback-btn"
-      class="fixed bottom-6 left-6 z-50 w-12 h-12 bg-gray-800 hover:bg-gray-700 text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+      href={FEEDBACK_FORM_URL}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="fixed bottom-6 left-6 z-50 w-12 h-12 bg-gray-800 hover:bg-gray-700 text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 no-underline"
       title={t(lang, 'header.report')}
       aria-label={t(lang, 'header.report')}
     >
       <span class="text-lg">🐛</span>
-    </button>
+    </a>
 
-    <script is:inline define:vars={{ FEEDBACK_FORM_URL }}>
-      document.getElementById('feedback-btn')?.addEventListener('click', function() {
-        var pageUrl = encodeURIComponent(window.location.pathname);
-        window.open(FEEDBACK_FORM_URL + '?entry.1677210818=' + pageUrl, '_blank');
+    <script is:inline>
+      document.addEventListener('DOMContentLoaded', function() {
+        var btn = document.getElementById('feedback-btn');
+        if (btn) {
+          btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            var base = btn.getAttribute('href');
+            var page = encodeURIComponent(window.location.pathname);
+            window.open(base + '?entry.1677210818=' + page, '_blank');
+          });
+        }
       });
     </script>
   </body>
