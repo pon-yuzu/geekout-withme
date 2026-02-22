@@ -13,6 +13,8 @@
   "nav.login": "Log in",
   "nav.signup": "Sign up",
 
+  "header.report": "Report",
+
   "footer.contact": "Contact Us",
   "footer.legal": "Legal",
   "footer.privacy": "Privacy Policy",
@@ -90,6 +92,12 @@
   "levelCheck.back": "← Back",
   "levelCheck.quit": "Quit Assessment",
   "levelCheck.quitConfirm": "Are you sure you want to quit? Your progress will be lost.",
+  "levelCheck.warning": "If you quit midway, you'll need to start over. Please begin when you have enough time.",
+  "levelCheck.estimatedTime": "Estimated time:",
+  "levelCheck.timeText": "Text only: 5\u201310 min",
+  "levelCheck.timeListening": "Listening only: 5\u201310 min",
+  "levelCheck.timeSpeaking": "Speaking only: 5\u201310 min",
+  "levelCheck.timeAll": "All: 15\u201325 min",
   "levelCheck.loginForAccuracy": "Log in for more accurate AI-powered assessment",
   "levelCheck.monthlyLimit": "You've already taken the assessment this month. Standard analysis will be used.",
   "levelCheck.level": "Level:",

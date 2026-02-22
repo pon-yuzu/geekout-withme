@@ -14,6 +14,7 @@ interface Props {
 const lang = Astro.locals.lang as Lang;
 const hasLangCookie = Astro.request.headers.get('cookie')?.includes('lang=');
 const buildId = __BUILD_ID__;
+const FEEDBACK_FORM_URL = 'https://forms.gle/placeholder';
 
 const { title, description = "Find your language level, discover resources, and connect with fellow language geeks!", user } = Astro.props;
 ---
@@ -86,6 +87,11 @@ const { title, description = "Find your language level, discover resources, and 
               <div class="bg-white border border-orange-100 rounded-xl shadow-lg py-2 min-w-[180px]">
                 <a href="/links" class="block px-4 py-2 text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">{t(lang, 'nav.links')}</a>
                 <a href="/contact" class="block px-4 py-2 text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">{t(lang, 'nav.contact')}</a>
+                {FEEDBACK_FORM_URL && (
+                  <a href={FEEDBACK_FORM_URL} target="_blank" rel="noopener noreferrer" class="block px-4 py-2 text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">
+                    🐛 {t(lang, 'header.report')}
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -129,6 +135,11 @@ const { title, description = "Find your language level, discover resources, and 
           <div class="border-t border-orange-100 mt-2 pt-2">
             <a href="/links" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.links')}</a>
             <a href="/contact" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.contact')}</a>
+            {FEEDBACK_FORM_URL && (
+              <a href={FEEDBACK_FORM_URL} target="_blank" rel="noopener noreferrer" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">
+                🐛 {t(lang, 'header.report')}
+              </a>
+            )}
           </div>
           {!user && (
             <div class="flex items-center gap-3 pt-2 border-t border-orange-100">

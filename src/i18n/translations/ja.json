@@ -13,6 +13,8 @@
   "nav.login": "ログイン",
   "nav.signup": "新規登録",
 
+  "header.report": "報告",
+
   "footer.contact": "お問い合わせ",
   "footer.legal": "特定商取引法に基づく表記",
   "footer.privacy": "プライバシーポリシー",
@@ -90,6 +92,12 @@
   "levelCheck.back": "← 戻る",
   "levelCheck.quit": "アセスメントをやめる",
   "levelCheck.quitConfirm": "本当にやめますか？進捗は失われます。",
+  "levelCheck.warning": "テストを途中でやめると最初からやり直しになります。時間に余裕がある時に始めてください。",
+  "levelCheck.estimatedTime": "目安の所要時間:",
+  "levelCheck.timeText": "テキストのみ: 5\u301c10分",
+  "levelCheck.timeListening": "リスニングのみ: 5\u301c10分",
+  "levelCheck.timeSpeaking": "スピーキングのみ: 5\u301c10分",
+  "levelCheck.timeAll": "すべて: 15\u301c25分",
   "levelCheck.loginForAccuracy": "ログインするとAIによる高精度な診断が受けられます",
   "levelCheck.monthlyLimit": "今月すでにアセスメントを受けています。通常の分析が使用されます。",
   "levelCheck.level": "レベル：",

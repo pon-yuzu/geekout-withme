@@ -240,8 +240,23 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
               <span className="block text-sm text-gray-500 ml-9">{t('levelCheck.selectMode.bothSub')}</span>
             </button>
           </div>
+          {/* Warning & estimated time */}
+          <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl px-5 py-4 max-w-md mx-auto text-left">
+            <p className="text-amber-800 text-sm font-medium mb-2">
+              {t('levelCheck.warning')}
+            </p>
+            <p className="text-amber-700 text-xs font-medium mb-1">
+              {t('levelCheck.estimatedTime')}
+            </p>
+            <ul className="text-amber-700 text-xs space-y-0.5 ml-1">
+              <li>{t('levelCheck.timeText')}</li>
+              <li>{t('levelCheck.timeListening')}</li>
+              <li>{t('levelCheck.timeSpeaking')}</li>
+              <li>{t('levelCheck.timeAll')}</li>
+            </ul>
+          </div>
           {!isLoggedIn && (
-            <div className="mt-6 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 max-w-md mx-auto">
+            <div className="mt-4 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 max-w-md mx-auto">
               <p className="text-blue-700 text-sm">
                 <a href="/login" className="underline underline-offset-2 font-medium hover:text-blue-900">{t('levelCheck.loginForAccuracy')}</a>
               </p>

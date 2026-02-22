@@ -277,5 +277,21 @@ export const japaneseQuestionPool: LevelBlock[] = [
   },
 ];
 
+// Shuffle options while tracking the correct answer index
+export function shuffleOptions(options: string[], correct: number | number[]): { shuffled: string[]; newCorrect: number | number[] } {
+  const indexed = options.map((text, i) => ({ text, origIndex: i }));
+  for (let i = indexed.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [indexed[i], indexed[j]] = [indexed[j], indexed[i]];
+  }
+  const shuffled = indexed.map(o => o.text);
+  if (Array.isArray(correct)) {
+    const newCorrect = correct.map(c => indexed.findIndex(o => o.origIndex === c));
+    return { shuffled, newCorrect };
+  }
+  const newCorrect = indexed.findIndex(o => o.origIndex === correct);
+  return { shuffled, newCorrect };
+}
+
 export const QUESTIONS_PER_LEVEL = 5;
 export const PASS_THRESHOLD = 3;

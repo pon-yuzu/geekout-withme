@@ -8,6 +8,7 @@ import {
   LISTENING_PASS_THRESHOLD,
   type ListeningLevelBlock,
 } from '../lib/listeningQuestions';
+import { shuffleOptions } from '../lib/questions';
 
 interface Props {
   language: 'english' | 'japanese';
@@ -59,6 +60,12 @@ export default function ListeningAssessment({
   const currentQuestion = currentLevel.questions[currentQuestionIndex];
   const totalQuestions = levels.length * LISTENING_QUESTIONS_PER_LEVEL;
   const answeredSoFar = currentLevelIndex * LISTENING_QUESTIONS_PER_LEVEL + currentQuestionIndex;
+
+  // Shuffle options for each question
+  const { shuffled: shuffledOptions, newCorrect: shuffledCorrect } = useMemo(
+    () => shuffleOptions(currentQuestion.options, currentQuestion.correct),
+    [currentLevelIndex, currentQuestionIndex],
+  );
 
   const audioSrc = `/audio/listening/${currentQuestion.id}.mp3`;
 
@@ -168,7 +175,7 @@ export default function ListeningAssessment({
   const handleNext = () => {
     if (selectedOption === null || showingFeedback) return;
 
-    const isCorrect = selectedOption === currentQuestion.correct;
+    const isCorrect = selectedOption === shuffledCorrect;
     const newAnswer = { level: currentLevel.level, correct: isCorrect };
     const updatedAnswers = [...allAnswers, newAnswer];
     setAllAnswers(updatedAnswers);
@@ -315,11 +322,11 @@ export default function ListeningAssessment({
 
               {/* Options */}
               <div className="space-y-3 max-w-lg mx-auto mb-8">
-                {currentQuestion.options.map((option, index) => {
+                {shuffledOptions.map((option, index) => {
                   let className = 'w-full px-6 py-4 rounded-xl text-left transition-all ';
 
                   if (showingFeedback) {
-                    if (index === currentQuestion.correct) {
+                    if (index === shuffledCorrect) {
                       className += 'bg-green-50 border-2 border-green-500 text-green-800';
                     } else if (index === selectedOption && feedbackState === 'incorrect') {
                       className += 'bg-red-50 border-2 border-red-400 text-red-700';

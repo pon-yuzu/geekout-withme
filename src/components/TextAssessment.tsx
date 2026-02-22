@@ -4,6 +4,7 @@ import {
   englishQuestionPool,
   japaneseQuestionPool,
   selectQuestions,
+  shuffleOptions,
   QUESTIONS_PER_LEVEL,
   PASS_THRESHOLD,
   type LevelBlock,
@@ -56,6 +57,12 @@ export default function TextAssessment({
   const currentQuestion = currentLevel.questions[currentQuestionIndex];
   const totalQuestions = levels.length * QUESTIONS_PER_LEVEL;
   const answeredSoFar = currentLevelIndex * QUESTIONS_PER_LEVEL + currentQuestionIndex;
+
+  // Shuffle options for each question (re-shuffle when question changes)
+  const { shuffled: shuffledOptions, newCorrect: shuffledCorrect } = useMemo(
+    () => shuffleOptions(currentQuestion.options, currentQuestion.correct),
+    [currentLevelIndex, currentQuestionIndex],
+  );
 
   const checkCorrect = (
     selected: number,
@@ -135,7 +142,7 @@ export default function TextAssessment({
   const handleNext = () => {
     if (selectedOption === null || showingFeedback) return;
 
-    const isCorrect = checkCorrect(selectedOption, currentQuestion.correct);
+    const isCorrect = checkCorrect(selectedOption, shuffledCorrect);
     const newAnswer = { level: currentLevel.level, correct: isCorrect };
     const updatedAnswers = [...allAnswers, newAnswer];
     setAllAnswers(updatedAnswers);
@@ -155,10 +162,10 @@ export default function TextAssessment({
     currentLevelIndex === levels.length - 1 &&
     currentQuestionIndex === currentLevel.questions.length - 1;
 
-  // Determine correct answer index for feedback display
-  const correctIndex = Array.isArray(currentQuestion.correct)
-    ? currentQuestion.correct[0]
-    : currentQuestion.correct;
+  // Determine correct answer index for feedback display (using shuffled index)
+  const correctIndex = Array.isArray(shuffledCorrect)
+    ? shuffledCorrect[0]
+    : shuffledCorrect;
 
   return (
     <div>
@@ -250,7 +257,7 @@ export default function TextAssessment({
 
           {/* Options */}
           <div className="space-y-3 max-w-lg mx-auto mb-8">
-            {currentQuestion.options.map((option, index) => {
+            {shuffledOptions.map((option, index) => {
               let className =
                 'w-full px-6 py-4 rounded-xl text-left transition-all ';
 
