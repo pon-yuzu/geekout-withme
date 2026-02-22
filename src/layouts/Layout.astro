@@ -14,7 +14,7 @@ interface Props {
 const lang = Astro.locals.lang as Lang;
 const hasLangCookie = Astro.request.headers.get('cookie')?.includes('lang=');
 const buildId = __BUILD_ID__;
-const FEEDBACK_FORM_URL = 'https://forms.gle/placeholder';
+const FEEDBACK_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdQJcfpioXMYeeGm5ezhSpM4f5OMsem9RIHdb1xG3KvQKR6Dg/viewform';
 
 const { title, description = "Find your language level, discover resources, and connect with fellow language geeks!", user } = Astro.props;
 ---
