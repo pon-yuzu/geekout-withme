@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from '../../i18n/index';
 import ParticipantList from './ParticipantList';
 import ChatPanel from './ChatPanel';
+import ConversationCards from './ConversationCards';
+import type { ConversationLevelId } from '../../data/conversationData';
 
 interface Participant {
   id: string;
@@ -22,6 +24,8 @@ interface Props {
   userId: string;
   userName: string;
   onLeave: () => void;
+  isPremium?: boolean;
+  autoLevel?: ConversationLevelId | null;
 }
 
 function AudioPlayer({ stream }: { stream: MediaStream }) {
@@ -32,7 +36,7 @@ function AudioPlayer({ stream }: { stream: MediaStream }) {
   return <audio ref={ref} autoPlay />;
 }
 
-export default function ChatRoom({ roomId, roomName, userId, userName, onLeave }: Props) {
+export default function ChatRoom({ roomId, roomName, userId, userName, onLeave, isPremium, autoLevel }: Props) {
   const { t } = useTranslation();
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -40,6 +44,7 @@ export default function ChatRoom({ roomId, roomName, userId, userName, onLeave }
   const [connected, setConnected] = useState(false);
   const [error, setError] = useState('');
   const [remoteStreams, setRemoteStreams] = useState<Map<string, MediaStream>>(new Map());
+  const [activeTab, setActiveTab] = useState<'chat' | 'cards'>('chat');
 
   const wsRef = useRef<WebSocket | null>(null);
   const audioStreamRef = useRef<MediaStream | null>(null);
@@ -255,6 +260,13 @@ export default function ChatRoom({ roomId, roomName, userId, userName, onLeave }
     }
   };
 
+  const handleShareToChat = (text: string) => {
+    sendMessage(text);
+    setActiveTab('chat');
+  };
+
+  const showCardsTab = isPremium;
+
   return (
     <div>
       {/* Remote audio streams (hidden) */}
@@ -305,14 +317,50 @@ export default function ChatRoom({ roomId, roomName, userId, userName, onLeave }
           />
         </div>
 
-        {/* Chat */}
+        {/* Chat + Cards panel */}
         <div className="md:col-span-2">
-          <ChatPanel
-            messages={messages}
-            onSendMessage={sendMessage}
-            onSendImage={sendImage}
-            currentUserId={userId}
-          />
+          {/* Tab bar */}
+          {showCardsTab && (
+            <div className="flex mb-3 bg-gray-100 rounded-lg p-0.5">
+              <button
+                onClick={() => setActiveTab('chat')}
+                className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${
+                  activeTab === 'chat'
+                    ? 'bg-white text-gray-800 shadow-sm'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                {t('chatRoom.tabChat')}
+              </button>
+              <button
+                onClick={() => setActiveTab('cards')}
+                className={`flex-1 py-2 text-sm font-medium rounded-md transition-colors ${
+                  activeTab === 'cards'
+                    ? 'bg-white text-gray-800 shadow-sm'
+                    : 'text-gray-500 hover:text-gray-700'
+                }`}
+              >
+                {t('chatRoom.tabCards')}
+              </button>
+            </div>
+          )}
+
+          {/* Tab content */}
+          {activeTab === 'chat' ? (
+            <ChatPanel
+              messages={messages}
+              onSendMessage={sendMessage}
+              onSendImage={sendImage}
+              currentUserId={userId}
+            />
+          ) : (
+            <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm" style={{ height: '400px' }}>
+              <ConversationCards
+                onShareToChat={handleShareToChat}
+                autoLevel={autoLevel}
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
