@@ -46,9 +46,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
     customer: customerId,
     line_items: [{ price: priceId, quantity: 1 }],
     mode: 'subscription',
-    subscription_data: {
-      trial_period_days: 30,
-    },
     success_url: `${origin}/community?success=true`,
     cancel_url: `${origin}/community?canceled=true`,
   });
