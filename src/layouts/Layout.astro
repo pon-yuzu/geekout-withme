@@ -87,11 +87,6 @@ const { title, description = "Find your language level, discover resources, and 
               <div class="bg-white border border-orange-100 rounded-xl shadow-lg py-2 min-w-[180px]">
                 <a href="/links" class="block px-4 py-2 text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">{t(lang, 'nav.links')}</a>
                 <a href="/contact" class="block px-4 py-2 text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">{t(lang, 'nav.contact')}</a>
-                {FEEDBACK_FORM_URL && (
-                  <a href={FEEDBACK_FORM_URL} target="_blank" rel="noopener noreferrer" class="block px-4 py-2 text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">
-                    🐛 {t(lang, 'header.report')}
-                  </a>
-                )}
               </div>
             </div>
           </div>
@@ -135,11 +130,6 @@ const { title, description = "Find your language level, discover resources, and 
           <div class="border-t border-orange-100 mt-2 pt-2">
             <a href="/links" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.links')}</a>
             <a href="/contact" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.contact')}</a>
-            {FEEDBACK_FORM_URL && (
-              <a href={FEEDBACK_FORM_URL} target="_blank" rel="noopener noreferrer" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">
-                🐛 {t(lang, 'header.report')}
-              </a>
-            )}
           </div>
           {!user && (
             <div class="flex items-center gap-3 pt-2 border-t border-orange-100">
@@ -203,6 +193,23 @@ const { title, description = "Find your language level, discover resources, and 
       </div>
     </footer>
     <div class="fixed bottom-1 right-2 text-[10px] text-gray-300 pointer-events-none select-none">{buildId}</div>
+
+    {/* Floating bug report button */}
+    <button
+      id="feedback-btn"
+      class="fixed bottom-6 left-6 z-50 w-12 h-12 bg-gray-800 hover:bg-gray-700 text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
+      title={t(lang, 'header.report')}
+      aria-label={t(lang, 'header.report')}
+    >
+      <span class="text-lg">🐛</span>
+    </button>
+
+    <script is:inline define:vars={{ FEEDBACK_FORM_URL }}>
+      document.getElementById('feedback-btn')?.addEventListener('click', function() {
+        var pageUrl = encodeURIComponent(window.location.pathname);
+        window.open(FEEDBACK_FORM_URL + '?entry.1677210818=' + pageUrl, '_blank');
+      });
+    </script>
   </body>
 </html>
 
