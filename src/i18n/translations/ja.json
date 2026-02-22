@@ -14,7 +14,13 @@
   "nav.signup": "新規登録",
 
   "footer.contact": "お問い合わせ",
+  "footer.legal": "特定商取引法に基づく表記",
+  "footer.privacy": "プライバシーポリシー",
+  "footer.terms": "利用規約",
   "footer.copyright": "© 2026 Geek Out With Me. 情熱が言葉の壁を壊す。",
+  "legal.tokushoho": "特定商取引法に基づく表記",
+  "legal.privacy": "プライバシーポリシー",
+  "legal.terms": "利用規約",
 
   "home.hero.title1": "好きなことで",
   "home.hero.title2": "言語を学ぼう",

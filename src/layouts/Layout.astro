@@ -179,7 +179,15 @@ const { title, description = "Find your language level, discover resources, and 
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/><path d="M12 2L2 7l10 5 10-5-10-5z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2 12l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2 17l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
           </a>
         </div>
-        <a href="/contact" class="inline-block text-sm text-gray-400 hover:text-orange-500 transition-colors mb-4">{t(lang, 'footer.contact')}</a>
+        <div class="flex justify-center items-center gap-4 mb-3 text-sm">
+          <a href="/contact" class="text-gray-400 hover:text-orange-500 transition-colors">{t(lang, 'footer.contact')}</a>
+          <span class="text-gray-300">|</span>
+          <a href="/terms" class="text-gray-400 hover:text-orange-500 transition-colors">{t(lang, 'footer.terms')}</a>
+          <span class="text-gray-300">|</span>
+          <a href="/privacy" class="text-gray-400 hover:text-orange-500 transition-colors">{t(lang, 'footer.privacy')}</a>
+          <span class="text-gray-300">|</span>
+          <a href="/legal" class="text-gray-400 hover:text-orange-500 transition-colors">{t(lang, 'footer.legal')}</a>
+        </div>
         <p class="text-gray-500 text-sm">{t(lang, 'footer.copyright')}</p>
       </div>
     </footer>

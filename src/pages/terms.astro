@@ -1,0 +1,20 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { t } from '../i18n/index';
+import type { Lang } from '../i18n/index';
+import { marked } from 'marked';
+// @ts-ignore
+import md from '../../policies/terms-of-service.md?raw';
+
+const lang = Astro.locals.lang as Lang;
+const user = Astro.locals.user;
+const html = await marked(md);
+---
+
+<Layout title={t(lang, 'legal.terms')} user={user}>
+  <section class="py-12 px-4">
+    <div class="max-w-3xl mx-auto prose prose-gray prose-headings:text-gray-800 prose-a:text-orange-500 prose-table:text-sm">
+      <Fragment set:html={html} />
+    </div>
+  </section>
+</Layout>
