@@ -2,11 +2,12 @@ import type { APIRoute } from 'astro';
 import { createStripeClient } from '../../../lib/stripe';
 import { createClient } from '@supabase/supabase-js';
 
-export const POST: APIRoute = async ({ request }) => {
-  const stripeSecretKey = import.meta.env.STRIPE_SECRET_KEY;
-  const webhookSecret = import.meta.env.STRIPE_WEBHOOK_SECRET;
+export const POST: APIRoute = async ({ request, locals }) => {
+  const runtime = (locals as any).runtime;
+  const stripeSecretKey = runtime?.env?.STRIPE_SECRET_KEY || import.meta.env.STRIPE_SECRET_KEY;
+  const webhookSecret = runtime?.env?.STRIPE_WEBHOOK_SECRET || import.meta.env.STRIPE_WEBHOOK_SECRET;
   const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-  const supabaseServiceKey = import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
+  const supabaseServiceKey = runtime?.env?.SUPABASE_SERVICE_ROLE_KEY || import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!stripeSecretKey || !webhookSecret || !supabaseUrl || !supabaseServiceKey) {
     return new Response('Server configuration error', { status: 500 });

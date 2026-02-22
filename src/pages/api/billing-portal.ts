@@ -7,7 +7,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
 
-  const stripeSecretKey = import.meta.env.STRIPE_SECRET_KEY;
+  const runtime = (locals as any).runtime;
+  const stripeSecretKey = runtime?.env?.STRIPE_SECRET_KEY || import.meta.env.STRIPE_SECRET_KEY;
   if (!stripeSecretKey) {
     return new Response(JSON.stringify({ error: 'Stripe not configured' }), { status: 500 });
   }

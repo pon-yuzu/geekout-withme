@@ -7,8 +7,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
   }
 
-  const stripeSecretKey = import.meta.env.STRIPE_SECRET_KEY;
-  const priceId = import.meta.env.STRIPE_PRICE_ID;
+  const runtime = (locals as any).runtime;
+  const stripeSecretKey = runtime?.env?.STRIPE_SECRET_KEY || import.meta.env.STRIPE_SECRET_KEY;
+  const priceId = runtime?.env?.STRIPE_PRICE_ID || import.meta.env.STRIPE_PRICE_ID;
 
   if (!stripeSecretKey || !priceId) {
     return new Response(JSON.stringify({ error: 'Stripe not configured' }), { status: 500 });
@@ -45,6 +46,9 @@ export const POST: APIRoute = async ({ request, locals }) => {
     customer: customerId,
     line_items: [{ price: priceId, quantity: 1 }],
     mode: 'subscription',
+    subscription_data: {
+      trial_period_days: 30,
+    },
     success_url: `${origin}/community?success=true`,
     cancel_url: `${origin}/community?canceled=true`,
   });
