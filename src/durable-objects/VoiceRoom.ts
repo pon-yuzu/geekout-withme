@@ -144,6 +144,50 @@ export class VoiceRoom {
             }));
             break;
           }
+
+          case 'translated_message': {
+            if (typeof data.originalText !== 'string' || typeof data.translatedText !== 'string') break;
+            if (raw.length > MAX_SIGNAL_SIZE) break;
+            this.broadcast(JSON.stringify({
+              type: 'translated_message',
+              from: { id: userId, name: userName },
+              originalText: data.originalText.slice(0, MAX_CHAT_MESSAGE_LENGTH),
+              translatedText: data.translatedText.slice(0, MAX_CHAT_MESSAGE_LENGTH),
+              originalLang: data.originalLang === 'ja' ? 'ja' : 'en',
+              timestamp: Date.now(),
+            }));
+            break;
+          }
+
+          case 'card': {
+            if (typeof data.topic !== 'string' || typeof data.prompt !== 'string') break;
+            if (raw.length > MAX_SIGNAL_SIZE) break;
+            this.broadcast(JSON.stringify({
+              type: 'card',
+              from: { id: userId, name: userName },
+              category: String(data.category || ''),
+              topic: data.topic.slice(0, 200),
+              topicJa: String(data.topicJa || '').slice(0, 200),
+              prompt: data.prompt.slice(0, MAX_CHAT_MESSAGE_LENGTH),
+              vocab: Array.isArray(data.vocab) ? data.vocab.slice(0, 20) : [],
+              timestamp: Date.now(),
+            }));
+            break;
+          }
+
+          case 'timer_event': {
+            if (!['start', 'language_switch', 'end'].includes(data.event)) break;
+            if (raw.length > MAX_SIGNAL_SIZE) break;
+            this.broadcast(JSON.stringify({
+              type: 'timer_event',
+              from: { id: userId, name: userName },
+              event: data.event,
+              totalMinutes: typeof data.totalMinutes === 'number' ? data.totalMinutes : undefined,
+              newLang: data.newLang === 'ja' || data.newLang === 'en' ? data.newLang : undefined,
+              timestamp: Date.now(),
+            }));
+            break;
+          }
         }
       } catch {
         // Invalid message format — silently drop

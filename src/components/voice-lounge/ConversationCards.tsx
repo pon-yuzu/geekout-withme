@@ -39,8 +39,24 @@ interface SessionConfig {
   sessionMinutes: number;
 }
 
+interface CardData {
+  category: string;
+  topic: string;
+  topicJa: string;
+  prompt: string;
+  vocab: string[];
+}
+
+interface TimerEventData {
+  event: 'start' | 'language_switch' | 'end';
+  totalMinutes?: number;
+  newLang?: 'ja' | 'en';
+}
+
 interface Props {
   onShareToChat?: (text: string) => void;
+  onShareCardToChat?: (cardData: CardData) => void;
+  onTimerEvent?: (eventData: TimerEventData) => void;
   autoLevel?: ConversationLevelId | null;
 }
 
@@ -185,6 +201,7 @@ function SessionTimer({
   onReset,
   lang,
   onLangSwitch,
+  onTimerEnd,
 }: {
   totalSeconds: number;
   isRunning: boolean;
@@ -192,6 +209,7 @@ function SessionTimer({
   onReset: () => void;
   lang: 'en' | 'ja';
   onLangSwitch: () => void;
+  onTimerEnd?: () => void;
 }) {
   const [elapsed, setElapsed] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -214,6 +232,12 @@ function SessionTimer({
       onLangSwitch();
     }
   }, [elapsed, halfTime, isRunning, onLangSwitch]);
+
+  useEffect(() => {
+    if (remaining === 0 && isRunning) {
+      onTimerEnd?.();
+    }
+  }, [remaining, isRunning, onTimerEnd]);
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-3 mb-3">
@@ -430,10 +454,14 @@ function ActiveSession({
   config,
   onEnd,
   onShareToChat,
+  onShareCardToChat,
+  onTimerEvent,
 }: {
   config: SessionConfig;
   onEnd: () => void;
   onShareToChat?: (text: string) => void;
+  onShareCardToChat?: (cardData: CardData) => void;
+  onTimerEvent?: (eventData: TimerEventData) => void;
 }) {
   const { myLevel, partnerLevel, selectedCats, sessionMinutes } = config;
 
@@ -464,16 +492,36 @@ function ActiveSession({
   const currentCard = deck[cardIdx % deck.length];
 
   const handleLangSwitch = () => {
-    setLang(l => (l === 'en' ? 'ja' : 'en'));
+    const newLang = lang === 'en' ? 'ja' : 'en';
+    setLang(newLang);
     setShowLangAlert(true);
     setTimeout(() => setShowLangAlert(false), 3000);
+    onTimerEvent?.({ event: 'language_switch', newLang });
+  };
+
+  const handleTimerToggle = () => {
+    const willRun = !timerRunning;
+    setTimerRunning(willRun);
+    if (willRun) {
+      onTimerEvent?.({ event: 'start', totalMinutes: sessionMinutes });
+    }
   };
 
   const handleShare = () => {
-    if (!currentCard || !onShareToChat) return;
+    if (!currentCard) return;
     const prompt = currentCard.prompts[0];
-    const text = `🃏 Topic: ${currentCard.topic} / ${currentCard.ja} — ${prompt}`;
-    onShareToChat(text);
+    if (onShareCardToChat) {
+      onShareCardToChat({
+        category: currentCard.category,
+        topic: currentCard.topic,
+        topicJa: currentCard.ja,
+        prompt,
+        vocab: currentCard.vocab,
+      });
+    } else if (onShareToChat) {
+      const text = `🃏 Topic: ${currentCard.topic} / ${currentCard.ja} — ${prompt}`;
+      onShareToChat(text);
+    }
   };
 
   return (
@@ -490,10 +538,11 @@ function ActiveSession({
       <SessionTimer
         totalSeconds={sessionMinutes * 60}
         isRunning={timerRunning}
-        onToggle={() => setTimerRunning(!timerRunning)}
+        onToggle={handleTimerToggle}
         onReset={() => { setTimerRunning(false); setLang('en'); }}
         lang={lang}
         onLangSwitch={handleLangSwitch}
+        onTimerEnd={() => onTimerEvent?.({ event: 'end' })}
       />
 
       <RoleSelector selectedRole={role} onSelect={setRole} />
@@ -504,7 +553,7 @@ function ActiveSession({
           card={currentCard}
           onNext={() => setCardIdx(i => i + 1)}
           onShuffle={() => { setDeck(shuffleArray(allCards)); setCardIdx(0); }}
-          onShare={onShareToChat ? handleShare : undefined}
+          onShare={(onShareCardToChat || onShareToChat) ? handleShare : undefined}
           cardIndex={cardIdx % deck.length}
           totalCards={deck.length}
         />
@@ -522,7 +571,7 @@ function ActiveSession({
 
 // ─── Main Export ──────────────────────────────────────────────────────────────
 
-export default function ConversationCards({ onShareToChat, autoLevel }: Props) {
+export default function ConversationCards({ onShareToChat, onShareCardToChat, onTimerEvent, autoLevel }: Props) {
   const [screen, setScreen] = useState<'setup' | 'session'>('setup');
   const [config, setConfig] = useState<SessionConfig | null>(null);
 
@@ -541,6 +590,8 @@ export default function ConversationCards({ onShareToChat, autoLevel }: Props) {
           config={config}
           onEnd={() => setScreen('setup')}
           onShareToChat={onShareToChat}
+          onShareCardToChat={onShareCardToChat}
+          onTimerEvent={onTimerEvent}
         />
       ) : null}
     </div>

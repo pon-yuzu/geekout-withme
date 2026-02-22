@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from '../../i18n/index';
 import ParticipantList from './ParticipantList';
 import ChatPanel from './ChatPanel';
+import type { ChatMessage } from './ChatPanel';
 import ConversationCards from './ConversationCards';
 import type { ConversationLevelId } from '../../data/conversationData';
 
@@ -11,11 +12,18 @@ interface Participant {
   muted: boolean;
 }
 
-interface ChatMessage {
-  from: { id: string; name: string };
-  message?: string;
-  imageData?: string;
-  timestamp: number;
+interface CardData {
+  category: string;
+  topic: string;
+  topicJa: string;
+  prompt: string;
+  vocab: string[];
+}
+
+interface TimerEventData {
+  event: 'start' | 'language_switch' | 'end';
+  totalMinutes?: number;
+  newLang?: 'ja' | 'en';
 }
 
 interface Props {
@@ -151,6 +159,7 @@ export default function ChatRoom({ roomId, roomName, userId, userName, onLeave, 
             break;
           case 'chat-message':
             setMessages(prev => [...prev, {
+              type: 'message',
               from: data.from,
               message: data.message,
               timestamp: data.timestamp,
@@ -158,8 +167,41 @@ export default function ChatRoom({ roomId, roomName, userId, userName, onLeave, 
             break;
           case 'chat-image':
             setMessages(prev => [...prev, {
+              type: 'image',
               from: data.from,
               imageData: data.imageData,
+              timestamp: data.timestamp,
+            }]);
+            break;
+          case 'translated_message':
+            setMessages(prev => [...prev, {
+              type: 'translated_message',
+              from: data.from,
+              originalText: data.originalText,
+              translatedText: data.translatedText,
+              originalLang: data.originalLang,
+              timestamp: data.timestamp,
+            }]);
+            break;
+          case 'card':
+            setMessages(prev => [...prev, {
+              type: 'card',
+              from: data.from,
+              category: data.category,
+              topic: data.topic,
+              topicJa: data.topicJa,
+              prompt: data.prompt,
+              vocab: data.vocab,
+              timestamp: data.timestamp,
+            }]);
+            break;
+          case 'timer_event':
+            setMessages(prev => [...prev, {
+              type: 'timer_event',
+              from: data.from,
+              event: data.event,
+              totalMinutes: data.totalMinutes,
+              newLang: data.newLang,
               timestamp: data.timestamp,
             }]);
             break;
@@ -245,6 +287,41 @@ export default function ChatRoom({ roomId, roomName, userId, userName, onLeave, 
     }
   };
 
+  const sendTranslatedMessage = (original: string, translated: string, originalLang: 'ja' | 'en') => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({
+        type: 'translated_message',
+        originalText: original,
+        translatedText: translated,
+        originalLang,
+      }));
+    }
+  };
+
+  const sendCardMessage = (cardData: CardData) => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({
+        type: 'card',
+        category: cardData.category,
+        topic: cardData.topic,
+        topicJa: cardData.topicJa,
+        prompt: cardData.prompt,
+        vocab: cardData.vocab,
+      }));
+    }
+  };
+
+  const sendTimerEvent = (eventData: TimerEventData) => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({
+        type: 'timer_event',
+        event: eventData.event,
+        totalMinutes: eventData.totalMinutes,
+        newLang: eventData.newLang,
+      }));
+    }
+  };
+
   const toggleMute = () => {
     const newMuted = !isMuted;
     setIsMuted(newMuted);
@@ -260,9 +337,13 @@ export default function ChatRoom({ roomId, roomName, userId, userName, onLeave, 
     }
   };
 
-  const handleShareToChat = (text: string) => {
-    sendMessage(text);
+  const handleShareCardToChat = (cardData: CardData) => {
+    sendCardMessage(cardData);
     setActiveTab('chat');
+  };
+
+  const handleTimerEvent = (eventData: TimerEventData) => {
+    sendTimerEvent(eventData);
   };
 
   const showCardsTab = isPremium;
@@ -351,14 +432,18 @@ export default function ChatRoom({ roomId, roomName, userId, userName, onLeave, 
               messages={messages}
               onSendMessage={sendMessage}
               onSendImage={sendImage}
+              onSendTranslated={isPremium ? sendTranslatedMessage : undefined}
               currentUserId={userId}
+              isPremium={isPremium}
             />
           </div>
           {showCardsTab && (
             <div style={{ display: activeTab === 'cards' ? 'block' : 'none' }}>
               <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm" style={{ height: '550px' }}>
                 <ConversationCards
-                  onShareToChat={handleShareToChat}
+                  onShareToChat={(text: string) => { sendMessage(text); setActiveTab('chat'); }}
+                  onShareCardToChat={handleShareCardToChat}
+                  onTimerEvent={handleTimerEvent}
                   autoLevel={autoLevel}
                 />
               </div>
