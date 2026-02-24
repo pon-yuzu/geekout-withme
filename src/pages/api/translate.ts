@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { tryIncrementUsage, quotaExceededResponse } from '../../lib/quota';
 
 const MAX_TEXT_LENGTH = 500;
 const JA_REGEX = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]/;
@@ -36,6 +37,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   const originalLang = JA_REGEX.test(text) ? 'ja' : 'en';
   const targetLang = originalLang === 'ja' ? 'English' : 'Japanese';
+
+  // Daily quota check
+  const quotaResult = await tryIncrementUsage(locals, 'translation');
+  if (!quotaResult.allowed) {
+    return quotaExceededResponse('translation');
+  }
 
   const runtime = (locals as any).runtime;
   const ai = runtime?.env?.AI;

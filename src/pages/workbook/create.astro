@@ -4,6 +4,7 @@ import { ChatBot } from '../../components/workbook/ChatBot';
 import { GenerationProgress } from '../../components/workbook/GenerationProgress';
 import { t } from '../../i18n/index';
 import type { Lang } from '../../i18n/index';
+import { isPromoActive } from '../../lib/promo';
 
 const user = Astro.locals.user;
 const lang = Astro.locals.lang as Lang;
@@ -25,6 +26,9 @@ if (supabase) {
     .limit(1);
   isPremium = (subs?.length ?? 0) > 0;
 }
+
+// During promo, all logged-in users get premium access
+if (isPromoActive()) isPremium = true;
 
 if (!isPremium) {
   return Astro.redirect('/community');

@@ -9,7 +9,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
   if (!user) return new Response('Unauthorized', { status: 401 });
 
   const workbookId = params.id!;
-  const apiKey = import.meta.env.CLAUDE_API_KEY ?? locals.runtime?.env?.CLAUDE_API_KEY;
+  const apiKey = import.meta.env.CF_AI_TOKEN ?? locals.runtime?.env?.CF_AI_TOKEN;
   if (!apiKey) return new Response('AI not configured', { status: 500 });
 
   const supabase = locals.supabase!;

@@ -3,17 +3,21 @@ interface AiMessage {
   content: string;
 }
 
-interface ClaudeResponse {
-  content: { type: string; text: string }[];
+interface WorkersAiResponse {
+  result: { response: string };
+  success: boolean;
+  errors: unknown[];
 }
 
-// Workers AI (Llama 3.1) - no API key needed, runs on Cloudflare edge
+const CF_MODEL = '@cf/meta/llama-3.1-70b-instruct';
+
+// Workers AI via binding (edge, no API key needed)
 export async function analyzeWithWorkersAI(
   ai: { run(model: string, inputs: Record<string, unknown>): Promise<{ response: string }> },
   systemPrompt: string,
   userMessage: string
 ): Promise<string> {
-  const result = await ai.run('@cf/meta/llama-3.1-8b-instruct', {
+  const result = await ai.run(CF_MODEL, {
     messages: [
       { role: 'system', content: systemPrompt },
       { role: 'user', content: userMessage },
@@ -22,60 +26,77 @@ export async function analyzeWithWorkersAI(
   return result.response;
 }
 
-// Claude API - optional upgrade, requires CLAUDE_API_KEY
-export async function analyzeWithClaude(
-  systemPrompt: string,
-  messages: { role: 'user' | 'assistant'; content: string }[],
-  apiKey: string
+// Workers AI via REST API
+async function callWorkersAiRest(
+  token: string,
+  messages: AiMessage[],
+  maxTokens?: number
 ): Promise<string> {
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-5-20250929',
-      max_tokens: 1024,
-      system: systemPrompt,
-      messages,
-    }),
-  });
+  const accountId = import.meta.env.CF_ACCOUNT_ID;
+  if (!accountId) throw new Error('CF_ACCOUNT_ID is not set');
+
+  const response = await fetch(
+    `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${CF_MODEL}`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        messages,
+        max_tokens: maxTokens ?? 1024,
+      }),
+    }
+  );
 
   if (!response.ok) {
     const error = await response.text();
-    throw new Error(`Claude API error: ${response.status} - ${error}`);
+    throw new Error(`Workers AI REST error: ${response.status} - ${error}`);
   }
 
-  const data = (await response.json()) as ClaudeResponse;
-  return data.content[0]?.text ?? '';
+  const data = (await response.json()) as WorkersAiResponse;
+  if (!data.success) {
+    throw new Error(`Workers AI error: ${JSON.stringify(data.errors)}`);
+  }
+  return data.result.response;
 }
 
-// Unified: tries Claude API if key set, otherwise Workers AI
+// Adapter: same signature as old analyzeWithClaude
+export async function analyzeWithClaude(
+  systemPrompt: string,
+  messages: { role: 'user' | 'assistant'; content: string }[],
+  apiToken: string
+): Promise<string> {
+  const aiMessages: AiMessage[] = [
+    { role: 'system', content: systemPrompt },
+    ...messages,
+  ];
+  return callWorkersAiRest(apiToken, aiMessages);
+}
+
+// Unified: tries REST API if token set, otherwise Workers AI binding
 export async function analyze(opts: {
   ai?: { run(model: string, inputs: Record<string, unknown>): Promise<{ response: string }> };
-  claudeApiKey?: string;
+  claudeApiKey?: string; // now CF_AI_TOKEN — kept param name for caller compat
   systemPrompt: string;
   userMessage: string;
 }): Promise<string> {
-  const { ai, claudeApiKey, systemPrompt, userMessage } = opts;
+  const { ai, claudeApiKey: cfToken, systemPrompt, userMessage } = opts;
 
-  // Prefer Claude API when key is available (higher quality)
-  if (claudeApiKey) {
+  if (cfToken) {
     return analyzeWithClaude(
       systemPrompt,
       [{ role: 'user', content: userMessage }],
-      claudeApiKey
+      cfToken
     );
   }
 
-  // Fall back to Workers AI (Llama - free, no key needed)
   if (ai) {
     return analyzeWithWorkersAI(ai, systemPrompt, userMessage);
   }
 
-  throw new Error('No AI backend available. Set CLAUDE_API_KEY or enable Workers AI binding.');
+  throw new Error('No AI backend available. Set CF_AI_TOKEN or enable Workers AI binding.');
 }
 
 export function buildVoiceAnalysisPrompt(language: string, level: string, uiLang?: string): string {
@@ -135,71 +156,32 @@ Return a JSON object with this exact structure:
 Return ONLY the JSON object, no other text.`;
 }
 
-// Multi-turn chat with Claude (for workbook chat flow)
+// Multi-turn chat via Workers AI REST API
 export async function claudeChat(
   systemPrompt: string,
   messages: { role: 'user' | 'assistant'; content: string }[],
-  apiKey: string,
+  apiToken: string,
   options?: { maxTokens?: number }
 ): Promise<string> {
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-5-20250929',
-      max_tokens: options?.maxTokens ?? 1024,
-      system: systemPrompt,
-      messages,
-    }),
-  });
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Claude API error: ${response.status} - ${error}`);
-  }
-
-  const data = (await response.json()) as ClaudeResponse;
-  return data.content[0]?.text ?? '';
+  const aiMessages: AiMessage[] = [
+    { role: 'system', content: systemPrompt },
+    ...messages,
+  ];
+  return callWorkersAiRest(apiToken, aiMessages, options?.maxTokens ?? 1024);
 }
 
-// Claude for content generation (single user prompt, optional system)
+// Content generation via Workers AI REST API
 export async function claudeGenerate(
-  apiKey: string,
+  apiToken: string,
   prompt: string,
   options?: { maxTokens?: number; system?: string }
 ): Promise<string> {
-  const body: Record<string, unknown> = {
-    model: 'claude-sonnet-4-5-20250929',
-    max_tokens: options?.maxTokens ?? 4096,
-    messages: [{ role: 'user', content: prompt }],
-  };
+  const aiMessages: AiMessage[] = [];
   if (options?.system) {
-    body.system = options.system;
+    aiMessages.push({ role: 'system', content: options.system });
   }
-
-  const response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-    },
-    body: JSON.stringify(body),
-  });
-
-  if (!response.ok) {
-    const error = await response.text();
-    throw new Error(`Claude API error: ${response.status} - ${error}`);
-  }
-
-  const data = (await response.json()) as ClaudeResponse;
-  const textBlock = data.content.find(b => b.type === 'text');
-  if (!textBlock) throw new Error('No text in Claude response');
-  return textBlock.text;
+  aiMessages.push({ role: 'user', content: prompt });
+  return callWorkersAiRest(apiToken, aiMessages, options?.maxTokens ?? 4096);
 }
 
 // Extract JSON from markdown code blocks

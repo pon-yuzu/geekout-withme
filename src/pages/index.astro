@@ -2,12 +2,49 @@
 import Layout from '../layouts/Layout.astro';
 import { t } from '../i18n/index';
 import type { Lang } from '../i18n/index';
+import { DAILY_LIMITS } from '../lib/quota';
+import { isPromoActive } from '../lib/promo';
 
 const user = Astro.locals.user;
 const lang = Astro.locals.lang as Lang;
+
+// Fetch daily usage for quota display
+let levelCheckUsed = 0;
+let workbookUsed = 0;
+const supabase = Astro.locals.supabase;
+if (supabase) {
+  try {
+    const { data } = await supabase.rpc('get_daily_usage');
+    const row = Array.isArray(data) ? data[0] : data;
+    levelCheckUsed = row?.level_check ?? 0;
+    workbookUsed = row?.workbook ?? 0;
+  } catch {}
+}
+const levelCheckLimit = DAILY_LIMITS.level_check;
+const workbookLimit = DAILY_LIMITS.workbook;
+const levelCheckRemaining = Math.max(0, levelCheckLimit - levelCheckUsed);
+const workbookRemaining = Math.max(0, workbookLimit - workbookUsed);
+const promoActive = isPromoActive();
 ---
 
 <Layout title="Home" user={user}>
+  {/* Promo banner */}
+  {promoActive && !user && (
+    <div class="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-center px-4 py-3">
+      <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-center gap-3">
+        <p class="text-sm sm:text-base font-medium">
+          🎉 {t(lang, 'promo.banner')}
+        </p>
+        <a
+          href="/signup"
+          class="inline-block px-5 py-1.5 bg-white text-orange-600 rounded-full text-sm font-semibold hover:bg-orange-50 transition-colors whitespace-nowrap"
+        >
+          {t(lang, 'promo.bannerCta')}
+        </a>
+      </div>
+    </div>
+  )}
+
   <!-- Section 1: Hero — Main CTA -->
   <section class="min-h-[80vh] flex items-center justify-center px-4">
     <div class="max-w-4xl mx-auto text-center">
@@ -50,20 +87,29 @@ const lang = Astro.locals.lang as Lang;
       </h2>
 
       <div class="grid md:grid-cols-2 gap-8">
-        <!-- Learning Tools -->
+        <!-- Level Check -->
         <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-teal-300 transition-all">
           <div class="flex items-center gap-3 mb-4">
-            <div class="w-14 h-14 bg-teal-50 border border-teal-200 rounded-full flex items-center justify-center text-2xl">📚</div>
+            <div class="w-14 h-14 bg-teal-50 border border-teal-200 rounded-full flex items-center justify-center text-2xl">🎯</div>
             <div>
-              <h3 class="text-xl font-semibold text-gray-800">{t(lang, 'home.learn.tools.title')}</h3>
-              <span class="inline-block text-xs font-medium px-2 py-0.5 bg-teal-100 text-teal-700 rounded-full">{t(lang, 'home.learn.tools.badge')}</span>
+              <h3 class="text-xl font-semibold text-gray-800">{t(lang, 'home.learn.levelCheck.title')}</h3>
+              <span class="inline-block text-xs font-medium px-2 py-0.5 bg-teal-100 text-teal-700 rounded-full">{t(lang, 'home.learn.levelCheck.badge')}</span>
             </div>
           </div>
-          <p class="text-gray-500 mb-6">
-            {t(lang, 'home.learn.tools.desc')}
+          <p class="text-gray-500 mb-4">
+            {t(lang, 'home.learn.levelCheck.desc')}
           </p>
-          <a href="/resources" class="inline-flex items-center gap-1 text-orange-500 font-semibold hover:text-orange-600 transition-colors">
-            {t(lang, 'home.learn.tools.cta')} →
+          {levelCheckRemaining > 0 ? (
+            <p class="text-sm text-teal-600 font-medium mb-4">
+              {t(lang, 'home.quota.remaining').replace('{{used}}', String(levelCheckRemaining)).replace('{{limit}}', String(levelCheckLimit))}
+            </p>
+          ) : (
+            <p class="text-sm text-red-500 font-medium mb-4">
+              {t(lang, 'home.quota.exhausted')}
+            </p>
+          )}
+          <a href="/level-check" class="inline-flex items-center gap-1 text-orange-500 font-semibold hover:text-orange-600 transition-colors">
+            {t(lang, 'home.learn.levelCheck.cta')} →
           </a>
         </div>
 
@@ -76,14 +122,28 @@ const lang = Astro.locals.lang as Lang;
               <span class="inline-block text-xs font-medium px-2 py-0.5 bg-orange-100 text-orange-700 rounded-full">{t(lang, 'home.learn.workbook.badge')}</span>
             </div>
           </div>
-          <p class="text-gray-500 mb-6">
+          <p class="text-gray-500 mb-4">
             {t(lang, 'home.learn.workbook.desc')}
           </p>
+          {workbookRemaining > 0 ? (
+            <p class="text-sm text-teal-600 font-medium mb-4">
+              {t(lang, 'home.quota.remaining').replace('{{used}}', String(workbookRemaining)).replace('{{limit}}', String(workbookLimit))}
+            </p>
+          ) : (
+            <p class="text-sm text-red-500 font-medium mb-4">
+              {t(lang, 'home.quota.exhausted')}
+            </p>
+          )}
           <a href="/workbook" class="inline-flex items-center gap-1 text-orange-500 font-semibold hover:text-orange-600 transition-colors">
             {t(lang, 'home.learn.workbook.cta')} →
           </a>
         </div>
       </div>
+
+      <!-- Reset note -->
+      <p class="text-center text-xs text-gray-400 mt-6">
+        {t(lang, 'home.quota.resetNote')}
+      </p>
     </div>
   </section>
 

@@ -40,7 +40,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   // Determine AI backend: Claude for logged-in within rate limit, Workers AI otherwise
   let useClaudeApi = false;
   const runtime = (locals as any).runtime;
-  const claudeApiKey = runtime?.env?.CLAUDE_API_KEY || import.meta.env.CLAUDE_API_KEY;
+  const claudeApiKey = runtime?.env?.CF_AI_TOKEN || import.meta.env.CF_AI_TOKEN;
 
   if (user && claudeApiKey) {
     const exceeded = await hasRecentAssessment(locals.supabase!, user.id);

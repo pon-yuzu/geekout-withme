@@ -123,7 +123,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     .eq('user_id', user.id).in('status', ['active', 'trialing']).limit(1);
   if (!subs?.length) return new Response('Premium required', { status: 403 });
 
-  const apiKey = import.meta.env.CLAUDE_API_KEY ?? locals.runtime?.env?.CLAUDE_API_KEY;
+  const apiKey = import.meta.env.CF_AI_TOKEN ?? locals.runtime?.env?.CF_AI_TOKEN;
   if (!apiKey) return new Response('AI not configured', { status: 500 });
 
   const { message, session, autoLevel, uiLang } = (await request.json()) as ChatRequest;

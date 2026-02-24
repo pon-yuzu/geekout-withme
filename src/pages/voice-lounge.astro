@@ -3,14 +3,17 @@ import Layout from '../layouts/Layout.astro';
 import VoiceLounge from '../components/voice-lounge/VoiceLounge.tsx';
 import { t } from '../i18n/index';
 import type { Lang } from '../i18n/index';
+import { isPromoActive } from '../lib/promo';
 
 const user = Astro.locals.user;
 const lang = Astro.locals.lang as Lang;
-if (!user) return Astro.redirect('/login');
+const promoActive = isPromoActive();
+
+if (!user && !promoActive) return Astro.redirect('/login');
 
 // Check premium status
 let isPremium = false;
-if (Astro.locals.supabase) {
+if (user && Astro.locals.supabase) {
   const supabase = Astro.locals.supabase;
   const { data: subscriptions } = await supabase
     .from('subscriptions')
@@ -21,9 +24,12 @@ if (Astro.locals.supabase) {
   isPremium = (subscriptions?.length ?? 0) > 0;
 }
 
+// During promo, logged-in users get premium access
+if (promoActive && user) isPremium = true;
+
 // Get conversation level from latest assessment
 let autoLevel: 'beginner' | 'intermediate' | 'advanced' | null = null;
-if (isPremium && Astro.locals.supabase) {
+if (isPremium && user && Astro.locals.supabase) {
   try {
     const { data: assessment } = await Astro.locals.supabase
       .from('assessment_results')
@@ -68,6 +74,17 @@ if (isPremium && Astro.locals.supabase) {
           isPremium={isPremium}
           autoLevel={autoLevel}
         />
+      ) : promoActive && !user ? (
+        <div class="text-center py-12 bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-200 rounded-2xl p-8 shadow-sm">
+          <div class="text-5xl mb-4">🎉</div>
+          <h3 class="text-xl font-semibold mb-2 text-gray-800">{t(lang, 'promo.signupCta')}</h3>
+          <a
+            href="/signup"
+            class="inline-block mt-4 px-8 py-3 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition-colors"
+          >
+            {t(lang, 'promo.signupBtn')}
+          </a>
+        </div>
       ) : (
         <div class="text-center py-12 bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
           <div class="text-4xl mb-4">&#10024;</div>

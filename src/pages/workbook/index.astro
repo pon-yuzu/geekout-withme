@@ -4,10 +4,16 @@ import { WorkbookCard } from '../../components/workbook/WorkbookCard';
 import { getUserWorkbooks, getPublicWorkbooks, getSampleWorkbooks } from '../../lib/workbook/db';
 import { t } from '../../i18n/index';
 import type { Lang } from '../../i18n/index';
+import { isPromoActive } from '../../lib/promo';
 
 const user = Astro.locals.user;
 const lang = Astro.locals.lang as Lang;
 const supabase = Astro.locals.supabase;
+const promoActive = isPromoActive();
+
+if (!user && !promoActive) {
+  return Astro.redirect('/login');
+}
 
 const wbLang = Astro.url.searchParams.get('lang') === 'japanese' ? 'japanese' : 'english';
 const tab = Astro.url.searchParams.get('tab') === 'public' ? 'public' : 'mine';
@@ -30,6 +36,9 @@ if (supabase) {
       .in('status', ['active', 'trialing'])
       .limit(1);
     isPremium = (subs?.length ?? 0) > 0;
+
+    // During promo, all logged-in users get premium access
+    if (promoActive) isPremium = true;
 
     if (isPremium) {
       if (tab === 'mine') {
@@ -153,21 +162,31 @@ const samples = wbLang === 'japanese' ? sampleJapanese : sampleEnglish;
             </div>
           )}
 
-          {/* Premium upsell */}
-          <div class="text-center py-12 bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl border border-orange-200">
-            <div class="text-5xl mb-4">&#11088;</div>
-            <h2 class="text-xl font-semibold text-gray-700 mb-2">{t(lang, 'workbook.premiumFeature')}</h2>
-            <p class="text-gray-500 mb-6">{t(lang, 'workbook.premiumDesc')}</p>
-            {!user ? (
-              <a href="/login" class="px-6 py-3 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition-colors">
-                {t(lang, 'workbook.loginBtn')}
+          {/* Premium upsell or promo signup */}
+          {promoActive && !user ? (
+            <div class="text-center py-12 bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl border border-orange-200">
+              <div class="text-5xl mb-4">🎉</div>
+              <h2 class="text-xl font-semibold text-gray-700 mb-2">{t(lang, 'promo.signupCta')}</h2>
+              <a href="/signup" class="inline-block mt-4 px-8 py-3 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition-colors">
+                {t(lang, 'promo.signupBtn')}
               </a>
-            ) : (
-              <a href="/community" class="px-6 py-3 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition-colors">
-                {t(lang, 'workbook.premiumBtn')}
-              </a>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div class="text-center py-12 bg-gradient-to-br from-orange-50 to-amber-50 rounded-2xl border border-orange-200">
+              <div class="text-5xl mb-4">&#11088;</div>
+              <h2 class="text-xl font-semibold text-gray-700 mb-2">{t(lang, 'workbook.premiumFeature')}</h2>
+              <p class="text-gray-500 mb-6">{t(lang, 'workbook.premiumDesc')}</p>
+              {!user ? (
+                <a href="/login" class="px-6 py-3 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition-colors">
+                  {t(lang, 'workbook.loginBtn')}
+                </a>
+              ) : (
+                <a href="/community" class="px-6 py-3 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition-colors">
+                  {t(lang, 'workbook.premiumBtn')}
+                </a>
+              )}
+            </div>
+          )}
         </>
       )}
     </div>

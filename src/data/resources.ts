@@ -1298,7 +1298,40 @@ export const englishResources: Resource[] = [
   },
 ];
 
-export const allResources: Resource[] = [...japaneseResources, ...englishResources];
+export const youtubeChannels: Resource[] = [
+  {
+    id: 'gowm-youtube',
+    name: 'Geek Out With Me (YouTube)',
+    nameJa: 'Geek Out With Me（YouTube）',
+    url: 'https://youtube.com/@cairsen1000',
+    language: 'english',
+    skills: ['listening', 'speaking'],
+    levels: ['A1', 'A2', 'B1', 'B2'],
+    freeScope: 'free',
+    description: 'English conversation channel with natural pronunciation and real-life topics.',
+    descriptionJa: 'ネイティブの自然な発音と日常トピックの英会話チャンネル。',
+    category: 'YouTube Channels',
+    recommended: true,
+  },
+];
+
+export const blogResources: Resource[] = [
+  {
+    id: 'gowm-note-magazine',
+    name: 'Ponglish English Phrases (note)',
+    nameJa: 'Ponglish 英語フレーズマガジン（note）',
+    url: 'https://note.com/ponglish_in_aus',
+    language: 'english',
+    skills: ['reading', 'speaking'],
+    levels: ['A2', 'B1', 'B2'],
+    freeScope: 'free',
+    description: 'Curated English phrase magazine with practical everyday expressions.',
+    descriptionJa: '実用的な日常英語フレーズを厳選したマガジン。',
+    category: 'Blogs & Articles',
+  },
+];
+
+export const allResources: Resource[] = [...japaneseResources, ...englishResources, ...youtubeChannels, ...blogResources];
 
 export function getCategories(language?: Language): string[] {
   const resources = language

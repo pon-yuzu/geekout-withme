@@ -5,6 +5,7 @@ import { claudeGenerate, extractJSON } from '../../../lib/claude';
 import { createWorkbook } from '../../../lib/workbook/db';
 import { buildTopicItemsPrompt } from '../../../lib/workbook/prompts/topic-items';
 import { getTopicConfig, getLevelConfig, getJlptLevelConfig } from '../../../lib/workbook/slots';
+import { tryIncrementUsage, quotaExceededResponse } from '../../../lib/quota';
 
 export const POST: APIRoute = async ({ request, locals }) => {
   const user = locals.user;
@@ -15,7 +16,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
     .eq('user_id', user.id).in('status', ['active', 'trialing']).limit(1);
   if (!subs?.length) return new Response('Premium required', { status: 403 });
 
-  const apiKey = import.meta.env.CLAUDE_API_KEY ?? locals.runtime?.env?.CLAUDE_API_KEY;
+  // Daily quota check
+  const quotaResult = await tryIncrementUsage(locals, 'workbook');
+  if (!quotaResult.allowed) {
+    return quotaExceededResponse('workbook');
+  }
+
+  const apiKey = import.meta.env.CF_AI_TOKEN ?? locals.runtime?.env?.CF_AI_TOKEN;
   if (!apiKey) return new Response('AI not configured', { status: 500 });
 
   // 月1冊制限チェック

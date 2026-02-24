@@ -3,7 +3,8 @@
 declare const __BUILD_ID__: string;
 
 interface ImportMetaEnv {
-  readonly CLAUDE_API_KEY?: string;
+  readonly CF_AI_TOKEN?: string;
+  readonly CF_ACCOUNT_ID?: string;
   readonly PUBLIC_SUPABASE_URL?: string;
   readonly PUBLIC_SUPABASE_ANON_KEY?: string;
   readonly SUPABASE_SERVICE_ROLE_KEY?: string;
@@ -11,6 +12,9 @@ interface ImportMetaEnv {
   readonly STRIPE_WEBHOOK_SECRET?: string;
   readonly PUBLIC_STRIPE_PUBLISHABLE_KEY?: string;
   readonly STRIPE_PRICE_ID?: string;
+  readonly STRIPE_WORKBOOK_PRICE_ID?: string;
+  readonly STRIPE_COACHING_PRICE_ID?: string;
+  readonly STRIPE_SESSION_PRICE_ID?: string;
 }
 
 interface ImportMeta {

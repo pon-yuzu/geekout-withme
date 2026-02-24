@@ -1,0 +1,50 @@
+---
+import Layout from '../layouts/Layout.astro';
+import ServicesPage from '../components/ServicesPage.tsx';
+import { t } from '../i18n/index';
+import type { Lang } from '../i18n/index';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+
+let isPremium = false;
+let purchases: { product_type: string; created_at: string }[] = [];
+
+if (user && Astro.locals.supabase) {
+  const supabase = Astro.locals.supabase;
+
+  const { data: subData } = await supabase
+    .from('subscriptions')
+    .select('status')
+    .eq('user_id', user.id)
+    .in('status', ['active', 'trialing'])
+    .limit(1);
+  isPremium = (subData?.length ?? 0) > 0;
+
+  const { data: purchaseData } = await supabase
+    .from('purchases')
+    .select('product_type, created_at')
+    .eq('user_id', user.id);
+  purchases = purchaseData ?? [];
+}
+---
+
+<Layout title={t(lang, 'services.title')} description="Services offered by Geek Out With Me" user={user}>
+  <section class="py-12 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="text-center mb-12">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">
+          <span class="text-orange-500">{t(lang, 'services.title')}</span>
+        </h1>
+        <p class="text-gray-600 text-lg">{t(lang, 'services.subtitle')}</p>
+      </div>
+
+      <ServicesPage
+        client:load
+        isLoggedIn={!!user}
+        isPremium={isPremium}
+        purchases={purchases}
+      />
+    </div>
+  </section>
+</Layout>

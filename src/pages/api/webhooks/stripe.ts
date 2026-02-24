@@ -64,6 +64,18 @@ export const POST: APIRoute = async ({ request, locals }) => {
         .eq('stripe_subscription_id', subscription.id);
       break;
     }
+    case 'checkout.session.completed': {
+      const session = event.data.object as any;
+      if (session.mode === 'payment' && session.metadata?.product_type) {
+        await supabase.from('purchases').insert({
+          user_id: session.metadata.user_id,
+          product_type: session.metadata.product_type,
+          stripe_session_id: session.id,
+          amount: session.amount_total,
+        });
+      }
+      break;
+    }
   }
 
   return new Response(JSON.stringify({ received: true }), { status: 200 });

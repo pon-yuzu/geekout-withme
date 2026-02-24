@@ -1,0 +1,514 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { t } from '../i18n/index';
+import type { Lang } from '../i18n/index';
+
+const lang = Astro.locals.lang as Lang;
+const user = Astro.locals.user;
+
+const LINE_URL = 'https://lin.ee/GfasAMn';
+const YOUTUBE_URL = 'https://youtube.com/@cairsen1000';
+const YOUTUBE_EMBED = 'https://www.youtube.com/embed/59T2tzKcWmo';
+---
+
+<Layout title={t(lang, 'gowm.hero.title')} description={t(lang, 'gowm.hero.subtitle')} user={user}>
+
+<div class="gowm">
+
+  <!-- Hero -->
+  <section class="gowm-hero">
+    <p class="gowm-tagline">Passion Breaks Language Barrier</p>
+    <h1 class="gowm-hero-title">{t(lang, 'gowm.hero.title')}</h1>
+    <p class="gowm-hero-subtitle">{t(lang, 'gowm.hero.subtitle')}</p>
+    <div class="gowm-hero-catchcopy">
+      {t(lang, 'gowm.hero.desc1')}<br />
+      {t(lang, 'gowm.hero.desc2')}<br />
+      <strong>{t(lang, 'gowm.hero.desc3')}</strong>
+    </div>
+    <div class="gowm-hero-badges">
+      <span class="gowm-badge">{t(lang, 'gowm.hero.badge')}</span>
+      <span class="gowm-badge">¥40,000〜</span>
+    </div>
+    <div class="gowm-hero-cta">
+      <a href={LINE_URL} target="_blank" rel="noopener noreferrer" class="gowm-btn-cta">{t(lang, 'gowm.hero.cta')}</a>
+    </div>
+    <div class="gowm-scroll-indicator"><span></span></div>
+  </section>
+
+  <!-- Problem -->
+  <section class="gowm-problem">
+    <div class="gowm-inner">
+      <span class="gowm-section-label">Problem</span>
+      <h2 class="gowm-section-title">{t(lang, 'gowm.problem.title')}</h2>
+      <ul class="gowm-problem-list">
+        {[1,2,3,4,5].map(i => <li>{t(lang, `gowm.problem.${i}`)}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Solution -->
+  <section class="gowm-solution">
+    <div class="gowm-inner">
+      <span class="gowm-section-label">Solution</span>
+      <h2 class="gowm-section-title">{t(lang, 'gowm.solution.title')}</h2>
+      <p class="gowm-solution-highlight">{t(lang, 'gowm.solution.p1')}</p>
+      <p class="gowm-solution-text">{t(lang, 'gowm.solution.p2')}</p>
+      <p class="gowm-solution-text">{t(lang, 'gowm.solution.p3')}</p>
+    </div>
+  </section>
+
+  <!-- YouTube -->
+  <section class="gowm-youtube">
+    <div class="gowm-youtube-inner">
+      <span class="gowm-section-label">YouTube</span>
+      <h2 class="gowm-section-title" style="text-align:center;">Geek out with Me!</h2>
+      <p class="gowm-youtube-desc">{t(lang, 'gowm.youtube.title')}</p>
+      <div class="gowm-youtube-embed">
+        <iframe src={YOUTUBE_EMBED} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      </div>
+      <a href={YOUTUBE_URL} target="_blank" rel="noopener noreferrer" class="gowm-youtube-link">{t(lang, 'gowm.youtube.cta')}</a>
+    </div>
+  </section>
+
+  <!-- Packages -->
+  <section class="gowm-packages">
+    <div class="gowm-inner">
+      <span class="gowm-section-label">Packages</span>
+      <h2 class="gowm-section-title">{t(lang, 'gowm.packages.title')}</h2>
+
+      <div class="gowm-package-grid">
+        <!-- Basic -->
+        <div class="gowm-package-card">
+          <span class="gowm-package-badge">{lang === 'ja' ? 'モニター価格' : 'Monitor Price'}</span>
+          <h3 class="gowm-package-name">{t(lang, 'gowm.packages.basic.title')}</h3>
+          <div class="gowm-package-price">
+            <span class="gowm-price-original">{t(lang, 'gowm.packages.basic.regular')}</span><br />
+            <span class="gowm-price-current">40,000</span>
+            <span class="gowm-price-unit">{lang === 'ja' ? '円（税込）' : 'JPY (tax incl.)'}</span>
+          </div>
+          <ul class="gowm-package-features">
+            {[1,2,3,4,5,6].map(i => <li>{t(lang, `gowm.packages.basic.${i}`)}</li>)}
+          </ul>
+        </div>
+
+        <!-- Full Support -->
+        <div class="gowm-package-card featured">
+          <span class="gowm-package-badge">{lang === 'ja' ? 'モニター価格' : 'Monitor Price'}</span>
+          <h3 class="gowm-package-name">{t(lang, 'gowm.packages.premium.title')}</h3>
+          <div class="gowm-package-price">
+            <span class="gowm-price-original">{t(lang, 'gowm.packages.premium.regular')}</span><br />
+            <span class="gowm-price-current">70,000</span>
+            <span class="gowm-price-unit">{lang === 'ja' ? '円（税込）' : 'JPY (tax incl.)'}</span>
+          </div>
+          <ul class="gowm-package-features">
+            {[1,2,3,4,5,6].map(i => <li>{t(lang, `gowm.packages.basic.${i}`)}</li>)}
+          </ul>
+          <div class="gowm-package-plus">
+            <span class="gowm-plus-label">{t(lang, 'gowm.packages.premium.extra')}</span>
+            <ul class="gowm-package-features gowm-plus-features">
+              {[1,2,3].map(i => <li>{t(lang, `gowm.packages.premium.${i}`)}</li>)}
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="gowm-packages-cta">
+        <a href={LINE_URL} target="_blank" rel="noopener noreferrer" class="gowm-btn-cta">{t(lang, 'gowm.packages.cta')}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Target -->
+  <section class="gowm-target">
+    <div class="gowm-inner">
+      <span class="gowm-section-label">Target</span>
+      <h2 class="gowm-section-title">{t(lang, 'gowm.target.title')}</h2>
+      <ul class="gowm-target-list">
+        {[1,2,3,4,5].map(i => <li>{t(lang, `gowm.target.${i}`)}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Benefits -->
+  <section class="gowm-benefits">
+    <div class="gowm-inner">
+      <span class="gowm-section-label">Benefits</span>
+      <h2 class="gowm-section-title">{t(lang, 'gowm.benefits.title')}</h2>
+      <div class="gowm-benefits-grid">
+        {[1,2,3,4,5].map(i => (
+          <div class="gowm-benefit-card">
+            <div class="gowm-benefit-icon">{String(i).padStart(2, '0')}</div>
+            <h3 class="gowm-benefit-title">{t(lang, `gowm.benefits.${i}.title`)}</h3>
+            <p class="gowm-benefit-desc">{t(lang, `gowm.benefits.${i}.desc`)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Profile -->
+  <section class="gowm-profile">
+    <div class="gowm-profile-inner">
+      <span class="gowm-section-label">Profile</span>
+      <h2 class="gowm-section-title">{t(lang, 'gowm.profile.title')}</h2>
+      <div class="gowm-profile-card">
+        <div class="gowm-profile-content">
+          <div class="gowm-profile-info">
+            <h3 class="gowm-profile-name">
+              Mochida Sayaka
+              <span class="gowm-profile-name-sub">{lang === 'ja' ? '（持田清香）/ ゆずぽん' : '/ Yuzupon'}</span>
+            </h3>
+            <ul class="gowm-profile-career">
+              {[1,2,3,4,5,6].map(i => <li>{t(lang, `gowm.profile.${i}`)}</li>)}
+            </ul>
+            <div class="gowm-profile-message">
+              <p class="gowm-profile-message-first">{t(lang, 'gowm.profile.message')}</p>
+              <p>{t(lang, 'gowm.profile.quote1')}</p>
+              <p>{t(lang, 'gowm.profile.quote2')}</p>
+              <p><strong>{t(lang, 'gowm.profile.quote3')}</strong></p>
+            </div>
+            <div class="gowm-profile-links">
+              <a href="https://note.com/ponglish_in_aus" target="_blank" rel="noopener noreferrer" class="gowm-profile-link">note</a>
+              <a href="https://www.instagram.com/rebellious1124/" target="_blank" rel="noopener noreferrer" class="gowm-profile-link">Instagram</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="gowm-cta">
+    <h2 class="gowm-cta-title">{t(lang, 'gowm.cta.title')}</h2>
+    <p class="gowm-cta-text">
+      {t(lang, 'gowm.cta.p1')}<br />
+      {t(lang, 'gowm.cta.p2')}
+    </p>
+    <span class="gowm-cta-limit">{t(lang, 'gowm.cta.badge')}</span>
+    <a href={LINE_URL} target="_blank" rel="noopener noreferrer" class="gowm-cta-button">{t(lang, 'gowm.cta.button')}</a>
+  </section>
+
+</div>
+
+</Layout>
+
+<style is:global>
+/* ============================================
+   GOWM LP — Pattern C: Flat × Retro × Collage
+   ============================================ */
+.gowm {
+  --gowm-primary: #FF6A2B;
+  --gowm-primary-dark: #E5501D;
+  --gowm-primary-light: #FF9A6A;
+  --gowm-accent: #19C3B2;
+  --gowm-accent-light: #B9F3EC;
+  --gowm-dark: #1F1A16;
+  --gowm-medium-gray: #5E534C;
+  --gowm-light-gray: #E7DED5;
+  --gowm-off-white: #FFF6EC;
+  --gowm-white: #FFFFFF;
+  --gowm-font-display: 'Outfit', 'Inter', sans-serif;
+  --gowm-font-body: 'Noto Sans JP', 'Inter', sans-serif;
+  --gowm-section-padding: 6rem 2rem;
+  --gowm-max-width: 1000px;
+
+  font-family: var(--gowm-font-body);
+  color: var(--gowm-dark);
+  line-height: 1.8;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Section common */
+.gowm section { padding: var(--gowm-section-padding); width: 100%; position: relative; }
+
+/* Section label */
+.gowm-section-label {
+  font-family: var(--gowm-font-display);
+  font-size: 0.7rem; font-weight: 600; color: var(--gowm-white);
+  background: var(--gowm-primary); letter-spacing: 0.2em; text-transform: uppercase;
+  display: inline-block; padding: 0.35rem 0.9rem; margin-bottom: 0.75rem; line-height: 1; border-radius: 4px;
+}
+
+/* Section title */
+.gowm-section-title {
+  font-family: var(--gowm-font-display);
+  font-size: clamp(1.6rem, 4.5vw, 2.2rem); font-weight: 700; line-height: 1.4;
+  margin: 0; padding-bottom: 1rem; position: relative; display: block; color: var(--gowm-dark);
+}
+.gowm-section-title::after {
+  content: ''; position: absolute; bottom: 0; left: 0;
+  width: 60px; height: 4px; background: var(--gowm-primary);
+}
+
+.gowm-inner { max-width: var(--gowm-max-width); margin: 0 auto; position: relative; z-index: 1; }
+
+/* ============ HERO ============ */
+.gowm-hero {
+  min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+  padding: 4rem 2rem; background: var(--gowm-off-white); position: relative; overflow: hidden;
+  max-width: var(--gowm-max-width); margin: 0 auto;
+}
+.gowm-hero::before {
+  content: ''; position: absolute; top: 10%; left: -10%; width: 120%; height: 40%;
+  background: var(--gowm-primary-light); opacity: 0.15; transform: skewY(-6deg); pointer-events: none;
+}
+.gowm-hero::after {
+  content: ''; position: absolute; top: 15%; right: 5%; width: 200px; height: 200px;
+  border: 2px dashed var(--gowm-primary); border-radius: 999px; opacity: 0.3; pointer-events: none;
+}
+.gowm-tagline {
+  font-family: var(--gowm-font-display); font-size: 0.75rem; color: var(--gowm-white);
+  background: var(--gowm-primary); letter-spacing: 0.25em; text-transform: uppercase;
+  margin-bottom: 1rem; position: relative; z-index: 1;
+  display: inline-block; padding: 0.5rem 1.2rem; border-radius: 4px;
+}
+.gowm-hero-title {
+  font-family: var(--gowm-font-display); font-weight: 800; font-size: clamp(2.5rem, 8vw, 5rem);
+  color: var(--gowm-primary); line-height: 1.1; margin-bottom: 0.5rem; position: relative; z-index: 1; letter-spacing: -0.02em;
+}
+.gowm-hero-subtitle {
+  font-family: var(--gowm-font-body); font-size: clamp(1rem, 2.5vw, 1.3rem);
+  color: var(--gowm-medium-gray); margin-bottom: 2rem; position: relative; z-index: 1;
+}
+.gowm-hero-catchcopy {
+  font-size: clamp(0.95rem, 2vw, 1.1rem); color: var(--gowm-dark); line-height: 2; margin-bottom: 2.5rem;
+  position: relative; z-index: 1; padding: 1.5rem; background: var(--gowm-white);
+  border: 1px solid var(--gowm-light-gray); border-radius: 6px;
+}
+.gowm-hero-badges {
+  display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2rem; position: relative; z-index: 1;
+}
+.gowm-badge {
+  font-family: var(--gowm-font-display); font-size: 0.75rem; font-weight: 600; color: var(--gowm-dark);
+  background: var(--gowm-accent-light); border: 1px solid var(--gowm-accent);
+  padding: 0.5rem 1rem; border-radius: 6px; letter-spacing: 0.05em;
+}
+.gowm-hero-cta { position: relative; z-index: 1; }
+.gowm-btn-cta {
+  display: inline-block; font-family: var(--gowm-font-display); font-size: 0.95rem; font-weight: 600;
+  color: var(--gowm-white); background: var(--gowm-primary); padding: 1.1rem 2.8rem;
+  text-decoration: none; border-radius: 6px; letter-spacing: 0.05em;
+  transition: all 0.2s ease; border: 2px solid var(--gowm-primary);
+}
+.gowm-btn-cta:hover { background: var(--gowm-primary-dark); border-color: var(--gowm-primary-dark); }
+
+.gowm-scroll-indicator {
+  position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); z-index: 1;
+}
+.gowm-scroll-indicator span {
+  display: block; width: 24px; height: 40px; border: 2px solid var(--gowm-primary); border-radius: 12px; position: relative;
+}
+.gowm-scroll-indicator span::before {
+  content: ''; position: absolute; top: 6px; left: 50%; transform: translateX(-50%);
+  width: 4px; height: 8px; background: var(--gowm-primary); border-radius: 2px;
+  animation: gowmScrollBounce 1.5s ease-in-out infinite;
+}
+@keyframes gowmScrollBounce {
+  0%, 100% { top: 6px; opacity: 1; }
+  50% { top: 18px; opacity: 0.5; }
+}
+
+/* ============ PROBLEM ============ */
+.gowm-problem { background: var(--gowm-white); position: relative; padding-top: 5rem; }
+.gowm-problem::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 10px; height: 100%; background: var(--gowm-primary);
+}
+.gowm-problem-list { list-style: none; margin-top: 2.5rem; }
+.gowm-problem-list li {
+  font-size: 1rem; color: var(--gowm-dark); padding: 1.2rem 1.5rem 1.2rem 3rem;
+  margin-bottom: 0.75rem; background: #FFF0E0; border-left: 4px solid var(--gowm-primary);
+  border-radius: 0 6px 6px 0; position: relative;
+}
+.gowm-problem-list li::before {
+  content: ''; position: absolute; left: 1rem; top: 50%; transform: translateY(-50%);
+  width: 8px; height: 8px; background: var(--gowm-accent);
+}
+
+/* ============ SOLUTION ============ */
+.gowm-solution { background: var(--gowm-off-white); overflow: hidden; }
+.gowm-solution-highlight {
+  font-family: var(--gowm-font-display); font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 900;
+  color: var(--gowm-dark); margin-top: 2.5rem; margin-bottom: 1.5rem; line-height: 1.6;
+  padding-bottom: 0.4rem; border-bottom: 4px solid var(--gowm-primary); display: inline-block;
+}
+.gowm-solution-text { font-size: 1rem; color: var(--gowm-medium-gray); line-height: 2; max-width: 700px; margin-bottom: 0.5rem; }
+
+/* ============ YOUTUBE ============ */
+.gowm-youtube { background: var(--gowm-white); text-align: center; position: relative; overflow: hidden; }
+.gowm-youtube::before {
+  content: ''; position: absolute; top: -50px; left: -50px; width: 200px; height: 200px;
+  background: var(--gowm-accent); opacity: 0.3; border-radius: 50%;
+}
+.gowm-youtube-inner { max-width: 800px; margin: 0 auto; position: relative; z-index: 1; }
+.gowm-youtube-desc { font-size: 1rem; color: var(--gowm-medium-gray); margin-bottom: 2rem; }
+.gowm-youtube-embed {
+  position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;
+  border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); margin-bottom: 2rem;
+}
+.gowm-youtube-embed iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+.gowm-youtube-link {
+  display: inline-block; padding: 1rem 2.5rem; background: var(--gowm-primary); color: var(--gowm-white);
+  font-weight: 700; font-size: 1rem; border-radius: 50px; text-decoration: none;
+  transition: all 0.3s ease; box-shadow: 0 4px 16px rgba(255,107,53,0.3);
+}
+.gowm-youtube-link:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(255,107,53,0.4); }
+
+/* ============ PACKAGES ============ */
+.gowm-packages { background: var(--gowm-off-white); position: relative; overflow: hidden; }
+.gowm-packages::before {
+  content: ''; position: absolute; top: 10%; right: -5%; width: 300px; height: 300px;
+  background: var(--gowm-accent-light); border-radius: 8px; opacity: 0.4; pointer-events: none;
+}
+.gowm-packages::after {
+  content: ''; position: absolute; bottom: 15%; left: -3%; width: 200px; height: 200px;
+  background: var(--gowm-primary-light); border-radius: 8px; opacity: 0.3; pointer-events: none;
+}
+.gowm-package-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; margin-top: 2rem; }
+.gowm-package-card {
+  background: var(--gowm-white); padding: 2.5rem 2rem; border-radius: 6px; position: relative;
+  overflow: hidden; transition: transform 0.2s ease; border: 2px solid var(--gowm-light-gray);
+}
+.gowm-package-card:hover { transform: translateY(-4px); }
+.gowm-package-card.featured { border-color: var(--gowm-primary); border-width: 3px; }
+.gowm-package-card.featured::before {
+  content: 'RECOMMENDED'; position: absolute; top: 20px; right: -35px;
+  font-family: var(--gowm-font-display); font-size: 0.6rem; font-weight: 600; color: var(--gowm-white);
+  background: var(--gowm-primary); padding: 0.3rem 2.5rem; transform: rotate(45deg); letter-spacing: 0.05em;
+}
+.gowm-package-badge {
+  font-family: var(--gowm-font-display); font-size: 0.7rem; font-weight: 600; color: var(--gowm-white);
+  background: var(--gowm-primary); padding: 0.3rem 0.9rem; border-radius: 4px; display: inline-block;
+  margin-bottom: 1rem; letter-spacing: 0.05em;
+}
+.gowm-package-name { font-family: var(--gowm-font-display); font-size: 1.3rem; font-weight: 700; color: var(--gowm-dark); margin-bottom: 1rem; }
+.gowm-package-price { margin-bottom: 1.5rem; }
+.gowm-price-original { font-size: 0.8rem; color: var(--gowm-medium-gray); text-decoration: line-through; }
+.gowm-price-current { font-family: var(--gowm-font-display); font-size: 2.5rem; font-weight: 700; color: var(--gowm-primary); }
+.gowm-price-unit { font-size: 0.9rem; color: var(--gowm-medium-gray); }
+.gowm-package-features { list-style: none; border-top: 1px solid var(--gowm-light-gray); padding-top: 1.5rem; }
+.gowm-package-features li {
+  font-size: 0.9rem; color: var(--gowm-dark); padding: 0.6rem 0 0.6rem 1.5rem; position: relative;
+}
+.gowm-package-features li::before {
+  content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: 8px; height: 8px; background: var(--gowm-accent);
+}
+.gowm-package-plus { margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px dashed var(--gowm-primary); }
+.gowm-plus-label {
+  display: inline-block; font-family: var(--gowm-font-display); font-size: 0.8rem; font-weight: 700;
+  color: var(--gowm-white); background: var(--gowm-primary); padding: 0.35rem 1rem; border-radius: 4px; margin-bottom: 1rem;
+}
+.gowm-plus-features { border-top: none !important; padding-top: 0 !important; margin-top: 0.5rem !important; }
+.gowm-plus-features li::before { background: var(--gowm-primary) !important; }
+.gowm-packages-cta { margin-top: 3rem; text-align: center; }
+
+/* ============ TARGET ============ */
+.gowm-target { background: var(--gowm-white); overflow: hidden; }
+.gowm-target-list { list-style: none; margin-top: 2.5rem; display: grid; gap: 1rem; counter-reset: target-counter; }
+.gowm-target-list li {
+  font-size: 1rem; color: var(--gowm-dark); padding: 1.2rem 1.5rem 1.2rem 4rem;
+  background: var(--gowm-off-white); border-radius: 6px; position: relative; counter-increment: target-counter;
+}
+.gowm-target-list li::before {
+  content: counter(target-counter, decimal-leading-zero); position: absolute; left: 1rem; top: 50%;
+  transform: translateY(-50%); font-family: var(--gowm-font-display); font-size: 0.85rem; font-weight: 700;
+  color: var(--gowm-white); background: var(--gowm-primary); padding: 0.25rem 0.6rem; border-radius: 4px;
+}
+
+/* ============ BENEFITS ============ */
+.gowm-benefits { background: var(--gowm-off-white); overflow: hidden; }
+.gowm-benefits-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-top: 3rem; }
+.gowm-benefit-card { background: transparent; padding: 2rem 1.5rem; border: 1px dashed var(--gowm-light-gray); text-align: left; }
+.gowm-benefit-icon {
+  font-family: var(--gowm-font-display); font-size: 0.85rem; font-weight: 700; color: var(--gowm-white);
+  background: var(--gowm-primary); display: inline-block; padding: 0.3rem 0.7rem; border-radius: 4px;
+  margin-bottom: 1rem; letter-spacing: 0.05em;
+}
+.gowm-benefit-title { font-family: var(--gowm-font-display); font-size: 1rem; font-weight: 700; color: var(--gowm-dark); margin-bottom: 0.75rem; }
+.gowm-benefit-desc { font-size: 0.85rem; color: var(--gowm-medium-gray); line-height: 1.7; }
+
+/* ============ PROFILE ============ */
+.gowm-profile { background: var(--gowm-white); overflow: hidden; }
+.gowm-profile-inner { max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
+.gowm-profile-card {
+  background: var(--gowm-off-white); padding: 2.5rem; margin-top: 2.5rem;
+  border-radius: 24px; box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+.gowm-profile-content { display: flex; gap: 2.5rem; align-items: flex-start; }
+.gowm-profile-info { flex: 1; }
+.gowm-profile-name {
+  font-family: var(--gowm-font-display); font-size: 1.6rem; font-weight: 700; margin-bottom: 1.2rem; color: var(--gowm-dark);
+}
+.gowm-profile-name-sub { font-size: 0.9rem; font-weight: 400; color: var(--gowm-medium-gray); display: block; margin-top: 0.3rem; }
+.gowm-profile-career {
+  list-style: none; margin-bottom: 1.5rem; padding: 1.2rem 1.5rem;
+  background: var(--gowm-white); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.gowm-profile-career li {
+  padding: 0.3rem 0 0.3rem 1.5rem; color: var(--gowm-medium-gray); font-size: 0.9rem; position: relative;
+}
+.gowm-profile-career li::before {
+  content: '●'; position: absolute; left: 0; color: var(--gowm-primary); font-size: 0.5rem; top: 0.6rem;
+}
+.gowm-profile-message { margin-bottom: 1.5rem; }
+.gowm-profile-message p { color: var(--gowm-medium-gray); font-size: 0.95rem; line-height: 1.8; margin-bottom: 0.8rem; }
+.gowm-profile-message-first { font-size: 1.05rem !important; color: var(--gowm-primary) !important; font-weight: 600; }
+.gowm-profile-links { display: flex; gap: 1rem; }
+.gowm-profile-link {
+  display: inline-block; padding: 0.7rem 1.8rem; background: var(--gowm-primary); color: var(--gowm-white);
+  font-weight: 700; font-size: 0.85rem; border-radius: 50px; text-decoration: none;
+  transition: all 0.3s ease; box-shadow: 0 4px 16px rgba(255,107,53,0.3);
+}
+.gowm-profile-link:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(255,107,53,0.4); }
+
+/* ============ CTA ============ */
+.gowm-cta {
+  background: var(--gowm-primary); padding: 5rem 2rem; position: relative; overflow: hidden;
+  display: flex; flex-direction: column; align-items: flex-start;
+}
+.gowm-cta::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255,255,255,0.03) 20px, rgba(255,255,255,0.03) 40px);
+  pointer-events: none;
+}
+.gowm-cta-title, .gowm-cta-text, .gowm-cta-limit, .gowm-cta-button {
+  max-width: var(--gowm-max-width); margin-left: auto; margin-right: auto; display: block; position: relative; z-index: 1; width: 100%;
+}
+.gowm-cta-title {
+  font-family: var(--gowm-font-display); font-size: clamp(1.6rem, 4vw, 2.4rem); font-weight: 900;
+  color: var(--gowm-white); line-height: 1.6; letter-spacing: 0.02em; margin-bottom: 1.5rem;
+}
+.gowm-cta-text { font-size: 1rem; color: var(--gowm-white); opacity: 0.9; line-height: 2; margin-bottom: 2rem; }
+.gowm-cta-limit {
+  display: block; width: fit-content; background: var(--gowm-white); color: var(--gowm-primary);
+  padding: 0.4rem 1rem; font-size: 0.8rem; font-weight: 600; margin-bottom: 2rem; border-radius: 4px; letter-spacing: 0.05em;
+}
+.gowm-cta-button {
+  display: inline-block; font-family: var(--gowm-font-display); font-size: 0.95rem; font-weight: 600;
+  color: var(--gowm-primary); background: var(--gowm-white); padding: 1.2rem 3rem;
+  text-decoration: none; border-radius: 6px; letter-spacing: 0.05em; transition: all 0.2s ease; border: 2px solid var(--gowm-white);
+  width: fit-content;
+}
+.gowm-cta-button:hover { background: var(--gowm-off-white); }
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+  .gowm section { padding: 4rem 1.5rem; }
+  .gowm-hero::after { width: 120px; height: 120px; top: 10%; }
+  .gowm-package-grid { grid-template-columns: 1fr; }
+  .gowm-benefits-grid { grid-template-columns: repeat(2, 1fr); }
+  .gowm-profile-card { padding: 1.5rem; }
+  .gowm-profile-content { flex-direction: column; align-items: center; text-align: center; }
+  .gowm-profile-career { text-align: left; }
+  .gowm-profile-links { justify-content: center; }
+}
+@media (max-width: 480px) {
+  .gowm-benefits-grid { grid-template-columns: 1fr; }
+  .gowm-hero-badges { flex-direction: column; align-items: flex-start; }
+}
+</style>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet" />

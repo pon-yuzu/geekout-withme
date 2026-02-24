@@ -84,8 +84,35 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
     setStep('select-mode');
   };
 
-  const handleModeSelect = (selectedMode: AssessmentMode) => {
+  const [reserveError, setReserveError] = useState<string | null>(null);
+  const [reserving, setReserving] = useState(false);
+
+  const handleModeSelect = async (selectedMode: AssessmentMode) => {
     setMode(selectedMode);
+    setReserveError(null);
+    setReserving(true);
+
+    try {
+      const res = await fetch('/api/reserve-usage', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ feature: 'level_check' }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setReserveError(data.error || t('quota.reserveFailed'));
+        setReserving(false);
+        return;
+      }
+    } catch {
+      setReserveError(t('quota.reserveFailed'));
+      setReserving(false);
+      return;
+    }
+
+    setReserving(false);
+
     if (selectedMode === 'text' || selectedMode === 'both') {
       setStep('text-assessment');
     } else if (selectedMode === 'listening') {
@@ -240,6 +267,14 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
               <span className="block text-sm text-gray-500 ml-9">{t('levelCheck.selectMode.bothSub')}</span>
             </button>
           </div>
+          {reserving && (
+            <div className="mt-4 text-gray-500 text-sm">{t('voice.analyzing')}</div>
+          )}
+          {reserveError && (
+            <div className="mt-4 bg-red-50 border border-red-200 rounded-xl px-4 py-3 max-w-md mx-auto">
+              <p className="text-red-700 text-sm">{reserveError}</p>
+            </div>
+          )}
           {/* Warning & estimated time */}
           <div className="mt-6 bg-amber-50 border border-amber-200 rounded-xl px-5 py-4 max-w-md mx-auto text-left">
             <p className="text-amber-800 text-sm font-medium mb-2">
@@ -255,13 +290,6 @@ export default function LevelCheckApp({ isLoggedIn }: LevelCheckAppProps) {
               <li>{t('levelCheck.timeAll')}</li>
             </ul>
           </div>
-          {!isLoggedIn && (
-            <div className="mt-4 bg-blue-50 border border-blue-200 rounded-xl px-4 py-3 max-w-md mx-auto">
-              <p className="text-blue-700 text-sm">
-                <a href="/login" className="underline underline-offset-2 font-medium hover:text-blue-900">{t('levelCheck.loginForAccuracy')}</a>
-              </p>
-            </div>
-          )}
           <button
             onClick={() => setStep('select-language')}
             className="mt-6 text-gray-500 hover:text-gray-800 transition-colors"
