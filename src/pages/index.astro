@@ -45,9 +45,9 @@ const promoActive = isPromoActive();
     </div>
   )}
 
-  <!-- Section 1: Hero — Main CTA -->
-  <section class="min-h-[80vh] flex items-center justify-center px-4">
-    <div class="max-w-4xl mx-auto text-center">
+  <!-- Section 1: Hero — Showcase Slider -->
+  <section class="min-h-[80vh] flex items-center justify-center px-4 py-16">
+    <div class="max-w-5xl mx-auto text-center">
       <h1 class="text-5xl md:text-7xl font-bold mb-6">
         <span class="text-orange-500">
           {t(lang, 'home.hero.title1')}
@@ -56,26 +56,148 @@ const promoActive = isPromoActive();
         <span class="text-gray-800">{t(lang, 'home.hero.title2')}</span>
       </h1>
 
-      <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+      <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
         {t(lang, 'home.hero.subtitle')}
       </p>
 
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a
-          href="/level-check"
-          class="px-8 py-4 bg-orange-500 text-white rounded-full font-semibold text-lg hover:bg-orange-600 transition-colors"
-        >
-          {t(lang, 'home.hero.ctaLevel')}
-        </a>
-        <a
-          href="/resources"
-          class="px-8 py-4 border border-orange-500 text-orange-500 rounded-full font-semibold text-lg hover:bg-orange-50 transition-colors"
-        >
-          {t(lang, 'home.hero.ctaResources')}
-        </a>
+      <!-- Feature showcase slider -->
+      <div id="hero-slider" class="relative max-w-3xl mx-auto">
+        <!-- Slide container -->
+        <div class="relative overflow-hidden rounded-3xl" style="min-height:220px">
+
+          <!-- Slide 0: Level Check -->
+          <a href="/level-check" class="hero-slide absolute inset-0 flex items-stretch opacity-100 transition-all duration-700 ease-in-out" data-slide="0">
+            <div class="flex-1 flex flex-col sm:flex-row items-center gap-6 sm:gap-10 bg-gradient-to-br from-orange-500 to-amber-500 text-white rounded-3xl px-8 py-8 sm:py-10 shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+              <div class="text-7xl sm:text-8xl shrink-0 drop-shadow-md">🎯</div>
+              <div class="text-left flex-1 min-w-0">
+                <h2 class="text-2xl sm:text-3xl font-bold mb-2">{t(lang, 'home.learn.levelCheck.title')}</h2>
+                <p class="text-white/85 text-base sm:text-lg mb-4 leading-relaxed">{t(lang, 'home.learn.levelCheck.desc')}</p>
+                <div class="flex flex-wrap items-center gap-3">
+                  {levelCheckRemaining > 0 ? (
+                    <span class="inline-flex items-center gap-2 text-base font-bold bg-white/20 backdrop-blur-sm rounded-full px-4 py-1.5 border border-white/30">
+                      <span class="w-2.5 h-2.5 rounded-full bg-white animate-pulse"></span>
+                      {t(lang, 'home.quota.remaining').replace('{{used}}', String(levelCheckRemaining)).replace('{{limit}}', String(levelCheckLimit))}
+                    </span>
+                  ) : (
+                    <span class="inline-flex items-center gap-2 text-base font-bold bg-red-500/30 backdrop-blur-sm rounded-full px-4 py-1.5 border border-white/30">
+                      {t(lang, 'home.quota.exhausted')}
+                    </span>
+                  )}
+                  <span class="font-semibold text-lg">→</span>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Slide 1: AI Workbook -->
+          <a href="/workbook" class="hero-slide absolute inset-0 flex items-stretch opacity-0 transition-all duration-700 ease-in-out pointer-events-none" data-slide="1">
+            <div class="flex-1 flex flex-col sm:flex-row items-center gap-6 sm:gap-10 bg-gradient-to-br from-teal-500 to-emerald-500 text-white rounded-3xl px-8 py-8 sm:py-10 shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+              <div class="text-7xl sm:text-8xl shrink-0 drop-shadow-md">📖</div>
+              <div class="text-left flex-1 min-w-0">
+                <h2 class="text-2xl sm:text-3xl font-bold mb-2">{t(lang, 'home.learn.workbook.title')}</h2>
+                <p class="text-white/85 text-base sm:text-lg mb-4 leading-relaxed">{t(lang, 'home.learn.workbook.desc')}</p>
+                <div class="flex flex-wrap items-center gap-3">
+                  {workbookRemaining > 0 ? (
+                    <span class="inline-flex items-center gap-2 text-base font-bold bg-white/20 backdrop-blur-sm rounded-full px-4 py-1.5 border border-white/30">
+                      <span class="w-2.5 h-2.5 rounded-full bg-white animate-pulse"></span>
+                      {t(lang, 'home.quota.remaining').replace('{{used}}', String(workbookRemaining)).replace('{{limit}}', String(workbookLimit))}
+                    </span>
+                  ) : (
+                    <span class="inline-flex items-center gap-2 text-base font-bold bg-red-500/30 backdrop-blur-sm rounded-full px-4 py-1.5 border border-white/30">
+                      {t(lang, 'home.quota.exhausted')}
+                    </span>
+                  )}
+                  <span class="font-semibold text-lg">→</span>
+                </div>
+              </div>
+            </div>
+          </a>
+
+          <!-- Slide 2: Voice Lounge -->
+          <a href="/voice-lounge" class="hero-slide absolute inset-0 flex items-stretch opacity-0 transition-all duration-700 ease-in-out pointer-events-none" data-slide="2">
+            <div class="flex-1 flex flex-col sm:flex-row items-center gap-6 sm:gap-10 bg-gradient-to-br from-violet-500 to-purple-600 text-white rounded-3xl px-8 py-8 sm:py-10 shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+              <div class="text-7xl sm:text-8xl shrink-0 drop-shadow-md">🎤</div>
+              <div class="text-left flex-1 min-w-0">
+                <h2 class="text-2xl sm:text-3xl font-bold mb-2">{t(lang, 'home.practice.voiceLounge.title')}</h2>
+                <p class="text-white/85 text-base sm:text-lg mb-4 leading-relaxed">{t(lang, 'home.practice.voiceLounge.desc')}</p>
+                <span class="font-semibold text-lg">→</span>
+              </div>
+            </div>
+          </a>
+
+          <!-- Slide 3: Community -->
+          <a href="/community" class="hero-slide absolute inset-0 flex items-stretch opacity-0 transition-all duration-700 ease-in-out pointer-events-none" data-slide="3">
+            <div class="flex-1 flex flex-col sm:flex-row items-center gap-6 sm:gap-10 bg-gradient-to-br from-sky-500 to-blue-600 text-white rounded-3xl px-8 py-8 sm:py-10 shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
+              <div class="text-7xl sm:text-8xl shrink-0 drop-shadow-md">🌏</div>
+              <div class="text-left flex-1 min-w-0">
+                <h2 class="text-2xl sm:text-3xl font-bold mb-2">{t(lang, 'home.practice.community.title')}</h2>
+                <p class="text-white/85 text-base sm:text-lg mb-4 leading-relaxed">{t(lang, 'home.practice.community.desc')}</p>
+                <span class="font-semibold text-lg">→</span>
+              </div>
+            </div>
+          </a>
+
+        </div>
+
+        <!-- Dot indicators + reset note -->
+        <div class="flex items-center justify-center gap-2.5 mt-5">
+          <button class="hero-dot w-3 h-3 rounded-full bg-orange-500 transition-all duration-300" data-dot="0" aria-label="Slide 1"></button>
+          <button class="hero-dot w-3 h-3 rounded-full bg-gray-300 transition-all duration-300 hover:bg-gray-400" data-dot="1" aria-label="Slide 2"></button>
+          <button class="hero-dot w-3 h-3 rounded-full bg-gray-300 transition-all duration-300 hover:bg-gray-400" data-dot="2" aria-label="Slide 3"></button>
+          <button class="hero-dot w-3 h-3 rounded-full bg-gray-300 transition-all duration-300 hover:bg-gray-400" data-dot="3" aria-label="Slide 4"></button>
+        </div>
+        <p class="text-xs text-gray-400 mt-2">{t(lang, 'home.quota.resetNote')}</p>
       </div>
     </div>
   </section>
+
+  <script is:inline>
+  (function() {
+    var INTERVAL = 5000;
+    var slider = document.getElementById('hero-slider');
+    if (!slider) return;
+    var slides = slider.querySelectorAll('.hero-slide');
+    var dots = slider.querySelectorAll('.hero-dot');
+    var dotColors = ['bg-orange-500','bg-teal-500','bg-violet-500','bg-sky-500'];
+    var total = slides.length;
+    var current = 0;
+    var timer;
+    var paused = false;
+
+    function goTo(idx) {
+      slides[current].classList.remove('opacity-100');
+      slides[current].classList.add('opacity-0','pointer-events-none');
+      dots[current].className = 'hero-dot w-3 h-3 rounded-full bg-gray-300 transition-all duration-300 hover:bg-gray-400';
+      current = idx;
+      slides[current].classList.remove('opacity-0','pointer-events-none');
+      slides[current].classList.add('opacity-100');
+      dots[current].className = 'hero-dot w-3 h-3 rounded-full ' + dotColors[current] + ' transition-all duration-300 scale-125';
+    }
+
+    function next() { goTo((current + 1) % total); }
+    function start() { timer = setInterval(function(){ if(!paused) next(); }, INTERVAL); }
+
+    dots.forEach(function(dot, i) {
+      dot.addEventListener('click', function() { goTo(i); clearInterval(timer); start(); });
+    });
+
+    slider.addEventListener('mouseenter', function() { paused = true; });
+    slider.addEventListener('mouseleave', function() { paused = false; });
+
+    // Touch swipe support
+    var touchStartX = 0;
+    slider.addEventListener('touchstart', function(e) { touchStartX = e.changedTouches[0].screenX; }, {passive:true});
+    slider.addEventListener('touchend', function(e) {
+      var diff = e.changedTouches[0].screenX - touchStartX;
+      if (Math.abs(diff) > 50) {
+        goTo(diff < 0 ? (current+1)%total : (current-1+total)%total);
+        clearInterval(timer); start();
+      }
+    }, {passive:true});
+
+    start();
+  })();
+  </script>
 
   <!-- Section 2: Learn — Self-study Resources -->
   <section class="py-20 px-4 bg-orange-50 relative overflow-hidden">
