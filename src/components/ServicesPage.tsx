@@ -81,16 +81,18 @@ export default function ServicesPage({ isLoggedIn, isPremium, purchases }: Props
     <div className="space-y-6">
       {/* Free tier */}
       <ServiceCard
-        icon="🎯"
-        title={t('services.levelCheck.title')}
-        desc={t('services.levelCheck.desc')}
-        price={t('services.levelCheck.price')}
+        icon="🌀"
+        title={t('services.lifeBalance.title')}
+        desc={t('services.lifeBalance.desc')}
+        price={t('services.lifeBalance.price')}
       >
         <a
-          href="/level-check"
+          href="https://savemy12weeks.com/"
+          target="_blank"
+          rel="noopener noreferrer"
           className="inline-block px-6 py-3 bg-gray-100 text-gray-700 rounded-full font-semibold hover:bg-gray-200 transition-colors"
         >
-          {t('services.levelCheck.cta')}
+          {t('services.lifeBalance.cta')}
         </a>
       </ServiceCard>
 
@@ -241,6 +243,21 @@ export default function ServicesPage({ isLoggedIn, isPremium, purchases }: Props
         )}
       </ServiceCard>
 
+      {/* YouTube English Learning Consulting */}
+      <ServiceCard
+        icon="🎬"
+        title={t('services.gowm.title')}
+        desc={t('services.gowm.desc')}
+        price={t('services.gowm.price')}
+      >
+        <a
+          href="/gowm"
+          className="inline-block px-6 py-3 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition-colors"
+        >
+          {t('services.gowm.cta')}
+        </a>
+      </ServiceCard>
+
       {/* High-tier inquiry services */}
       <ServiceCard
         icon="🎤"
@@ -249,7 +266,7 @@ export default function ServicesPage({ isLoggedIn, isPremium, purchases }: Props
         muted
       >
         <a
-          href="/gowm"
+          href="/contact"
           className="inline-block px-6 py-3 bg-gray-700 text-white rounded-full font-semibold hover:bg-gray-800 transition-colors"
         >
           {t('services.appearance.cta')}

@@ -578,6 +578,11 @@
   "services.session.cta": "予約する",
   "services.session.requiresCoaching": "まずは初回体験から",
 
+  "services.gowm.title": "YouTube出演 英語学習コンサル",
+  "services.gowm.desc": "あなたの「好き」を英語で世界に発信！YouTube出演を通じて、実践的な英語力を身につける完全サポートプログラムです。",
+  "services.gowm.price": "¥40,000〜",
+  "services.gowm.cta": "詳しく見る",
+
   "services.appearance.title": "ゲスト出演",
   "services.appearance.desc": "イベント、ポッドキャスト、YouTubeなどで言語学習や情熱ベースの教育についてお話しします。",
   "services.appearance.cta": "お問い合わせ",

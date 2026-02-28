@@ -578,6 +578,11 @@
   "services.session.cta": "Book Session",
   "services.session.requiresCoaching": "Complete First Coaching first",
 
+  "services.gowm.title": "YouTube English Learning Consulting",
+  "services.gowm.desc": "Share your passion with the world in English! A full-support program to build practical English skills through YouTube appearances.",
+  "services.gowm.price": "From ¥40,000",
+  "services.gowm.cta": "Learn More",
+
   "services.appearance.title": "Guest Appearance",
   "services.appearance.desc": "Invite me to speak at your event, podcast, or YouTube channel about language learning and passion-based education.",
   "services.appearance.cta": "Contact Us",
