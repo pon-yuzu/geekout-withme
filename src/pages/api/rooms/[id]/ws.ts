@@ -1,6 +1,10 @@
 import type { APIRoute } from 'astro';
+import { isVoiceLoungeAllowed } from '../../../../lib/features';
 
 export const GET: APIRoute = async ({ params, request, locals }) => {
+  if (!isVoiceLoungeAllowed(locals.user?.id, locals)) {
+    return new Response(JSON.stringify({ error: 'Voice Lounge is currently under maintenance' }), { status: 503 });
+  }
   const user = locals.user;
   if (!user) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });

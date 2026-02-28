@@ -1,6 +1,15 @@
 import type { APIRoute } from 'astro';
+import { isVoiceLoungeAllowed } from '../../../lib/features';
+
+function maintenanceResponse() {
+  return new Response(
+    JSON.stringify({ error: 'Voice Lounge is currently under maintenance' }),
+    { status: 503, headers: { 'Content-Type': 'application/json' } }
+  );
+}
 
 export const GET: APIRoute = async ({ locals }) => {
+  if (!isVoiceLoungeAllowed(locals.user?.id, locals)) return maintenanceResponse();
   const supabase = locals.supabase;
   if (!supabase) {
     return new Response(JSON.stringify({ error: 'Database not configured' }), { status: 503 });
@@ -22,6 +31,7 @@ export const GET: APIRoute = async ({ locals }) => {
 };
 
 export const POST: APIRoute = async ({ request, locals }) => {
+  if (!isVoiceLoungeAllowed(locals.user?.id, locals)) return maintenanceResponse();
   const user = locals.user;
   if (!user) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });

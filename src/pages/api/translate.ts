@@ -1,10 +1,14 @@
 import type { APIRoute } from 'astro';
 import { tryIncrementUsage, quotaExceededResponse } from '../../lib/quota';
+import { isVoiceLoungeAllowed } from '../../lib/features';
 
 const MAX_TEXT_LENGTH = 500;
 const JA_REGEX = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]/;
 
 export const POST: APIRoute = async ({ request, locals }) => {
+  if (!isVoiceLoungeAllowed(locals.user?.id, locals)) {
+    return new Response(JSON.stringify({ error: 'Voice Lounge is currently under maintenance' }), { status: 503 });
+  }
   const user = locals.user;
   if (!user) {
     return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });

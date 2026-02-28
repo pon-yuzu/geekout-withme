@@ -4,16 +4,21 @@ import VoiceLounge from '../components/voice-lounge/VoiceLounge.tsx';
 import { t } from '../i18n/index';
 import type { Lang } from '../i18n/index';
 import { isPromoActive } from '../lib/promo';
+import { isVoiceLoungeAllowed } from '../lib/features';
 
 const user = Astro.locals.user;
 const lang = Astro.locals.lang as Lang;
 const promoActive = isPromoActive();
+const vlEnabled = isVoiceLoungeAllowed(user?.id, Astro.locals);
 
-if (!user && !promoActive) return Astro.redirect('/login');
+// When VL is disabled, allow anyone to see the maintenance page (no redirect)
+if (vlEnabled && !user && !promoActive) return Astro.redirect('/login');
 
-// Check premium status
+// Check premium status (only needed when VL is enabled)
 let isPremium = false;
-if (user && Astro.locals.supabase) {
+let autoLevel: 'beginner' | 'intermediate' | 'advanced' | null = null;
+
+if (vlEnabled && user && Astro.locals.supabase) {
   const supabase = Astro.locals.supabase;
   const { data: subscriptions } = await supabase
     .from('subscriptions')
@@ -22,32 +27,26 @@ if (user && Astro.locals.supabase) {
     .in('status', ['active', 'trialing'])
     .limit(1);
   isPremium = (subscriptions?.length ?? 0) > 0;
-}
 
-// During promo, logged-in users get premium access
-if (promoActive && user) isPremium = true;
+  if (promoActive) isPremium = true;
 
-// Get conversation level from latest assessment
-let autoLevel: 'beginner' | 'intermediate' | 'advanced' | null = null;
-if (isPremium && user && Astro.locals.supabase) {
-  try {
-    const { data: assessment } = await Astro.locals.supabase
-      .from('assessment_results')
-      .select('text_level')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single();
+  if (isPremium) {
+    try {
+      const { data: assessment } = await supabase
+        .from('assessment_results')
+        .select('text_level')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .single();
 
-    if (assessment?.text_level) {
-      const level = assessment.text_level as string;
-      // Map CEFR/JLPT to conversation level
-      if (['A1', 'A2', 'N5', 'N4'].includes(level)) autoLevel = 'beginner';
-      else if (['B1', 'B2', 'N3', 'N2'].includes(level)) autoLevel = 'intermediate';
-      else if (['C1', 'C2', 'N1'].includes(level)) autoLevel = 'advanced';
-    }
-  } catch {
-    // No assessment found
+      if (assessment?.text_level) {
+        const level = assessment.text_level as string;
+        if (['A1', 'A2', 'N5', 'N4'].includes(level)) autoLevel = 'beginner';
+        else if (['B1', 'B2', 'N3', 'N2'].includes(level)) autoLevel = 'intermediate';
+        else if (['C1', 'C2', 'N1'].includes(level)) autoLevel = 'advanced';
+      }
+    } catch {}
   }
 }
 ---
@@ -66,7 +65,23 @@ if (isPremium && user && Astro.locals.supabase) {
         </p>
       </div>
 
-      {isPremium ? (
+      {!vlEnabled ? (
+        <!-- Maintenance / Coming Soon -->
+        <div class="text-center py-16 bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
+          <div class="text-5xl mb-6">🔧</div>
+          <p class="text-lg text-gray-600 mb-8 max-w-md mx-auto">
+            {t(lang, 'voiceLounge.maintenance.message')}
+          </p>
+          <div class="flex justify-center items-center gap-5">
+            <a href="https://www.instagram.com/rebellious1124/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-orange-500 transition-colors" aria-label="Instagram">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+            </a>
+            <a href="https://www.threads.net/@rebellious1124" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-orange-500 transition-colors" aria-label="Threads">
+              <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017C1.5 8.418 2.35 5.564 3.995 3.512 5.845 1.208 8.598.027 12.179.003h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.059.564c-1.086-3.898-3.724-5.834-7.835-5.856h-.014c-2.786.02-4.931.928-6.379 2.702C4.945 6.501 4.235 8.912 4.212 12v.012c.023 3.088.733 5.499 2.029 7.023 1.448 1.774 3.593 2.682 6.38 2.702h.006c2.36-.018 4.168-.614 5.531-1.823 1.503-1.334 2.262-3.162 2.255-5.433-.004-1.46-.424-2.638-1.248-3.501-.806-.843-1.929-1.335-3.282-1.47a7.45 7.45 0 00-.197 1.982c.089.04.178.083.266.129 1.418.744 2.137 1.87 2.137 3.348 0 2.453-1.898 4.212-5.07 4.672a8.63 8.63 0 01-1.273.094c-2.278 0-4.088-.884-5.232-2.559-1.073-1.57-1.577-3.703-1.482-5.88.166-3.799 2.088-6.357 5.394-7.03.566-.115 1.157-.173 1.76-.173 1.837 0 3.402.563 4.523 1.629l-1.386 1.612c-.783-.742-1.946-1.135-3.36-1.135-.422 0-.843.041-1.243.121-2.408.49-3.578 2.32-3.698 5.087-.068 1.559.285 3.089.978 4.111.739 1.088 1.847 1.67 3.308 1.67.336 0 .676-.025 1.009-.077 1.842-.266 2.932-1.081 2.932-2.327 0-.574-.27-1.019-.825-1.382a2.66 2.66 0 00-.095 .587c-.009.33-.044.66-.104.984l2.068-.283c.075-.42.113-.848.113-1.279 0-.773-.14-1.49-.404-2.135 2.281.282 3.974 1.293 4.93 2.934.707 1.211 1.073 2.695 1.078 4.356.009 2.939-1.005 5.352-3.015 7.136C18.256 23.14 15.602 23.978 12.186 24z"/></svg>
+            </a>
+          </div>
+        </div>
+      ) : isPremium ? (
         <VoiceLounge
           client:load
           userId={user.id}
@@ -74,17 +89,6 @@ if (isPremium && user && Astro.locals.supabase) {
           isPremium={isPremium}
           autoLevel={autoLevel}
         />
-      ) : promoActive && !user ? (
-        <div class="text-center py-12 bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-200 rounded-2xl p-8 shadow-sm">
-          <div class="text-5xl mb-4">🎉</div>
-          <h3 class="text-xl font-semibold mb-2 text-gray-800">{t(lang, 'promo.signupCta')}</h3>
-          <a
-            href="/signup"
-            class="inline-block mt-4 px-8 py-3 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition-colors"
-          >
-            {t(lang, 'promo.signupBtn')}
-          </a>
-        </div>
       ) : (
         <div class="text-center py-12 bg-white border border-gray-200 rounded-2xl p-8 shadow-sm">
           <div class="text-4xl mb-4">&#10024;</div>

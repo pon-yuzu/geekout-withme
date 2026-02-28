@@ -1,7 +1,11 @@
 import type { APIRoute } from 'astro';
 import { createClient } from '@supabase/supabase-js';
+import { isVoiceLoungeEnabled } from '../../../../lib/features';
 
-export const POST: APIRoute = async ({ params, request }) => {
+export const POST: APIRoute = async ({ params, request, locals }) => {
+  if (!isVoiceLoungeEnabled()) {
+    return new Response(JSON.stringify({ error: 'Voice Lounge is currently under maintenance' }), { status: 503 });
+  }
   const roomId = params.id;
   if (!roomId) {
     return new Response(JSON.stringify({ error: 'Room ID required' }), { status: 400 });
