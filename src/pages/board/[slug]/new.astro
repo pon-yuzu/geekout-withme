@@ -1,0 +1,45 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import ThreadCreateForm from '../../../components/board/ThreadCreateForm';
+import { t } from '../../../i18n/index';
+import type { Lang } from '../../../i18n/index';
+import { isAdmin } from '../../../lib/admin';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+
+if (!user) {
+  return Astro.redirect('/login');
+}
+
+const slug = Astro.params.slug;
+const supabase = Astro.locals.supabase!;
+
+const { data: board } = await supabase
+  .from('boards')
+  .select('*')
+  .eq('slug', slug)
+  .single();
+
+if (!board) {
+  return Astro.redirect('/board');
+}
+
+// Check permission
+if (board.post_permission === 'admin_only' && !isAdmin(user.email, Astro.locals)) {
+  return Astro.redirect(`/board/${slug}`);
+}
+
+const boardName = lang === 'ja' ? board.name_ja : board.name_en;
+---
+
+<Layout title={`${t(lang, 'board.thread.new')} - ${boardName}`} user={user}>
+  <section class="py-12 px-4 max-w-2xl mx-auto">
+    <div class="text-center mb-8">
+      <h1 class="text-2xl font-bold text-gray-800">{t(lang, 'board.thread.new')}</h1>
+      <p class="text-gray-500 text-sm mt-1">{board.emoji} {boardName}</p>
+    </div>
+
+    <ThreadCreateForm client:load boardId={board.id} boardSlug={board.slug} />
+  </section>
+</Layout>

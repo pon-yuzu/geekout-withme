@@ -1,0 +1,67 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { t } from '../../i18n/index';
+import type { Lang } from '../../i18n/index';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+
+if (!user) {
+  return Astro.redirect('/login');
+}
+
+const supabase = Astro.locals.supabase!;
+
+const { data: boards } = await supabase
+  .from('boards')
+  .select('*')
+  .order('sort_order', { ascending: true });
+
+// Get thread counts per board
+const { data: allThreads } = await supabase
+  .from('threads')
+  .select('board_id');
+
+const countByBoard: Record<string, number> = {};
+for (const th of allThreads || []) {
+  countByBoard[th.board_id] = (countByBoard[th.board_id] || 0) + 1;
+}
+---
+
+<Layout title={t(lang, 'board.title')} user={user}>
+  <section class="py-12 px-4 max-w-4xl mx-auto">
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold text-gray-800 mb-2">{t(lang, 'board.title')}</h1>
+      <p class="text-gray-500">{t(lang, 'board.subtitle')}</p>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      {(boards || []).map((board: any) => {
+        const name = lang === 'ja' ? board.name_ja : board.name_en;
+        const desc = lang === 'ja' ? board.description_ja : board.description_en;
+        const threadCount = countByBoard[board.id] || 0;
+
+        return (
+          <a
+            href={`/board/${board.slug}`}
+            class="bg-white border border-gray-200 rounded-2xl p-5 hover:border-orange-300 hover:shadow-md transition-all group block"
+          >
+            <div class="flex items-start gap-3">
+              <span class="text-2xl">{board.emoji}</span>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <h2 class="font-bold text-gray-800 group-hover:text-orange-500 transition-colors">{name}</h2>
+                  {board.post_permission === 'admin_only' && (
+                    <span class="text-[10px] font-semibold px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded-full">{t(lang, 'board.adminOnly')}</span>
+                  )}
+                </div>
+                <p class="text-sm text-gray-500 mt-1">{desc}</p>
+                <p class="text-xs text-gray-400 mt-2">💬 {threadCount}</p>
+              </div>
+            </div>
+          </a>
+        );
+      })}
+    </div>
+  </section>
+</Layout>

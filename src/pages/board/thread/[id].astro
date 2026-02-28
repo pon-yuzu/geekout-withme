@@ -1,0 +1,46 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import ThreadDetail from '../../../components/board/ThreadDetail';
+import { t } from '../../../i18n/index';
+import type { Lang } from '../../../i18n/index';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+
+if (!user) {
+  return Astro.redirect('/login');
+}
+
+const threadId = Astro.params.id;
+const supabase = Astro.locals.supabase!;
+
+// Fetch thread to get board info for breadcrumb
+const { data: thread } = await supabase
+  .from('threads')
+  .select(`
+    id, title,
+    board:boards!threads_board_id_fkey(slug, name_ja, name_en, emoji)
+  `)
+  .eq('id', threadId)
+  .single();
+
+if (!thread) {
+  return Astro.redirect('/board');
+}
+
+const board = thread.board as any;
+const boardName = lang === 'ja' ? board.name_ja : board.name_en;
+---
+
+<Layout title={thread.title} user={user}>
+  <section class="py-12 px-4 max-w-3xl mx-auto">
+    {/* Breadcrumb */}
+    <nav class="flex items-center gap-2 text-sm text-gray-400 mb-6">
+      <a href="/board" class="hover:text-orange-500 transition-colors">{t(lang, 'board.title')}</a>
+      <span>/</span>
+      <a href={`/board/${board.slug}`} class="hover:text-orange-500 transition-colors">{board.emoji} {boardName}</a>
+    </nav>
+
+    <ThreadDetail client:load threadId={threadId!} />
+  </section>
+</Layout>

@@ -1,0 +1,49 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import ThreadList from '../../../components/board/ThreadList';
+import { t } from '../../../i18n/index';
+import type { Lang } from '../../../i18n/index';
+import { isAdmin } from '../../../lib/admin';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+
+if (!user) {
+  return Astro.redirect('/login');
+}
+
+const slug = Astro.params.slug;
+const supabase = Astro.locals.supabase!;
+
+const { data: board } = await supabase
+  .from('boards')
+  .select('*')
+  .eq('slug', slug)
+  .single();
+
+if (!board) {
+  return Astro.redirect('/board');
+}
+
+const boardName = lang === 'ja' ? board.name_ja : board.name_en;
+const boardDesc = lang === 'ja' ? board.description_ja : board.description_en;
+const userIsAdmin = isAdmin(user.email, Astro.locals);
+---
+
+<Layout title={`${board.emoji} ${boardName}`} user={user}>
+  <section class="py-12 px-4 max-w-3xl mx-auto">
+    <div class="text-center mb-8">
+      <span class="text-3xl">{board.emoji}</span>
+      <h1 class="text-2xl font-bold text-gray-800 mt-2">{boardName}</h1>
+      <p class="text-gray-500 text-sm mt-1">{boardDesc}</p>
+    </div>
+
+    <ThreadList
+      client:load
+      boardId={board.id}
+      boardSlug={board.slug}
+      postPermission={board.post_permission}
+      isAdmin={userIsAdmin}
+    />
+  </section>
+</Layout>
