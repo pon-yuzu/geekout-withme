@@ -94,23 +94,7 @@ export default function ServicesPage({ isLoggedIn, isPremium, purchases, hasLine
 
   return (
     <div className="space-y-6">
-      {/* Free tier */}
-      <ServiceCard
-        icon="🌀"
-        title={t('services.lifeBalance.title')}
-        desc={t('services.lifeBalance.desc')}
-        price={t('services.lifeBalance.price')}
-      >
-        <a
-          href="https://savemy12weeks.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-block px-6 py-3 bg-gray-100 text-gray-700 rounded-full font-semibold hover:bg-gray-200 transition-colors"
-        >
-          {t('services.lifeBalance.cta')}
-        </a>
-      </ServiceCard>
-
+      {/* Community - Free */}
       <ServiceCard
         icon="💬"
         title={t('services.community.title')}
@@ -324,34 +308,6 @@ export default function ServicesPage({ isLoggedIn, isPremium, purchases, hasLine
 
       {/* High-tier inquiry services */}
       <ServiceCard
-        icon="🎤"
-        title={t('services.appearance.title')}
-        desc={t('services.appearance.desc')}
-        muted
-      >
-        <a
-          href="/contact"
-          className="inline-block px-6 py-3 bg-gray-700 text-white rounded-full font-semibold hover:bg-gray-800 transition-colors"
-        >
-          {t('services.appearance.cta')}
-        </a>
-      </ServiceCard>
-
-      <ServiceCard
-        icon="🏫"
-        title={t('services.seminar.title')}
-        desc={t('services.seminar.desc')}
-        muted
-      >
-        <a
-          href="/contact"
-          className="inline-block px-6 py-3 bg-gray-700 text-white rounded-full font-semibold hover:bg-gray-800 transition-colors"
-        >
-          {t('services.seminar.cta')}
-        </a>
-      </ServiceCard>
-
-      <ServiceCard
         icon="👤"
         title={t('services.personal.title')}
         desc={t('services.personal.desc')}
@@ -362,6 +318,20 @@ export default function ServicesPage({ isLoggedIn, isPremium, purchases, hasLine
           className="inline-block px-6 py-3 bg-gray-700 text-white rounded-full font-semibold hover:bg-gray-800 transition-colors"
         >
           {t('services.personal.cta')}
+        </a>
+      </ServiceCard>
+
+      <ServiceCard
+        icon="🎤"
+        title={t('services.seminar.title')}
+        desc={t('services.seminar.desc')}
+        muted
+      >
+        <a
+          href="/contact"
+          className="inline-block px-6 py-3 bg-gray-700 text-white rounded-full font-semibold hover:bg-gray-800 transition-colors"
+        >
+          {t('services.seminar.cta')}
         </a>
       </ServiceCard>
     </div>
