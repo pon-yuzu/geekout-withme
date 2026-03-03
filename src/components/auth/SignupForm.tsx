@@ -23,6 +23,7 @@ export default function SignupForm() {
       password,
       options: {
         data: { display_name: displayName },
+        emailRedirectTo: `${window.location.origin}/auth/callback?type=signup`,
       },
     });
 
