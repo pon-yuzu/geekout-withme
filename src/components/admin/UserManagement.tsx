@@ -6,7 +6,9 @@ interface User {
   avatar_url: string | null;
   email: string;
   tier: string;
+  tier_expires_at: string | null;
   effectiveTier: string;
+  hasLineSupport: boolean;
   created_at: string;
 }
 
@@ -16,6 +18,11 @@ const TIER_LABELS: Record<string, { label: string; color: string }> = {
   personal: { label: 'Personal', color: 'bg-teal-100 text-teal-700' },
 };
 
+function toLocalDate(iso: string | null): string {
+  if (!iso) return '';
+  return new Date(iso).toISOString().slice(0, 10);
+}
+
 export default function UserManagement() {
   const [users, setUsers] = useState<User[]>([]);
   const [total, setTotal] = useState(0);
@@ -23,6 +30,7 @@ export default function UserManagement() {
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
+  const [expiresEdit, setExpiresEdit] = useState<Record<string, string>>({});
 
   const perPage = 20;
 
@@ -53,26 +61,57 @@ export default function UserManagement() {
     fetchUsers();
   };
 
-  const handleTierChange = async (userId: string, newTier: string) => {
+  const handleTierChange = async (userId: string, newTier: string, expiresAt?: string) => {
     setUpdating(userId);
     try {
+      const payload: any = { userId, tier: newTier };
+      if (newTier === 'personal' && expiresAt) {
+        payload.tier_expires_at = expiresAt;
+      }
       const res = await fetch('/api/admin/users', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, tier: newTier }),
+        body: JSON.stringify(payload),
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      setUsers((prev) =>
-        prev.map((u) =>
-          u.id === userId ? { ...u, tier: newTier, effectiveTier: newTier === 'free' ? u.effectiveTier : newTier } : u
-        )
-      );
+      setExpiresEdit((prev) => {
+        const next = { ...prev };
+        delete next[userId];
+        return next;
+      });
       fetchUsers();
     } catch (err) {
       console.error('Failed to update tier:', err);
     } finally {
       setUpdating(null);
     }
+  };
+
+  const handleTierSelect = (userId: string, newTier: string) => {
+    if (newTier === 'personal') {
+      const user = users.find((u) => u.id === userId);
+      const existing = user?.tier_expires_at ? toLocalDate(user.tier_expires_at) : '';
+      setExpiresEdit((prev) => ({ ...prev, [userId]: existing }));
+    } else {
+      setExpiresEdit((prev) => {
+        const next = { ...prev };
+        delete next[userId];
+        return next;
+      });
+      handleTierChange(userId, newTier);
+    }
+  };
+
+  const handleExpiresConfirm = (userId: string) => {
+    handleTierChange(userId, 'personal', expiresEdit[userId] || undefined);
+  };
+
+  const handleExpiresCancel = (userId: string) => {
+    setExpiresEdit((prev) => {
+      const next = { ...prev };
+      delete next[userId];
+      return next;
+    });
   };
 
   const totalPages = Math.ceil(total / perPage);
@@ -115,6 +154,8 @@ export default function UserManagement() {
               <tbody>
                 {users.map((user) => {
                   const tierInfo = TIER_LABELS[user.effectiveTier] || TIER_LABELS.free;
+                  const showExpiresInput = expiresEdit.hasOwnProperty(user.id);
+                  const isExpired = user.tier_expires_at && new Date(user.tier_expires_at) < new Date();
                   return (
                     <tr key={user.id} className="border-t border-orange-50 hover:bg-orange-25">
                       <td className="px-4 py-3">
@@ -139,21 +180,55 @@ export default function UserManagement() {
                         {user.tier !== user.effectiveTier && (
                           <span className="ml-1 text-[10px] text-gray-400">(via subscription)</span>
                         )}
+                        {user.tier_expires_at && (
+                          <span className={`ml-1 text-[10px] ${isExpired ? 'text-red-400' : 'text-gray-400'}`}>
+                            {isExpired ? 'exp ' : '~'}
+                            {toLocalDate(user.tier_expires_at)}
+                          </span>
+                        )}
+                        {user.hasLineSupport && (
+                          <span className="ml-1 px-1.5 py-0.5 bg-teal-100 text-teal-700 text-[10px] font-bold rounded-full">LINE</span>
+                        )}
                       </td>
                       <td className="px-4 py-3">
-                        <select
-                          value={user.tier}
-                          onChange={(e) => handleTierChange(user.id, e.target.value)}
-                          disabled={updating === user.id}
-                          className="px-2 py-1 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 disabled:opacity-50"
-                        >
-                          <option value="free">Free</option>
-                          <option value="premium">Premium</option>
-                          <option value="personal">Personal</option>
-                        </select>
-                        {updating === user.id && (
-                          <span className="ml-2 text-xs text-orange-500">Saving...</span>
-                        )}
+                        <div className="flex flex-col gap-1">
+                          <select
+                            value={showExpiresInput ? 'personal' : user.tier}
+                            onChange={(e) => handleTierSelect(user.id, e.target.value)}
+                            disabled={updating === user.id}
+                            className="px-2 py-1 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-300 disabled:opacity-50"
+                          >
+                            <option value="free">Free</option>
+                            <option value="premium">Premium</option>
+                            <option value="personal">Personal</option>
+                          </select>
+                          {showExpiresInput && (
+                            <div className="flex items-center gap-1 mt-1">
+                              <input
+                                type="date"
+                                value={expiresEdit[user.id] || ''}
+                                onChange={(e) => setExpiresEdit((prev) => ({ ...prev, [user.id]: e.target.value }))}
+                                className="px-2 py-1 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-teal-300"
+                              />
+                              <button
+                                onClick={() => handleExpiresConfirm(user.id)}
+                                disabled={updating === user.id}
+                                className="px-2 py-1 bg-teal-500 text-white text-xs rounded-lg hover:bg-teal-600 disabled:opacity-50"
+                              >
+                                {updating === user.id ? '...' : 'OK'}
+                              </button>
+                              <button
+                                onClick={() => handleExpiresCancel(user.id)}
+                                className="px-2 py-1 text-gray-400 text-xs hover:text-gray-600"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          )}
+                          {updating === user.id && !showExpiresInput && (
+                            <span className="text-xs text-orange-500">Saving...</span>
+                          )}
+                        </div>
                       </td>
                       <td className="px-4 py-3 text-gray-400 text-xs">
                         {new Date(user.created_at).toLocaleDateString('ja-JP')}

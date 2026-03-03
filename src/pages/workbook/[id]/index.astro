@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
-import { getWorkbook, getAllDays } from '../../../lib/workbook/db';
+import { getWorkbook, getAllDays, getWorkbookProgress, getUserAllProgress, calculateStreak } from '../../../lib/workbook/db';
 import { getTheme } from '../../../lib/workbook/themes';
 import { t } from '../../../i18n/index';
 import type { Lang } from '../../../i18n/index';
@@ -33,6 +33,16 @@ if (workbook.status === 'generating' && isOwner) {
 const days = await getAllDays(supabase, id!);
 const theme = getTheme(workbook.theme_color);
 const isSample = workbook.is_public && !isOwner;
+
+// User progress tracking (owner only)
+let completedDays: number[] = [];
+let streak = 0;
+if (user && isOwner) {
+  const progress = await getWorkbookProgress(supabase, id!, user.id);
+  completedDays = progress.map(p => p.day_number);
+  const allProgress = await getUserAllProgress(supabase, user.id);
+  streak = calculateStreak(allProgress);
+}
 ---
 
 <Layout title={workbook.title} user={user}>
@@ -49,14 +59,40 @@ const isSample = workbook.is_public && !isOwner;
         )}
       </div>
 
+      <!-- User Progress Bar (owner only) -->
+      {isOwner && days.length > 0 && (
+        <div class="mb-6">
+          <div class="flex justify-between text-sm text-gray-500 mb-1">
+            <span>{t(lang, 'workbook.progress.label')}: {completedDays.length} / {days.length}</span>
+            <span>{Math.round((completedDays.length / days.length) * 100)}%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-3">
+            <div
+              class="bg-teal-400 h-3 rounded-full transition-all"
+              style={`width: ${Math.round((completedDays.length / days.length) * 100)}%`}
+            />
+          </div>
+          {streak > 0 && (
+            <div class="mt-2 text-center">
+              <span class="inline-flex items-center gap-1 px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
+                {lang === 'ja' ? `\uD83D\uDD25 ${streak}\u65E5\u9023\u7D9A\u5B66\u7FD2\u4E2D\uFF01` : `\uD83D\uDD25 ${streak}-day streak!`}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+
       <!-- Day Grid -->
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3">
         {days.map(day => (
           <a
             href={`/workbook/${id}/${day.day_number}`}
-            class="flex flex-col items-center p-4 bg-white border border-gray-200 rounded-xl hover:border-orange-300 hover:shadow-md transition-all text-center group"
+            class={`relative flex flex-col items-center p-4 bg-white border rounded-xl hover:shadow-md transition-all text-center group ${completedDays.includes(day.day_number) ? 'border-teal-300 hover:border-teal-400' : 'border-gray-200 hover:border-orange-300'}`}
           >
-            <span class="text-2xl mb-2">{day.item_emoji || '📖'}</span>
+            {completedDays.includes(day.day_number) && (
+              <div class="absolute top-1 right-1 w-5 h-5 bg-teal-400 text-white rounded-full flex items-center justify-center text-xs font-bold">{'\u2713'}</div>
+            )}
+            <span class="text-2xl mb-2">{day.item_emoji || '\uD83D\uDCD6'}</span>
             <span class="text-xs font-bold text-orange-500 group-hover:text-orange-600">{t(lang, 'workbook.day.dayLabel') === 'Day' ? `Day ${day.day_number}` : `${day.day_number}${t(lang, 'workbook.day.dayLabel')}`}</span>
             <span class="text-xs text-gray-500 mt-1 line-clamp-2">{day.item_en}</span>
           </a>

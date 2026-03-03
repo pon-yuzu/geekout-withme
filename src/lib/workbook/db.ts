@@ -1,5 +1,5 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Workbook, WorkbookDay, DayContent, TopicItem } from './types';
+import type { Workbook, WorkbookDay, DayContent, TopicItem, WorkbookProgress } from './types';
 
 export async function createWorkbook(
   supabase: SupabaseClient,
@@ -182,4 +182,100 @@ export function parseTopicItems(json: string | Record<string, unknown>): TopicIt
     return JSON.parse(json) as TopicItem[];
   }
   return json as unknown as TopicItem[];
+}
+
+// === Progress Tracking ===
+
+export async function getWorkbookProgress(
+  supabase: SupabaseClient,
+  workbookId: string,
+  userId: string
+): Promise<WorkbookProgress[]> {
+  const { data, error } = await supabase
+    .from('workbook_progress')
+    .select('*')
+    .eq('workbook_id', workbookId)
+    .eq('user_id', userId)
+    .order('day_number', { ascending: true });
+  if (error) return [];
+  return (data ?? []) as WorkbookProgress[];
+}
+
+export async function markDayComplete(
+  supabase: SupabaseClient,
+  workbookId: string,
+  userId: string,
+  dayNumber: number
+): Promise<void> {
+  const { error } = await supabase
+    .from('workbook_progress')
+    .upsert(
+      { workbook_id: workbookId, user_id: userId, day_number: dayNumber },
+      { onConflict: 'workbook_id,user_id,day_number' }
+    );
+  if (error) throw new Error(`Failed to mark day complete: ${error.message}`);
+}
+
+export async function unmarkDayComplete(
+  supabase: SupabaseClient,
+  workbookId: string,
+  userId: string,
+  dayNumber: number
+): Promise<void> {
+  const { error } = await supabase
+    .from('workbook_progress')
+    .delete()
+    .eq('workbook_id', workbookId)
+    .eq('user_id', userId)
+    .eq('day_number', dayNumber);
+  if (error) throw new Error(`Failed to unmark day: ${error.message}`);
+}
+
+export async function getUserAllProgress(
+  supabase: SupabaseClient,
+  userId: string
+): Promise<WorkbookProgress[]> {
+  const { data, error } = await supabase
+    .from('workbook_progress')
+    .select('*')
+    .eq('user_id', userId)
+    .order('completed_at', { ascending: false });
+  if (error) return [];
+  return (data ?? []) as WorkbookProgress[];
+}
+
+function toDateStr(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+export function calculateStreak(progressRecords: WorkbookProgress[]): number {
+  if (progressRecords.length === 0) return 0;
+
+  const uniqueDates = [...new Set(
+    progressRecords.map(p => toDateStr(new Date(p.completed_at)))
+  )].sort().reverse();
+
+  const today = new Date();
+  const todayStr = toDateStr(today);
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = toDateStr(yesterday);
+
+  if (uniqueDates[0] !== todayStr && uniqueDates[0] !== yesterdayStr) {
+    return 0;
+  }
+
+  let streak = 1;
+  for (let i = 1; i < uniqueDates.length; i++) {
+    const current = new Date(uniqueDates[i - 1]);
+    const prev = new Date(uniqueDates[i]);
+    const diffMs = current.getTime() - prev.getTime();
+    const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+    if (diffDays === 1) {
+      streak++;
+    } else {
+      break;
+    }
+  }
+  return streak;
 }

@@ -3,6 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import ServicesPage from '../components/ServicesPage.tsx';
 import { t } from '../i18n/index';
 import type { Lang } from '../i18n/index';
+import { getUserTier } from '../lib/tier';
+import { hasLineSupport } from '../lib/line-support';
 
 const user = Astro.locals.user;
 const lang = Astro.locals.lang as Lang;
@@ -27,6 +29,16 @@ if (user && Astro.locals.supabase) {
     .eq('user_id', user.id);
   purchases = purchaseData ?? [];
 }
+
+let hasLineSupportActive = false;
+if (user && Astro.locals.supabase) {
+  const runtime = (Astro.locals as any).runtime;
+  const linePriceId = runtime?.env?.STRIPE_LINE_SUPPORT_PRICE_ID || import.meta.env.STRIPE_LINE_SUPPORT_PRICE_ID;
+  if (linePriceId) {
+    const tier = await getUserTier(Astro.locals.supabase, user.id);
+    hasLineSupportActive = await hasLineSupport(Astro.locals.supabase, user.id, tier, linePriceId);
+  }
+}
 ---
 
 <Layout title={t(lang, 'services.title')} description="Services offered by Geek Out With Me" user={user}>
@@ -44,6 +56,7 @@ if (user && Astro.locals.supabase) {
         isLoggedIn={!!user}
         isPremium={isPremium}
         purchases={purchases}
+        hasLineSupport={hasLineSupportActive}
       />
     </div>
   </section>

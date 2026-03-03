@@ -5,12 +5,15 @@ export type UserTier = 'free' | 'premium' | 'personal';
 export async function getUserTier(supabase: any, userId: string): Promise<UserTier> {
   const { data: profile } = await supabase
     .from('profiles')
-    .select('tier')
+    .select('tier, tier_expires_at')
     .eq('id', userId)
     .single();
 
-  if (profile?.tier === 'personal') return 'personal';
-  if (profile?.tier === 'premium') return 'premium';
+  // Check tier expiration
+  const tierValid = !profile?.tier_expires_at || new Date(profile.tier_expires_at) > new Date();
+
+  if (profile?.tier === 'personal' && tierValid) return 'personal';
+  if (profile?.tier === 'premium' && tierValid) return 'premium';
 
   const { data: sub } = await supabase
     .from('subscriptions')

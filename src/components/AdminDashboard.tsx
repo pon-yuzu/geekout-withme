@@ -3,6 +3,7 @@ import { useTranslation } from '../i18n/index';
 import type { Lang } from '../i18n/index';
 import UserManagement from './admin/UserManagement';
 import StudentArchiveManager from './admin/StudentArchiveManager';
+import BookingManager from './booking/admin/BookingManager';
 
 interface UserStats {
   total_users: number;
@@ -44,7 +45,7 @@ interface StatsData {
   dailySignups: DailySignup[];
 }
 
-type AdminTab = 'stats' | 'users' | 'archives';
+type AdminTab = 'stats' | 'users' | 'archives' | 'booking';
 
 export default function AdminDashboard({ lang, userId }: { lang: Lang; userId?: string }) {
   const { t } = useTranslation();
@@ -88,6 +89,7 @@ export default function AdminDashboard({ lang, userId }: { lang: Lang; userId?: 
     { key: 'stats', label: 'Overview' },
     { key: 'users', label: 'Users' },
     { key: 'archives', label: 'Archives' },
+    { key: 'booking', label: 'Booking' },
   ];
 
   return (
@@ -118,6 +120,8 @@ export default function AdminDashboard({ lang, userId }: { lang: Lang; userId?: 
       {activeTab === 'users' && <UserManagement />}
 
       {activeTab === 'archives' && userId && <StudentArchiveManager userId={userId} />}
+
+      {activeTab === 'booking' && <BookingManager />}
 
       {activeTab === 'stats' && (
         <>

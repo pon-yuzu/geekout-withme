@@ -10,11 +10,11 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^9.0.0",
-    "@astrojs/react": "^3.0.0",
+    "@astrojs/cloudflare": "^12.6.12",
+    "@astrojs/react": "^4.4.2",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.95.3",
-    "astro": "^4.0.0",
+    "astro": "^5.18.0",
     "events": "^3.3.0",
     "heic2any": "^0.0.4",
     "marked": "^17.0.3",
@@ -26,7 +26,7 @@
     "stripe": "^20.3.1"
   },
   "devDependencies": {
-    "@astrojs/tailwind": "^5.0.0",
+    "@astrojs/tailwind": "^6.0.2",
     "@google-cloud/text-to-speech": "^6.4.0",
     "@types/simple-peer": "^9.11.9",
     "tailwindcss": "^3.4.0"

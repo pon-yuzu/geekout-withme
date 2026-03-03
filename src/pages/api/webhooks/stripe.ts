@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { createStripeClient } from '../../../lib/stripe';
 import { createClient } from '@supabase/supabase-js';
+import { createMemberBooking, createGuestBooking, useCoupon } from '../../../lib/booking/db';
 
 export const POST: APIRoute = async ({ request, locals }) => {
   const runtime = (locals as any).runtime;
@@ -36,7 +37,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
       const subscription = event.data.object;
       const customerId = subscription.customer as string;
 
-      // Find user by stripe customer id
       const { data: customer } = await supabase
         .from('stripe_customers')
         .select('id')
@@ -66,13 +66,57 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }
     case 'checkout.session.completed': {
       const session = event.data.object as any;
-      if (session.mode === 'payment' && session.metadata?.product_type) {
-        await supabase.from('purchases').insert({
-          user_id: session.metadata.user_id,
-          product_type: session.metadata.product_type,
-          stripe_session_id: session.id,
-          amount: session.amount_total,
-        });
+      const meta = session.metadata || {};
+
+      if (session.mode === 'payment') {
+        // --- Member booking paid ---
+        if (meta.type === 'booking' && meta.user_id && meta.slot_start) {
+          try {
+            const booking = await createMemberBooking(supabase, meta.user_id, {
+              slot_start: meta.slot_start,
+              slot_end: meta.slot_end,
+              booking_type: meta.booking_type || 'public',
+              status: 'confirmed',
+              coupon_id: meta.coupon_id || undefined,
+              amount_paid: Number(meta.amount_paid) || 0,
+              stripe_session_id: session.id,
+              notes: meta.notes || undefined,
+            });
+            if (meta.coupon_id) await useCoupon(supabase, meta.coupon_id);
+          } catch (err: any) {
+            console.error('Webhook booking creation failed:', err.message);
+          }
+        }
+
+        // --- Guest booking paid ---
+        if (meta.type === 'booking_guest' && meta.guest_email && meta.slot_start) {
+          try {
+            const booking = await createGuestBooking(supabase, {
+              guest_name: meta.guest_name,
+              guest_email: meta.guest_email,
+              slot_start: meta.slot_start,
+              slot_end: meta.slot_end,
+              status: 'confirmed',
+              coupon_id: meta.coupon_id || undefined,
+              amount_paid: Number(meta.amount_paid) || 0,
+              stripe_session_id: session.id,
+              notes: meta.notes || undefined,
+            });
+            if (meta.coupon_id) await useCoupon(supabase, meta.coupon_id);
+          } catch (err: any) {
+            console.error('Webhook guest booking creation failed:', err.message);
+          }
+        }
+
+        // --- Product purchase (workbook, coaching, etc.) ---
+        if (meta.product_type) {
+          await supabase.from('purchases').insert({
+            user_id: meta.user_id,
+            product_type: meta.product_type,
+            stripe_session_id: session.id,
+            amount: session.amount_total,
+          });
+        }
       }
       break;
     }

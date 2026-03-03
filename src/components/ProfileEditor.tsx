@@ -10,6 +10,7 @@ interface Props {
   subscriptionStatus: string | null;
   currentPeriodEnd: string | null;
   cancelAtPeriodEnd: boolean;
+  hasLineSupport?: boolean;
 }
 
 export default function ProfileEditor({
@@ -20,6 +21,7 @@ export default function ProfileEditor({
   subscriptionStatus,
   currentPeriodEnd,
   cancelAtPeriodEnd,
+  hasLineSupport = false,
 }: Props) {
   const { t } = useTranslation();
   const supabase = createSupabaseBrowserClient();
@@ -384,6 +386,16 @@ export default function ProfileEditor({
                 <span className="text-gray-800 font-medium" suppressHydrationWarning>{formatDate(currentPeriodEnd)}</span>
               </p>
             )}
+            {/* LINE Support badge */}
+            <div className="flex items-center gap-2 mt-4 mb-4">
+              <span className="text-sm text-gray-600">LINE Support:</span>
+              {hasLineSupport ? (
+                <span className="px-2 py-0.5 bg-teal-100 text-teal-700 text-xs font-semibold rounded-full">Active</span>
+              ) : (
+                <span className="px-2 py-0.5 bg-gray-100 text-gray-500 text-xs font-semibold rounded-full">-</span>
+              )}
+            </div>
+
             <button
               onClick={handleManageBilling}
               disabled={billingLoading}

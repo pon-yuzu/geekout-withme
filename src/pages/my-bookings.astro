@@ -1,0 +1,23 @@
+---
+import Layout from '../layouts/Layout.astro';
+import MyBookings from '../components/booking/MyBookings';
+import { t } from '../i18n/index';
+import type { Lang } from '../i18n/index';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+
+if (!user) {
+  return Astro.redirect('/login');
+}
+
+const pageTitle = t(lang, 'booking.myBookings');
+---
+
+<Layout title={pageTitle} user={user}>
+  <section class="py-12 px-4">
+    <div class="max-w-3xl mx-auto">
+      <MyBookings client:load />
+    </div>
+  </section>
+</Layout>

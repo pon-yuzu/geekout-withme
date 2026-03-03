@@ -4,14 +4,17 @@ import { useTranslation } from '../../i18n/index';
 interface Props {
   workbook: Workbook;
   showAuthor?: boolean;
+  userCompletedDays?: number;
 }
 
-export function WorkbookCard({ workbook, showAuthor }: Props) {
+export function WorkbookCard({ workbook, showAuthor, userCompletedDays }: Props) {
   const { t, lang } = useTranslation();
   const isGenerating = workbook.status === 'generating';
   const isFailed = workbook.status === 'failed';
   const totalDays = workbook.is_public ? 30 : 7;
   const progress = Math.round((workbook.days_completed / totalDays) * 100);
+  const hasStudyProgress = typeof userCompletedDays === 'number' && userCompletedDays > 0;
+  const studyProgress = hasStudyProgress ? Math.round((userCompletedDays / totalDays) * 100) : 0;
 
   return (
     <a
@@ -46,19 +49,37 @@ export function WorkbookCard({ workbook, showAuthor }: Props) {
         )}
       </p>
 
-      {/* Progress */}
-      <div className="mb-2">
-        <div className="flex justify-between text-xs text-gray-400 mb-1">
-          <span>{workbook.days_completed} / {totalDays} {t('workbook.card.days')}</span>
-          <span>{progress}%</span>
+      {/* Generation Progress (only show when generating) */}
+      {isGenerating && (
+        <div className="mb-2">
+          <div className="flex justify-between text-xs text-gray-400 mb-1">
+            <span>{workbook.days_completed} / {totalDays} {t('workbook.card.days')}</span>
+            <span>{progress}%</span>
+          </div>
+          <div className="w-full bg-gray-100 rounded-full h-2">
+            <div
+              className="bg-orange-500 h-2 rounded-full transition-all"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
         </div>
-        <div className="w-full bg-gray-100 rounded-full h-2">
-          <div
-            className="bg-orange-500 h-2 rounded-full transition-all"
-            style={{ width: `${progress}%` }}
-          />
+      )}
+
+      {/* Study Progress (completed workbooks only) */}
+      {!isGenerating && (
+        <div className="mb-2">
+          <div className="flex justify-between text-xs text-gray-400 mb-1">
+            <span>{hasStudyProgress ? `${userCompletedDays} / ${totalDays}` : `0 / ${totalDays}`} {t('workbook.card.studied')}</span>
+            <span>{studyProgress}%</span>
+          </div>
+          <div className="w-full bg-gray-100 rounded-full h-2">
+            <div
+              className="bg-teal-400 h-2 rounded-full transition-all"
+              style={{ width: `${studyProgress}%` }}
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="text-xs text-gray-400" suppressHydrationWarning>
         {new Date(workbook.created_at).toLocaleDateString(lang === 'ja' ? 'ja-JP' : 'en-US')}

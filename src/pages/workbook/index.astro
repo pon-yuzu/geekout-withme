@@ -1,7 +1,8 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { WorkbookCard } from '../../components/workbook/WorkbookCard';
-import { getUserWorkbooks, getPublicWorkbooks, getSampleWorkbooks } from '../../lib/workbook/db';
+import { getUserWorkbooks, getPublicWorkbooks, getSampleWorkbooks, getUserAllProgress } from '../../lib/workbook/db';
+import type { WorkbookProgress } from '../../lib/workbook/types';
 import { t } from '../../i18n/index';
 import type { Lang } from '../../i18n/index';
 import { isPromoActive } from '../../lib/promo';
@@ -47,6 +48,15 @@ if (supabase) {
         publicWorkbooks = await getPublicWorkbooks(supabase);
       }
     }
+  }
+}
+
+// User progress map
+let progressMap: Record<string, number> = {};
+if (user && supabase) {
+  const allProgress = await getUserAllProgress(supabase, user.id);
+  for (const p of allProgress) {
+    progressMap[p.workbook_id] = (progressMap[p.workbook_id] || 0) + 1;
   }
 }
 
@@ -143,7 +153,7 @@ const samples = wbLang === 'japanese' ? sampleJapanese : sampleEnglish;
           ) : (
             <div class="grid md:grid-cols-2 gap-6">
               {filteredWorkbooks.map(wb => (
-                <WorkbookCard client:load workbook={wb} showAuthor={tab === 'public'} />
+                <WorkbookCard client:load workbook={wb} showAuthor={tab === 'public'} userCompletedDays={progressMap[wb.id] || 0} />
               ))}
             </div>
           )}
@@ -156,7 +166,7 @@ const samples = wbLang === 'japanese' ? sampleJapanese : sampleEnglish;
               <p class="text-gray-500 mb-4 text-sm">{t(lang, 'workbook.samples.desc')}</p>
               <div class="grid md:grid-cols-2 gap-6">
                 {samples.map(wb => (
-                  <WorkbookCard client:load workbook={wb} showAuthor={false} />
+                  <WorkbookCard client:load workbook={wb} showAuthor={false} userCompletedDays={progressMap[wb.id] || 0} />
                 ))}
               </div>
             </div>

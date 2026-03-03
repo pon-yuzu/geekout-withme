@@ -7,7 +7,16 @@ dist/
 # environment variables
 .env
 .env.*
+.env.local
+.env.production
 !.env.example
+
+# secrets
+*.pem
+*.key
+*.p12
+secrets/
+credentials/
 
 # OS files
 .DS_Store

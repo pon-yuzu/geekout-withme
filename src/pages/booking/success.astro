@@ -1,0 +1,41 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { t } from '../../i18n/index';
+import type { Lang } from '../../i18n/index';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+
+const sessionId = Astro.url.searchParams.get('session_id');
+---
+
+<Layout title={lang === 'ja' ? '予約完了' : 'Booking Confirmed'} user={user}>
+  <section class="py-20 px-4">
+    <div class="max-w-md mx-auto text-center">
+      <div class="text-6xl mb-6">✅</div>
+      <h1 class="text-2xl font-bold text-gray-800 mb-4">
+        {lang === 'ja' ? 'お支払いが完了しました！' : 'Payment Complete!'}
+      </h1>
+      <p class="text-gray-600 mb-8">
+        {lang === 'ja'
+          ? '予約が確定されました。セッションの詳細はメールでお送りします。'
+          : 'Your booking has been confirmed. Session details will be sent via email.'}
+      </p>
+
+      <div class="flex flex-col gap-3">
+        <a
+          href="/my-bookings"
+          class="px-6 py-3 bg-orange-500 text-white rounded-xl font-medium hover:bg-orange-600 transition-colors"
+        >
+          {lang === 'ja' ? '予約一覧を見る' : 'View My Bookings'}
+        </a>
+        <a
+          href="/"
+          class="px-6 py-3 text-gray-600 hover:text-gray-800 transition-colors"
+        >
+          {lang === 'ja' ? 'トップページへ' : 'Back to Home'}
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

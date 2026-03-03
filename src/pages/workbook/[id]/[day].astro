@@ -1,7 +1,8 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import { Quiz } from '../../../components/workbook/Quiz';
-import { getWorkbook, getDay, parseDayContent } from '../../../lib/workbook/db';
+import { getWorkbook, getDay, parseDayContent, getWorkbookProgress } from '../../../lib/workbook/db';
+import { DayCompleteButton } from '../../../components/workbook/DayCompleteButton';
 import { getTopicConfig, getDestinationConfig } from '../../../lib/workbook/slots';
 import { getTheme } from '../../../lib/workbook/themes';
 import { t } from '../../../i18n/index';
@@ -48,6 +49,14 @@ function formatTips(text: string): string {
 }
 
 const dayLabel = lang === 'ja' ? `${dayNumber}${t(lang, 'workbook.day.dayLabel')}` : `Day ${dayNumber}`;
+
+let isDayCompleted = false;
+if (user && isOwner) {
+  const progress = await getWorkbookProgress(supabase, id!, user.id);
+  isDayCompleted = progress.some(p => p.day_number === dayNumber);
+}
+const completeLabel = lang === 'ja' ? '\u5B8C\u4E86\u6E08\u307F' : 'Completed';
+const incompleteLabel = lang === 'ja' ? '\u3053\u306E\u65E5\u3092\u5B8C\u4E86\u306B\u3059\u308B' : 'Mark as complete';
 ---
 
 <Layout title={`${dayLabel}: ${content.meta.en}`} user={user}>
@@ -236,6 +245,20 @@ const dayLabel = lang === 'ja' ? `${dayNumber}${t(lang, 'workbook.day.dayLabel')
           class="w-full min-h-[120px] p-3 border-2 border-gray-200 rounded-lg text-base leading-relaxed resize-y focus:outline-none focus:border-orange-400"
         />
       </div>
+
+      <!-- Day Complete Button (owner only) -->
+      {isOwner && (
+        <div class="mb-6">
+          <DayCompleteButton
+            client:load
+            workbookId={id!}
+            dayNumber={dayNumber}
+            initialCompleted={isDayCompleted}
+            labelComplete={completeLabel}
+            labelIncomplete={incompleteLabel}
+          />
+        </div>
+      )}
 
       <!-- Footer Navigation -->
       <div class="text-center mb-4">

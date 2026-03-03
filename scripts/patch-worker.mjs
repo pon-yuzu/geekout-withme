@@ -7,9 +7,13 @@
  * internal rendering pipeline. This script wraps the worker's fetch handler
  * to intercept WebSocket requests and handle them directly.
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, statSync } from 'node:fs';
+import { join } from 'node:path';
 
-const WORKER_PATH = 'dist/_worker.js';
+// Astro 5.16+ outputs _worker.js as a directory; earlier versions as a single file
+const BASE = 'dist/_worker.js';
+const stat = statSync(BASE);
+const WORKER_PATH = stat.isDirectory() ? join(BASE, 'index.js') : BASE;
 const worker = readFileSync(WORKER_PATH, 'utf-8');
 
 // Find the export pattern: export{VARNAME as default, ...}

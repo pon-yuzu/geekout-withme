@@ -29,7 +29,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
 
   let query = supabase
     .from('profiles')
-    .select('id, display_name, avatar_url, tier, created_at', { count: 'exact' });
+    .select('id, display_name, avatar_url, tier, tier_expires_at, created_at', { count: 'exact' });
 
   if (q) {
     query = query.or(`display_name.ilike.%${q}%`);
@@ -46,6 +46,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
   const userIds = (profiles || []).map((p: any) => p.id);
   let emailMap: Record<string, string> = {};
   let subMap: Record<string, string> = {};
+  let lineSupportMap: Record<string, boolean> = {};
 
   if (userIds.length > 0) {
     const { data: authUsers } = await supabase.auth.admin.listUsers({
@@ -62,13 +63,18 @@ export const GET: APIRoute = async ({ request, locals }) => {
 
     const { data: subs } = await supabase
       .from('subscriptions')
-      .select('user_id, status')
+      .select('user_id, status, price_id')
       .in('user_id', userIds)
       .in('status', ['active', 'trialing']);
 
     if (subs) {
+      const runtime = (locals as any).runtime;
+      const linePriceId = runtime?.env?.STRIPE_LINE_SUPPORT_PRICE_ID || import.meta.env.STRIPE_LINE_SUPPORT_PRICE_ID;
       for (const s of subs) {
         subMap[s.user_id] = s.status;
+        if (linePriceId && s.price_id === linePriceId) {
+          lineSupportMap[s.user_id] = true;
+        }
       }
     }
   }
@@ -84,7 +90,9 @@ export const GET: APIRoute = async ({ request, locals }) => {
       avatar_url: p.avatar_url,
       email: emailMap[p.id] || '',
       tier: p.tier || 'free',
+      tier_expires_at: p.tier_expires_at || null,
       effectiveTier,
+      hasLineSupport: lineSupportMap[p.id] || (p.tier === 'personal'),
       created_at: p.created_at,
     };
   });
@@ -99,7 +107,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
       if (!existingIds.has(id)) {
         const { data: profile } = await supabase
           .from('profiles')
-          .select('id, display_name, avatar_url, tier, created_at')
+          .select('id, display_name, avatar_url, tier, tier_expires_at, created_at')
           .eq('id', id)
           .single();
         if (profile) {
@@ -113,7 +121,9 @@ export const GET: APIRoute = async ({ request, locals }) => {
             avatar_url: profile.avatar_url,
             email: emailMap[id] || '',
             tier: profile.tier || 'free',
+            tier_expires_at: profile.tier_expires_at || null,
             effectiveTier,
+            hasLineSupport: lineSupportMap[id] || (profile.tier === 'personal'),
             created_at: profile.created_at,
           });
         }
@@ -143,15 +153,23 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
     return new Response(JSON.stringify({ error: 'Server configuration error' }), { status: 500 });
   }
 
-  const { userId, tier } = await request.json();
+  const { userId, tier, tier_expires_at } = await request.json();
 
   if (!userId || !['free', 'premium', 'personal'].includes(tier)) {
     return new Response(JSON.stringify({ error: 'Invalid parameters' }), { status: 400 });
   }
 
+  const update: any = { tier };
+  // Set or clear expiration
+  if (tier === 'personal' && tier_expires_at) {
+    update.tier_expires_at = new Date(tier_expires_at).toISOString();
+  } else {
+    update.tier_expires_at = null;
+  }
+
   const { error } = await supabase
     .from('profiles')
-    .update({ tier })
+    .update(update)
     .eq('id', userId);
 
   if (error) {

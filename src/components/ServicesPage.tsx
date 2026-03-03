@@ -10,11 +10,12 @@ interface Props {
   isLoggedIn: boolean;
   isPremium: boolean;
   purchases: Purchase[];
+  hasLineSupport?: boolean;
 }
 
 const LINE_URL = 'https://lin.ee/9Nobyp8';
 
-export default function ServicesPage({ isLoggedIn, isPremium, purchases }: Props) {
+export default function ServicesPage({ isLoggedIn, isPremium, purchases, hasLineSupport = false }: Props) {
   const { t } = useTranslation();
   const [loading, setLoading] = useState<string | null>(null);
 
@@ -63,8 +64,8 @@ export default function ServicesPage({ isLoggedIn, isPremium, purchases }: Props
     setLoading(null);
   };
 
-  const handleManage = async () => {
-    setLoading('premium');
+  const handleManage = async (key = 'premium') => {
+    setLoading(key);
     try {
       const res = await fetch('/api/billing-portal', { method: 'POST' });
       const data = await res.json();
@@ -73,6 +74,20 @@ export default function ServicesPage({ isLoggedIn, isPremium, purchases }: Props
       }
     } catch (error) {
       console.error('Portal error:', error);
+    }
+    setLoading(null);
+  };
+
+  const handleLineSupportSubscribe = async () => {
+    setLoading('line_support');
+    try {
+      const res = await fetch('/api/create-line-support-checkout', { method: 'POST' });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error('LINE support checkout error:', error);
     }
     setLoading(null);
   };
@@ -137,7 +152,7 @@ export default function ServicesPage({ isLoggedIn, isPremium, purchases }: Props
           <div className="flex items-center gap-3">
             <span className="text-green-600 font-semibold">{t('services.premium.active')}</span>
             <button
-              onClick={handleManage}
+              onClick={() => handleManage('premium')}
               disabled={loading === 'premium'}
               className="px-6 py-3 bg-white border border-gray-200 rounded-full font-semibold hover:bg-orange-50 transition-colors disabled:opacity-50"
             >
@@ -179,6 +194,55 @@ export default function ServicesPage({ isLoggedIn, isPremium, purchases }: Props
           </button>
         )}
       </ServiceCard>
+
+      {/* LINE Unlimited Support */}
+      <div className={`rounded-2xl p-8 shadow-sm ${
+        hasLineSupport
+          ? 'bg-gradient-to-br from-green-50 to-teal-50 border-2 border-teal-300'
+          : 'bg-white border border-gray-200'
+      }`}>
+        <div className="flex items-center gap-3 mb-4">
+          <span className="text-3xl">📱</span>
+          <div>
+            <h3 className="text-xl font-bold">{t('services.lineSupport.title')}</h3>
+            <span className="font-semibold text-teal-500">{t('services.lineSupport.price')}</span>
+          </div>
+          {hasLineSupport && (
+            <span className="ml-auto bg-teal-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+              {t('services.lineSupport.active')}
+            </span>
+          )}
+        </div>
+        <p className="text-gray-600 mb-6">{t('services.lineSupport.desc')}</p>
+
+        {!isLoggedIn ? (
+          <a
+            href="/login"
+            className="inline-block px-6 py-3 bg-teal-500 text-white rounded-full font-semibold hover:bg-teal-600 transition-colors"
+          >
+            {t('services.login')}
+          </a>
+        ) : hasLineSupport ? (
+          <div className="flex items-center gap-3">
+            <span className="text-green-600 font-semibold">{t('services.lineSupport.active')}</span>
+            <button
+              onClick={() => handleManage('line_support')}
+              disabled={loading === 'line_support'}
+              className="px-6 py-3 bg-white border border-gray-200 rounded-full font-semibold hover:bg-teal-50 transition-colors disabled:opacity-50"
+            >
+              {loading === 'line_support' ? t('services.loading') : t('services.lineSupport.manage')}
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={handleLineSupportSubscribe}
+            disabled={loading === 'line_support'}
+            className="px-6 py-3 bg-teal-500 text-white rounded-full font-semibold hover:bg-teal-600 transition-colors disabled:opacity-50"
+          >
+            {loading === 'line_support' ? t('services.loading') : t('services.lineSupport.cta')}
+          </button>
+        )}
+      </div>
 
       <ServiceCard
         icon="🌱"

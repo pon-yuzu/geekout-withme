@@ -3,6 +3,8 @@ import Layout from '../layouts/Layout.astro';
 import ProfileEditor from '../components/ProfileEditor.tsx';
 import { t } from '../i18n/index';
 import type { Lang } from '../i18n/index';
+import { getUserTier } from '../lib/tier';
+import { hasLineSupport } from '../lib/line-support';
 
 const user = Astro.locals.user;
 const lang = Astro.locals.lang as Lang;
@@ -24,26 +26,38 @@ if (supabase) {
   avatarUrl = profile?.avatar_url ?? null;
 }
 
-// Fetch subscription info
+// Fetch subscription info + tier
 let isPremium = false;
 let subscriptionStatus: string | null = null;
 let currentPeriodEnd: string | null = null;
 let cancelAtPeriodEnd = false;
 
 if (supabase) {
+  const tier = await getUserTier(supabase, user.id);
+  isPremium = tier === 'premium' || tier === 'personal';
+
   const { data: sub } = await supabase
     .from('subscriptions')
     .select('status, current_period_end, cancel_at_period_end')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
     .limit(1)
-    .single();
+    .maybeSingle();
 
   if (sub) {
     subscriptionStatus = sub.status;
-    isPremium = sub.status === 'active' || sub.status === 'trialing';
     currentPeriodEnd = sub.current_period_end;
     cancelAtPeriodEnd = sub.cancel_at_period_end ?? false;
+  }
+}
+
+let hasLineSupportActive = false;
+if (supabase) {
+  const runtime = (Astro.locals as any).runtime;
+  const linePriceId = runtime?.env?.STRIPE_LINE_SUPPORT_PRICE_ID || import.meta.env.STRIPE_LINE_SUPPORT_PRICE_ID;
+  if (linePriceId) {
+    const tier = await getUserTier(supabase, user.id);
+    hasLineSupportActive = await hasLineSupport(supabase, user.id, tier, linePriceId);
   }
 }
 ---
@@ -66,6 +80,7 @@ if (supabase) {
         subscriptionStatus={subscriptionStatus}
         currentPeriodEnd={currentPeriodEnd}
         cancelAtPeriodEnd={cancelAtPeriodEnd}
+        hasLineSupport={hasLineSupportActive}
       />
     </div>
   </section>

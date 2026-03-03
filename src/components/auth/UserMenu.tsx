@@ -72,6 +72,12 @@ export default function UserMenu({ email, displayName, userTier }: UserMenuProps
             >
               {t('userMenu.history')}
             </a>
+            <a
+              href="/my-bookings"
+              className="block px-4 py-2 text-sm text-gray-600 hover:bg-orange-50 transition-colors"
+            >
+              {t('booking.myBookings')}
+            </a>
             {userTier === 'personal' && (
               <a
                 href="/my-archive"

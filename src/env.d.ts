@@ -15,6 +15,7 @@ interface ImportMetaEnv {
   readonly STRIPE_WORKBOOK_PRICE_ID?: string;
   readonly STRIPE_COACHING_PRICE_ID?: string;
   readonly STRIPE_SESSION_PRICE_ID?: string;
+  readonly ADMIN_EMAILS?: string;
 }
 
 interface ImportMeta {

@@ -157,3 +157,11 @@ export interface GenerationStatus {
   total: number;
   workbookId: string;
 }
+
+// === Progress Tracking ===
+export interface WorkbookProgress {
+  workbook_id: string;
+  user_id: string;
+  day_number: number;
+  completed_at: string;
+}
