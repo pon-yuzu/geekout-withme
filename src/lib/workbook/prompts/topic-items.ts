@@ -3,13 +3,13 @@ import { getTopicConfig } from '../slots';
 
 export function buildTopicItemsPrompt(config: GenerationConfig): string {
   const topicConfig = getTopicConfig(config.topic);
-  const itemDescription = topicConfig?.itemPrompt ?? `${config.topicLabel}に関連するアイテム30個`;
+  const itemDescription = topicConfig?.itemPrompt ?? `${config.topicLabel}に関連するアイテム7個`;
   const isJapanese = config.language === 'japanese';
 
   const expertRole = isJapanese ? '日本語教材の専門家' : '英語教材の専門家';
   const langLabel = isJapanese ? '日本語学習' : '英語学習';
 
-  return `あなたは${expertRole}です。以下のテーマで30日間の${langLabel}ワークブック用のアイテムリストを作成してください。
+  return `あなたは${expertRole}です。以下のテーマで7日間の${langLabel}ワークブック用のアイテムリストを作成してください。
 
 # テーマ
 ${config.topicLabel}
@@ -18,7 +18,7 @@ ${config.topicLabel}
 ${itemDescription}
 
 # 出力形式
-以下のJSON配列形式で、30個のアイテムを出力してください。
+以下のJSON配列形式で、7個のアイテムを出力してください。
 各アイテムは英語名、日本語名、絵文字を含めてください。
 バリエーション豊かに、初心者から上級者まで楽しめる順番で並べてください。
 

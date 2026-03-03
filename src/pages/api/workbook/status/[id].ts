@@ -29,7 +29,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
       JSON.stringify({
         status: workbook.status,
         daysCompleted: workbook.days_completed,
-        total: 30,
+        total: 7,
         workbookId,
       }),
       { headers: { 'Content-Type': 'application/json' } }
@@ -41,13 +41,13 @@ export const GET: APIRoute = async ({ params, locals }) => {
   const items = profileData.items;
   const nextDay = workbook.days_completed + 1;
 
-  if (nextDay > 30) {
-    await updateWorkbookStatus(supabase, workbookId, 'completed', 30);
+  if (nextDay > 7) {
+    await updateWorkbookStatus(supabase, workbookId, 'completed', 7);
     return new Response(
       JSON.stringify({
         status: 'completed',
-        daysCompleted: 30,
-        total: 30,
+        daysCompleted: 7,
+        total: 7,
         workbookId,
       }),
       { headers: { 'Content-Type': 'application/json' } }
@@ -61,7 +61,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
       JSON.stringify({
         status: 'failed',
         daysCompleted: workbook.days_completed,
-        total: 30,
+        total: 7,
         workbookId,
       }),
       { headers: { 'Content-Type': 'application/json' } }
@@ -97,14 +97,14 @@ export const GET: APIRoute = async ({ params, locals }) => {
     });
 
     const newCompleted = nextDay;
-    const newStatus = newCompleted >= 30 ? 'completed' : 'generating';
+    const newStatus = newCompleted >= 7 ? 'completed' : 'generating';
     await updateWorkbookStatus(supabase, workbookId, newStatus, newCompleted);
 
     return new Response(
       JSON.stringify({
         status: newStatus,
         daysCompleted: newCompleted,
-        total: 30,
+        total: 7,
         workbookId,
       }),
       { headers: { 'Content-Type': 'application/json' } }
@@ -115,7 +115,7 @@ export const GET: APIRoute = async ({ params, locals }) => {
       JSON.stringify({
         status: 'generating',
         daysCompleted: workbook.days_completed,
-        total: 30,
+        total: 7,
         workbookId,
       }),
       { headers: { 'Content-Type': 'application/json' } }

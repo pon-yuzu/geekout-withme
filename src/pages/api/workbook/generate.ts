@@ -84,7 +84,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   // Create workbook record
   const workbookId = nanoid(12);
   const langSuffix = isJapanese ? '日本語' : '英語';
-  const title = `30日間${topicConfig.labelJa}${langSuffix}`;
+  const title = `7日間${topicConfig.labelJa}${langSuffix}`;
   const subtitle = `${levelConfig.labelJa} → ${config.destLabel}`;
 
   await createWorkbook(locals.supabase!, {
@@ -108,7 +108,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     JSON.stringify({
       status: 'generating',
       daysCompleted: 0,
-      total: 30,
+      total: 7,
       workbookId,
     }),
     { headers: { 'Content-Type': 'application/json' } }

@@ -72,6 +72,26 @@ export default function ConversationCardsStandalone({ autoLevel, lang = 'ja', ac
             : '使い方：カードを選んで、日記に書いたり、独り言で話してみたり、次の言語交換の準備に使おう！'}
         </div>
 
+        {/* Signup CTA for anonymous users */}
+        {isAnonymous && (
+          <div className="text-center bg-orange-50 rounded-2xl p-6 border border-orange-200 shadow-sm mb-6">
+            <p className="text-gray-700 font-medium mb-3 text-sm">
+              {t('convCards.anonymous.signupDesc')}
+            </p>
+            <a
+              href="/signup"
+              className="inline-block px-6 py-2.5 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition-colors text-sm"
+            >
+              {t('convCards.anonymous.signupBtn')}
+            </a>
+            <div className="mt-2">
+              <a href="/login" className="text-xs text-gray-500 hover:text-orange-500 transition-colors">
+                {t('convCards.anonymous.loginLink')}
+              </a>
+            </div>
+          </div>
+        )}
+
         <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-6">
           {/* Level */}
           <div>

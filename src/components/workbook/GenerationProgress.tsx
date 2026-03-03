@@ -12,7 +12,7 @@ export function GenerationProgress({ slots, resumeWorkbookId, resumeDaysComplete
   const { t } = useTranslation();
   const [status, setStatus] = useState<GenerationStatus | null>(
     resumeWorkbookId
-      ? { status: 'generating', daysCompleted: resumeDaysCompleted ?? 0, total: 30, workbookId: resumeWorkbookId }
+      ? { status: 'generating', daysCompleted: resumeDaysCompleted ?? 0, total: 7, workbookId: resumeWorkbookId }
       : null
   );
   const [error, setError] = useState<string | null>(null);
@@ -109,7 +109,7 @@ export function GenerationProgress({ slots, resumeWorkbookId, resumeDaysComplete
       <div className="mb-4">
         <div className="flex justify-between text-sm text-gray-500 mb-1">
           <span>{t('workbook.generation.progress')}</span>
-          <span>{status?.daysCompleted ?? 0} / 30 {t('workbook.generation.days')}</span>
+          <span>{status?.daysCompleted ?? 0} / {status?.total ?? 7} {t('workbook.generation.days')}</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-3">
           <div

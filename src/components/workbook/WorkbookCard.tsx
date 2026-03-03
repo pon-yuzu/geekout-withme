@@ -10,7 +10,8 @@ export function WorkbookCard({ workbook, showAuthor }: Props) {
   const { t, lang } = useTranslation();
   const isGenerating = workbook.status === 'generating';
   const isFailed = workbook.status === 'failed';
-  const progress = Math.round((workbook.days_completed / 30) * 100);
+  const totalDays = workbook.is_public ? 30 : 7;
+  const progress = Math.round((workbook.days_completed / totalDays) * 100);
 
   return (
     <a
@@ -48,7 +49,7 @@ export function WorkbookCard({ workbook, showAuthor }: Props) {
       {/* Progress */}
       <div className="mb-2">
         <div className="flex justify-between text-xs text-gray-400 mb-1">
-          <span>{workbook.days_completed} / 30 {t('workbook.card.days')}</span>
+          <span>{workbook.days_completed} / {totalDays} {t('workbook.card.days')}</span>
           <span>{progress}%</span>
         </div>
         <div className="w-full bg-gray-100 rounded-full h-2">

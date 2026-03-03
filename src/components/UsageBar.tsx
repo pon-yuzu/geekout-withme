@@ -40,13 +40,13 @@ export default function UsageBar() {
 
   if (!data) return null;
 
-  const { level_check, workbook, translation } = data;
-  const compact = `${level_check.used}/${level_check.limit}  ${workbook.used}/${workbook.limit}  ${translation.used}/${translation.limit}`;
+  const { level_check, workbook } = data;
+  const compact = `${level_check.used}/${level_check.limit}  ${workbook.used}/${workbook.limit}`;
 
   const features = [
     { key: 'level_check', ...level_check },
     { key: 'workbook', ...workbook },
-    { key: 'translation', ...translation },
+    // translation hidden while Voice Lounge is disabled
   ];
 
   return (

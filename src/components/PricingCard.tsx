@@ -40,9 +40,13 @@ export default function PricingCard({ isLoggedIn, isPremium }: Props) {
 
   return (
     <div className="bg-white border border-gray-200 rounded-2xl p-8 relative overflow-hidden shadow-sm">
-      {isPremium && (
-        <div className="absolute top-4 right-4 bg-green-500 text-xs font-bold px-3 py-1 rounded-full">
+      {isPremium ? (
+        <div className="absolute top-4 right-4 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">
           {t('pricing.active')}
+        </div>
+      ) : (
+        <div className="absolute top-4 right-4 bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full animate-pulse">
+          {t('pricing.trialBadge')}
         </div>
       )}
 
@@ -64,8 +68,8 @@ export default function PricingCard({ isLoggedIn, isPremium }: Props) {
           <span>{t('pricing.features.free')}</span>
         </li>
         <li className="flex items-center gap-3">
-          <span className="text-teal-500">✓</span>
-          <span>{t('pricing.features.voiceLounge')}</span>
+          <span className="text-gray-300">✓</span>
+          <span className="text-gray-400">{t('pricing.features.voiceLounge')} <span className="text-[10px] font-semibold px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded-full">{t('voiceLounge.comingSoon')}</span></span>
         </li>
         <li className="flex items-center gap-3">
           <span className="text-teal-500">✓</span>
@@ -80,6 +84,12 @@ export default function PricingCard({ isLoggedIn, isPremium }: Props) {
           <span>{t('pricing.features.events')}</span>
         </li>
       </ul>
+
+      {!isPremium && (
+        <div className="mb-6 bg-orange-50 border border-orange-200 rounded-xl px-4 py-3 text-sm text-orange-700 font-medium">
+          {t('pricing.trialNote')}
+        </div>
+      )}
 
       {!isLoggedIn ? (
         <a
