@@ -7,6 +7,7 @@ import { t } from '../i18n/index';
 import type { Lang } from '../i18n/index';
 import { isPromoActive } from '../lib/promo';
 import { isVoiceLoungeEnabled, isVoiceLoungeAllowed } from '../lib/features';
+import { getUserTier } from '../lib/tier';
 
 interface Props {
   title: string;
@@ -22,6 +23,11 @@ const FEEDBACK_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdQJcfpioXMY
 const { title, description = "Find your language level, discover resources, and connect with fellow language geeks!", user } = Astro.props;
 const promoActive = isPromoActive();
 const vlEnabled = isVoiceLoungeAllowed((Astro.locals.user as any)?.id, Astro.locals);
+
+let userTier = 'free';
+if (user && Astro.locals.supabase) {
+  userTier = await getUserTier(Astro.locals.supabase, (Astro.locals.user as any)?.id);
+}
 ---
 
 <!doctype html>
@@ -136,7 +142,7 @@ const vlEnabled = isVoiceLoungeAllowed((Astro.locals.user as any)?.id, Astro.loc
             </span>
           )}
           {user ? (
-            <UserMenu client:load email={user.email || ''} displayName={user.user_metadata?.display_name} />
+            <UserMenu client:load email={user.email || ''} displayName={user.user_metadata?.display_name} userTier={userTier} />
           ) : (
             <div class="flex items-center gap-3">
               <a href="/login" class="text-sm font-medium text-gray-600 hover:text-orange-500 transition-colors">{t(lang, 'nav.login')}</a>
@@ -154,7 +160,7 @@ const vlEnabled = isVoiceLoungeAllowed((Astro.locals.user as any)?.id, Astro.loc
           )}
           <LanguageToggle lang={lang} client:load />
           {user && (
-            <UserMenu client:load email={user.email || ''} displayName={user.user_metadata?.display_name} />
+            <UserMenu client:load email={user.email || ''} displayName={user.user_metadata?.display_name} userTier={userTier} />
           )}
           <button id="mobile-menu-btn" class="p-2 text-gray-600 hover:text-orange-500" aria-label="Menu">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">

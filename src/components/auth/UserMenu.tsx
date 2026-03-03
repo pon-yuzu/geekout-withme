@@ -5,9 +5,10 @@ import { useTranslation } from '../../i18n/index';
 interface UserMenuProps {
   email: string;
   displayName?: string;
+  userTier?: string;
 }
 
-export default function UserMenu({ email, displayName }: UserMenuProps) {
+export default function UserMenu({ email, displayName, userTier }: UserMenuProps) {
   const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -71,6 +72,14 @@ export default function UserMenu({ email, displayName }: UserMenuProps) {
             >
               {t('userMenu.history')}
             </a>
+            {userTier === 'personal' && (
+              <a
+                href="/my-archive"
+                className="block px-4 py-2 text-sm text-teal-600 hover:bg-teal-50 transition-colors"
+              >
+                📦 My Archive
+              </a>
+            )}
             <button
               onClick={handleLogout}
               className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"

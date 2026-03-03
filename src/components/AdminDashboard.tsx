@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from '../i18n/index';
 import type { Lang } from '../i18n/index';
+import UserManagement from './admin/UserManagement';
+import StudentArchiveManager from './admin/StudentArchiveManager';
 
 interface UserStats {
   total_users: number;
@@ -42,8 +44,11 @@ interface StatsData {
   dailySignups: DailySignup[];
 }
 
-export default function AdminDashboard({ lang }: { lang: Lang }) {
+type AdminTab = 'stats' | 'users' | 'archives';
+
+export default function AdminDashboard({ lang, userId }: { lang: Lang; userId?: string }) {
   const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useState<AdminTab>('stats');
   const [stats, setStats] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -79,15 +84,43 @@ export default function AdminDashboard({ lang }: { lang: Lang }) {
 
   const maxSignups = Math.max(...(stats.dailySignups.map((d) => d.signups)), 1);
 
+  const tabs: { key: AdminTab; label: string }[] = [
+    { key: 'stats', label: 'Overview' },
+    { key: 'users', label: 'Users' },
+    { key: 'archives', label: 'Archives' },
+  ];
+
   return (
     <div>
-      <div className="text-center mb-10">
+      <div className="text-center mb-6">
         <h1 className="text-4xl md:text-5xl font-bold mb-2">
           <span className="text-orange-500">{t('admin.title')}</span>
         </h1>
         <p className="text-gray-500">{t('admin.subtitle')}</p>
       </div>
 
+      <div className="flex justify-center gap-2 mb-8">
+        {tabs.map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
+              activeTab === tab.key
+                ? 'bg-orange-500 text-white'
+                : 'bg-white text-gray-600 border border-gray-200 hover:bg-orange-50'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === 'users' && <UserManagement />}
+
+      {activeTab === 'archives' && userId && <StudentArchiveManager userId={userId} />}
+
+      {activeTab === 'stats' && (
+        <>
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
         {/* Users */}
@@ -167,6 +200,8 @@ export default function AdminDashboard({ lang }: { lang: Lang }) {
           {t('admin.cfAnalytics')}
         </a>
       </div>
+        </>
+      )}
     </div>
   );
 }

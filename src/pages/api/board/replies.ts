@@ -1,4 +1,6 @@
 import type { APIRoute } from 'astro';
+import { getUserTier, hasTierAccess } from '../../../lib/tier';
+import type { UserTier } from '../../../lib/tier';
 
 export const POST: APIRoute = async ({ request, locals }) => {
   const user = locals.user;
@@ -18,15 +20,23 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   const supabase = locals.supabase!;
 
-  // Verify thread exists
+  // Verify thread exists and check board access tier
   const { data: thread } = await supabase
     .from('threads')
-    .select('id')
+    .select('id, board_id, boards!threads_board_id_fkey(access_tier)')
     .eq('id', thread_id)
     .single();
 
   if (!thread) {
     return new Response(JSON.stringify({ error: 'Thread not found' }), { status: 404 });
+  }
+
+  const boardAccessTier = (thread as any).boards?.access_tier;
+  if (boardAccessTier) {
+    const userTier = await getUserTier(supabase, user.id);
+    if (!hasTierAccess(userTier, boardAccessTier as UserTier)) {
+      return new Response(JSON.stringify({ error: 'Access denied' }), { status: 403 });
+    }
   }
 
   const { data: reply, error } = await supabase

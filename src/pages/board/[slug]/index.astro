@@ -4,6 +4,8 @@ import ThreadList from '../../../components/board/ThreadList';
 import { t } from '../../../i18n/index';
 import type { Lang } from '../../../i18n/index';
 import { isAdmin } from '../../../lib/admin';
+import { getUserTier, hasTierAccess } from '../../../lib/tier';
+import type { UserTier } from '../../../lib/tier';
 
 const user = Astro.locals.user;
 const lang = Astro.locals.lang as Lang;
@@ -23,6 +25,14 @@ const { data: board } = await supabase
 
 if (!board) {
   return Astro.redirect('/board');
+}
+
+// Check access tier
+if (board.access_tier) {
+  const userTier = await getUserTier(supabase, user.id);
+  if (!hasTierAccess(userTier, board.access_tier as UserTier)) {
+    return Astro.redirect('/board');
+  }
 }
 
 const boardName = lang === 'ja' ? board.name_ja : board.name_en;

@@ -1,5 +1,21 @@
 import type { APIRoute } from 'astro';
 import { isAdmin } from '../../../../lib/admin';
+import { getUserTier, hasTierAccess } from '../../../../lib/tier';
+import type { UserTier } from '../../../../lib/tier';
+
+async function checkBoardAccess(supabase: any, boardId: string, userId: string): Promise<{ board: any; allowed: boolean }> {
+  const { data: board } = await supabase
+    .from('boards')
+    .select('id, post_permission, access_tier')
+    .eq('id', boardId)
+    .single();
+
+  if (!board) return { board: null, allowed: false };
+  if (!board.access_tier) return { board, allowed: true };
+
+  const userTier = await getUserTier(supabase, userId);
+  return { board, allowed: hasTierAccess(userTier, board.access_tier as UserTier) };
+}
 
 export const GET: APIRoute = async ({ request, locals }) => {
   const user = locals.user;
@@ -17,6 +33,15 @@ export const GET: APIRoute = async ({ request, locals }) => {
   }
 
   const supabase = locals.supabase!;
+
+  const { board, allowed } = await checkBoardAccess(supabase, boardId, user.id);
+  if (!board) {
+    return new Response(JSON.stringify({ error: 'Board not found' }), { status: 404 });
+  }
+  if (!allowed) {
+    return new Response(JSON.stringify({ error: 'Access denied' }), { status: 403 });
+  }
+
   const offset = (page - 1) * perPage;
 
   const { data: threads, error } = await supabase
@@ -79,15 +104,15 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   const supabase = locals.supabase!;
 
-  // Check board exists and permission
-  const { data: board } = await supabase
-    .from('boards')
-    .select('id, post_permission')
-    .eq('id', board_id)
-    .single();
+  // Check board exists, permission, and access tier
+  const { board, allowed } = await checkBoardAccess(supabase, board_id, user.id);
 
   if (!board) {
     return new Response(JSON.stringify({ error: 'Board not found' }), { status: 404 });
+  }
+
+  if (!allowed) {
+    return new Response(JSON.stringify({ error: 'Access denied' }), { status: 403 });
   }
 
   if (board.post_permission === 'admin_only' && !isAdmin(user.email, locals)) {

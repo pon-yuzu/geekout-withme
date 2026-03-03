@@ -2,6 +2,8 @@
 import Layout from '../../layouts/Layout.astro';
 import { t } from '../../i18n/index';
 import type { Lang } from '../../i18n/index';
+import { getUserTier, hasTierAccess } from '../../lib/tier';
+import type { UserTier } from '../../lib/tier';
 
 const user = Astro.locals.user;
 const lang = Astro.locals.lang as Lang;
@@ -16,6 +18,8 @@ const { data: boards } = await supabase
   .from('boards')
   .select('*')
   .order('sort_order', { ascending: true });
+
+const userTier = await getUserTier(supabase, user.id);
 
 // Get thread counts per board
 const { data: allThreads } = await supabase
@@ -40,6 +44,26 @@ for (const th of allThreads || []) {
         const name = lang === 'ja' ? board.name_ja : board.name_en;
         const desc = lang === 'ja' ? board.description_ja : board.description_en;
         const threadCount = countByBoard[board.id] || 0;
+        const hasAccess = !board.access_tier || hasTierAccess(userTier, board.access_tier as UserTier);
+
+        if (!hasAccess) {
+          return (
+            <div class="bg-gray-50 border border-gray-200 rounded-2xl p-5 opacity-60 cursor-not-allowed">
+              <div class="flex items-start gap-3">
+                <span class="text-2xl grayscale">{board.emoji}</span>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-2">
+                    <h2 class="font-bold text-gray-400">{name}</h2>
+                    <span class="text-[10px] font-semibold px-1.5 py-0.5 bg-teal-50 text-teal-600 rounded-full">
+                      {board.access_tier === 'personal' ? 'Personal Only' : 'Premium Only'}
+                    </span>
+                  </div>
+                  <p class="text-sm text-gray-400 mt-1">{desc}</p>
+                </div>
+              </div>
+            </div>
+          );
+        }
 
         return (
           <a
@@ -53,6 +77,9 @@ for (const th of allThreads || []) {
                   <h2 class="font-bold text-gray-800 group-hover:text-orange-500 transition-colors">{name}</h2>
                   {board.post_permission === 'admin_only' && (
                     <span class="text-[10px] font-semibold px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded-full">{t(lang, 'board.adminOnly')}</span>
+                  )}
+                  {board.access_tier === 'personal' && (
+                    <span class="text-[10px] font-semibold px-1.5 py-0.5 bg-teal-50 text-teal-600 rounded-full">Personal</span>
                   )}
                 </div>
                 <p class="text-sm text-gray-500 mt-1">{desc}</p>

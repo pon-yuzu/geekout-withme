@@ -23,7 +23,7 @@ if (!adminEmails.includes(user.email.toLowerCase())) {
 <Layout title={t(lang, 'admin.title')} user={user}>
   <section class="py-12 px-4">
     <div class="max-w-6xl mx-auto">
-      <AdminDashboard client:load lang={lang} />
+      <AdminDashboard client:load lang={lang} userId={user.id} />
     </div>
   </section>
 </Layout>
