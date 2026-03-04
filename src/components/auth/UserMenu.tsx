@@ -60,6 +60,14 @@ export default function UserMenu({ email, displayName, userTier }: UserMenuProps
             <p className="text-xs text-gray-500 truncate">{email}</p>
           </div>
           <div className="py-1">
+            {userTier === 'personal' && (
+              <a
+                href="/my"
+                className="block px-4 py-2 text-sm font-medium text-orange-500 hover:bg-orange-50 transition-colors"
+              >
+                {t('myPortal.title')}
+              </a>
+            )}
             <a
               href="/profile"
               className="block px-4 py-2 text-sm text-gray-600 hover:bg-orange-50 transition-colors"

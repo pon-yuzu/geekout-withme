@@ -260,6 +260,19 @@ const incompleteLabel = lang === 'ja' ? '\u3053\u306E\u65E5\u3092\u5B8C\u4E86\u3
         </div>
       )}
 
+      <!-- Ask on Board -->
+      <div class="flex justify-center mb-6">
+        <a
+          href={`/board/oshiete/new?title=${encodeURIComponent(`${workbook.title} - Day ${dayNumber}`)}&context=${encodeURIComponent(`${workbook.title} Day ${dayNumber}`)}`}
+          class="inline-flex items-center gap-2 px-6 py-2.5 border border-orange-200 text-orange-500 rounded-full text-sm font-medium hover:bg-orange-50 transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          {t(lang, 'customWorkbook.askOnBoard')}
+        </a>
+      </div>
+
       <!-- Footer Navigation -->
       <div class="text-center mb-4">
         <a href={`/workbook/${id}`} class="text-orange-500 hover:text-orange-600 font-medium">

@@ -22,6 +22,21 @@ export default function LoginForm() {
       setError(error.message);
       setLoading(false);
     } else {
+      // Check if personal tier → redirect to learning portal
+      try {
+        const { data: { user: u } } = await supabase.auth.getUser();
+        if (u) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('tier')
+            .eq('id', u.id)
+            .single();
+          if (profile?.tier === 'personal') {
+            window.location.href = '/my';
+            return;
+          }
+        }
+      } catch {}
       window.location.href = '/';
     }
   };

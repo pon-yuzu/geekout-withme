@@ -24,6 +24,7 @@ let publicWorkbooks: Awaited<ReturnType<typeof getPublicWorkbooks>> = [];
 let sampleEnglish: Awaited<ReturnType<typeof getSampleWorkbooks>> = [];
 let sampleJapanese: Awaited<ReturnType<typeof getSampleWorkbooks>> = [];
 let isPremium = false;
+let customWorkbooks: any[] = [];
 
 if (supabase) {
   sampleEnglish = await getSampleWorkbooks(supabase, 'english');
@@ -48,6 +49,14 @@ if (supabase) {
         publicWorkbooks = await getPublicWorkbooks(supabase);
       }
     }
+
+    // Fetch custom workbooks (Personal students)
+    const { data: cwb } = await supabase
+      .from('custom_workbooks')
+      .select('*')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+    customWorkbooks = cwb ?? [];
   }
 }
 
@@ -188,6 +197,41 @@ const samples = wbLang === 'japanese' ? sampleJapanese : sampleEnglish;
             </a>
           </div>
         </>
+      )}
+      {/* Custom Workbooks Section (Personal students) */}
+      {customWorkbooks.length > 0 && (
+        <div class="mt-10 pt-8 border-t border-gray-200">
+          <h2 class="text-xl font-bold text-gray-800 mb-4">
+            {t(lang, 'customWorkbook.myList')}
+          </h2>
+          <div class="grid md:grid-cols-2 gap-4">
+            {customWorkbooks.map((wb: any) => (
+              <a
+                href={`/my/workbook/custom/${wb.slug}`}
+                class="block bg-white border border-gray-200 rounded-2xl p-5 hover:border-orange-300 hover:shadow-md transition-all"
+              >
+                <div class="flex items-center gap-4">
+                  <div
+                    class="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg shrink-0"
+                    style={`background-color: ${wb.theme_color || '#e8a4b8'}`}
+                  >
+                    {wb.title.charAt(0)}
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <h3 class="font-bold text-lg truncate">{wb.title}</h3>
+                    {wb.description && (
+                      <p class="text-gray-500 text-sm mt-1 truncate">{wb.description}</p>
+                    )}
+                    <p class="text-gray-400 text-xs mt-1">
+                      {wb.total_days === 1 ? 'Interactive' : `${wb.total_days} days`}
+                    </p>
+                  </div>
+                  <span class="text-gray-400">→</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
       )}
     </div>
   </section>

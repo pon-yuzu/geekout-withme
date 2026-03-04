@@ -98,6 +98,9 @@ if (user && Astro.locals.supabase) {
                 <a href="/resources" class="block px-4 py-2 text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">{t(lang, 'nav.resources')}</a>
                 <a href="/conversation-cards" class="block px-4 py-2 text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">{t(lang, 'nav.convCards')}</a>
                 <a href="/workbook" class="block px-4 py-2 text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">{t(lang, 'nav.workbook')}</a>
+                {userTier === 'personal' && (
+                  <a href="/my" class="block px-4 py-2 text-orange-500 font-medium hover:bg-orange-50 transition-colors">{t(lang, 'myPortal.title')}</a>
+                )}
               </div>
             </div>
           </div>
@@ -179,6 +182,9 @@ if (user && Astro.locals.supabase) {
           <a href="/resources" class="block text-gray-600 hover:text-orange-500 transition-colors py-2 pl-3">{t(lang, 'nav.resources')}</a>
           <a href="/conversation-cards" class="block text-gray-600 hover:text-orange-500 transition-colors py-2 pl-3">{t(lang, 'nav.convCards')}</a>
           <a href="/workbook" class="block text-gray-600 hover:text-orange-500 transition-colors py-2 pl-3">{t(lang, 'nav.workbook')}</a>
+          {userTier === 'personal' && (
+            <a href="/my" class="block text-orange-500 font-medium transition-colors py-2 pl-3">{t(lang, 'myPortal.title')}</a>
+          )}
           <p class="text-xs font-semibold text-gray-400 uppercase tracking-wide pt-3 pb-1">{t(lang, 'nav.practice')}</p>
           <a href="/community" class="block text-gray-600 hover:text-orange-500 transition-colors py-2 pl-3">{t(lang, 'nav.community')}</a>
           <a href="/board" class="block text-gray-600 hover:text-orange-500 transition-colors py-2 pl-3">{t(lang, 'nav.board')}</a>

@@ -31,6 +31,13 @@ if (board.post_permission === 'admin_only' && !isAdmin(user.email, Astro.locals)
 }
 
 const boardName = lang === 'ja' ? board.name_ja : board.name_en;
+
+// Support prefill from workbook
+const prefillTitle = Astro.url.searchParams.get('title') || '';
+const prefillContext = Astro.url.searchParams.get('context') || '';
+const prefillBody = prefillContext
+  ? `> ${prefillContext}\n\n`
+  : '';
 ---
 
 <Layout title={`${t(lang, 'board.thread.new')} - ${boardName}`} user={user}>
@@ -40,6 +47,12 @@ const boardName = lang === 'ja' ? board.name_ja : board.name_en;
       <p class="text-gray-500 text-sm mt-1">{board.emoji} {boardName}</p>
     </div>
 
-    <ThreadCreateForm client:load boardId={board.id} boardSlug={board.slug} />
+    <ThreadCreateForm
+      client:load
+      boardId={board.id}
+      boardSlug={board.slug}
+      initialTitle={prefillTitle}
+      initialBody={prefillBody}
+    />
   </section>
 </Layout>

@@ -24,15 +24,31 @@ if (!workbook) {
   return Astro.redirect('/my/workbook/custom');
 }
 
+// For single-page workbooks, redirect directly to content
+if (workbook.total_days === 1) {
+  return Astro.redirect(`/my/workbook/custom/${slug}/day/1`);
+}
+
 const days = Array.from({ length: workbook.total_days }, (_, i) => i + 1);
+
+// Fetch progress
+const { data: progressData } = await supabase
+  .from('custom_workbook_progress')
+  .select('day_number')
+  .eq('workbook_id', workbook.id)
+  .eq('user_id', user.id);
+
+const completedDays = new Set((progressData ?? []).map((p: any) => p.day_number));
+const completedCount = completedDays.size;
+const pct = Math.round((completedCount / workbook.total_days) * 100);
 ---
 
 <Layout title={workbook.title} user={user}>
   <section class="py-8 px-4">
     <div class="max-w-4xl mx-auto">
       <div class="flex items-center justify-between mb-6">
-        <a href="/my/workbook/custom" class="text-gray-500 hover:text-orange-500 transition-colors text-sm">
-          ← {t(lang, 'customWorkbook.backToList')}
+        <a href="/my" class="text-gray-500 hover:text-orange-500 transition-colors text-sm">
+          ← {t(lang, 'myPortal.title')}
         </a>
       </div>
 
@@ -52,18 +68,40 @@ const days = Array.from({ length: workbook.total_days }, (_, i) => i + 1);
             Navigator: {workbook.navigator_name}
           </p>
         )}
+
+        {/* Progress bar */}
+        <div class="mt-6 max-w-md mx-auto">
+          <div class="flex items-center justify-between text-sm text-gray-500 mb-1">
+            <span>{completedCount}/{workbook.total_days} {t(lang, 'myPortal.daysComplete')}</span>
+            <span class="text-teal-500 font-medium">{pct}%</span>
+          </div>
+          <div class="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
+            <div class="h-full bg-teal-400 rounded-full transition-all" style={`width: ${pct}%`} />
+          </div>
+        </div>
       </div>
 
       <div class="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-10 gap-3">
-        {days.map((day) => (
-          <a
-            href={`/my/workbook/custom/${slug}/day/${day}`}
-            class="aspect-square rounded-xl border-2 border-gray-200 hover:border-orange-400 flex items-center justify-center font-bold text-lg transition-all hover:shadow-md"
-            style={`color: ${workbook.theme_color || '#e8a4b8'}`}
-          >
-            {day}
-          </a>
-        ))}
+        {days.map((day) => {
+          const done = completedDays.has(day);
+          return (
+            <a
+              href={`/my/workbook/custom/${slug}/day/${day}`}
+              class:list={[
+                'aspect-square rounded-xl border-2 flex items-center justify-center font-bold text-lg transition-all hover:shadow-md relative',
+                done
+                  ? 'border-teal-300 bg-teal-50'
+                  : 'border-gray-200 hover:border-orange-400',
+              ]}
+              style={`color: ${workbook.theme_color || '#e8a4b8'}`}
+            >
+              {day}
+              {done && (
+                <span class="absolute -top-1 -right-1 w-5 h-5 bg-teal-400 rounded-full flex items-center justify-center text-white text-xs">✓</span>
+              )}
+            </a>
+          );
+        })}
       </div>
     </div>
   </section>

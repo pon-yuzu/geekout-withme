@@ -4,12 +4,14 @@ import { useTranslation } from '../../i18n/index';
 interface ThreadCreateFormProps {
   boardId: string;
   boardSlug: string;
+  initialTitle?: string;
+  initialBody?: string;
 }
 
-export default function ThreadCreateForm({ boardId, boardSlug }: ThreadCreateFormProps) {
+export default function ThreadCreateForm({ boardId, boardSlug, initialTitle, initialBody }: ThreadCreateFormProps) {
   const { t } = useTranslation();
-  const [title, setTitle] = useState('');
-  const [body, setBody] = useState('');
+  const [title, setTitle] = useState(initialTitle || '');
+  const [body, setBody] = useState(initialBody || '');
   const [posting, setPosting] = useState(false);
   const [error, setError] = useState('');
 

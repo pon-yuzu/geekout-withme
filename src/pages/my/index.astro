@@ -1,0 +1,260 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { t } from '../../i18n/index';
+import type { Lang } from '../../i18n/index';
+import { getUserTier } from '../../lib/tier';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+const supabase = Astro.locals.supabase;
+
+if (!user || !supabase) {
+  return Astro.redirect('/login');
+}
+
+const tier = await getUserTier(supabase, user.id);
+if (tier !== 'personal') {
+  return Astro.redirect('/workbook');
+}
+
+const displayName = user.user_metadata?.display_name || user.email?.split('@')[0] || '';
+
+// Fetch custom workbooks
+const { data: workbooks } = await supabase
+  .from('custom_workbooks')
+  .select('*')
+  .eq('user_id', user.id)
+  .order('created_at', { ascending: false });
+
+const items = workbooks ?? [];
+
+// Fetch progress for all custom workbooks
+let progressMap: Record<string, number[]> = {};
+if (items.length > 0) {
+  const wbIds = items.map((wb: any) => wb.id);
+  const { data: progress } = await supabase
+    .from('custom_workbook_progress')
+    .select('workbook_id, day_number, completed_at')
+    .eq('user_id', user.id)
+    .in('workbook_id', wbIds);
+
+  for (const p of progress ?? []) {
+    if (!progressMap[p.workbook_id]) progressMap[p.workbook_id] = [];
+    progressMap[p.workbook_id].push(p.day_number);
+  }
+}
+
+// Calculate streak from custom workbook progress
+let streak = 0;
+{
+  const { data: allProgress } = await supabase
+    .from('custom_workbook_progress')
+    .select('completed_at')
+    .eq('user_id', user.id)
+    .order('completed_at', { ascending: false });
+
+  if (allProgress && allProgress.length > 0) {
+    const toDateStr = (d: Date) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+    const uniqueDates = [...new Set(allProgress.map((p: any) => toDateStr(new Date(p.completed_at))))].sort().reverse();
+
+    const today = new Date();
+    const todayStr = toDateStr(today);
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = toDateStr(yesterday);
+
+    if (uniqueDates[0] === todayStr || uniqueDates[0] === yesterdayStr) {
+      streak = 1;
+      for (let i = 1; i < uniqueDates.length; i++) {
+        const current = new Date(uniqueDates[i - 1]);
+        const prev = new Date(uniqueDates[i]);
+        const diffDays = Math.round((current.getTime() - prev.getTime()) / (1000 * 60 * 60 * 24));
+        if (diffDays === 1) streak++;
+        else break;
+      }
+    }
+  }
+}
+
+// Also include AI workbook progress for streak
+{
+  const { data: aiProgress } = await supabase
+    .from('workbook_progress')
+    .select('completed_at')
+    .eq('user_id', user.id)
+    .order('completed_at', { ascending: false });
+
+  if (aiProgress && aiProgress.length > 0) {
+    // Merge dates from both sources for combined streak
+    const { data: customProgress } = await supabase
+      .from('custom_workbook_progress')
+      .select('completed_at')
+      .eq('user_id', user.id);
+
+    const toDateStr = (d: Date) =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+    const allDates = [
+      ...(aiProgress ?? []).map((p: any) => toDateStr(new Date(p.completed_at))),
+      ...(customProgress ?? []).map((p: any) => toDateStr(new Date(p.completed_at))),
+    ];
+    const uniqueDates = [...new Set(allDates)].sort().reverse();
+
+    const today = new Date();
+    const todayStr = toDateStr(today);
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yesterdayStr = toDateStr(yesterday);
+
+    if (uniqueDates[0] === todayStr || uniqueDates[0] === yesterdayStr) {
+      let combined = 1;
+      for (let i = 1; i < uniqueDates.length; i++) {
+        const current = new Date(uniqueDates[i - 1]);
+        const prev = new Date(uniqueDates[i]);
+        const diffDays = Math.round((current.getTime() - prev.getTime()) / (1000 * 60 * 60 * 24));
+        if (diffDays === 1) combined++;
+        else break;
+      }
+      if (combined > streak) streak = combined;
+    }
+  }
+}
+
+// AI workbooks count
+const { count: aiWorkbookCount } = await supabase
+  .from('workbooks')
+  .select('id', { count: 'exact', head: true })
+  .eq('user_id', user.id);
+---
+
+<Layout title={t(lang, 'myPortal.title')} user={user}>
+  <section class="py-10 px-4">
+    <div class="max-w-4xl mx-auto">
+      {/* Header */}
+      <div class="mb-10">
+        <h1 class="text-3xl md:text-4xl font-bold text-gray-800">
+          {lang === 'ja'
+            ? `${displayName}さん、おかえりなさい！`
+            : `Welcome back, ${displayName}!`}
+        </h1>
+        <p class="text-gray-500 mt-2">{t(lang, 'myPortal.subtitle')}</p>
+      </div>
+
+      {/* Stats row */}
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mb-10">
+        <div class="bg-white border border-gray-200 rounded-2xl p-5 text-center">
+          <div class="text-3xl font-bold text-orange-500">{items.length}</div>
+          <div class="text-sm text-gray-500 mt-1">{t(lang, 'myPortal.materials')}</div>
+        </div>
+        <div class="bg-white border border-gray-200 rounded-2xl p-5 text-center">
+          <div class="text-3xl font-bold text-teal-500">
+            {Object.values(progressMap).reduce((sum, days) => sum + days.length, 0)}
+          </div>
+          <div class="text-sm text-gray-500 mt-1">{t(lang, 'myPortal.completedLessons')}</div>
+        </div>
+        {streak > 0 && (
+          <div class="bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-200 rounded-2xl p-5 text-center col-span-2 md:col-span-1">
+            <div class="text-3xl font-bold text-orange-600">{streak}</div>
+            <div class="text-sm text-orange-600 mt-1">{t(lang, 'myPortal.streakDays')}</div>
+          </div>
+        )}
+      </div>
+
+      {/* Custom Workbooks */}
+      <div class="mb-10">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">{t(lang, 'myPortal.myMaterials')}</h2>
+        {items.length === 0 ? (
+          <div class="text-center py-16 bg-white border border-gray-200 rounded-2xl">
+            <div class="text-5xl mb-4">📚</div>
+            <p class="text-gray-500">{t(lang, 'customWorkbook.empty')}</p>
+          </div>
+        ) : (
+          <div class="grid gap-4">
+            {items.map((wb: any) => {
+              const completed = progressMap[wb.id]?.length ?? 0;
+              const total = wb.total_days;
+              const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+              return (
+                <a
+                  href={wb.total_days === 1
+                    ? `/my/workbook/custom/${wb.slug}/day/1`
+                    : `/my/workbook/custom/${wb.slug}`}
+                  class="block bg-white border border-gray-200 rounded-2xl p-5 hover:border-orange-300 hover:shadow-md transition-all"
+                >
+                  <div class="flex items-center gap-4">
+                    <div
+                      class="w-14 h-14 rounded-xl flex items-center justify-center text-white font-bold text-xl shrink-0"
+                      style={`background-color: ${wb.theme_color || '#e8a4b8'}`}
+                    >
+                      {wb.title.charAt(0)}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                      <h3 class="font-bold text-lg truncate">{wb.title}</h3>
+                      {wb.description && (
+                        <p class="text-gray-500 text-sm mt-0.5 truncate">{wb.description}</p>
+                      )}
+                      {total > 1 && (
+                        <div class="mt-2">
+                          <div class="flex items-center gap-2 text-xs text-gray-500 mb-1">
+                            <span>{completed}/{total} {t(lang, 'myPortal.daysComplete')}</span>
+                            <span class="text-teal-500 font-medium">{pct}%</span>
+                          </div>
+                          <div class="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div
+                              class="h-full bg-teal-400 rounded-full transition-all"
+                              style={`width: ${pct}%`}
+                            />
+                          </div>
+                        </div>
+                      )}
+                      {total === 1 && (
+                        <p class="text-gray-400 text-xs mt-1">Interactive</p>
+                      )}
+                    </div>
+                    <span class="text-gray-400 text-lg">→</span>
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* AI Workbook link */}
+      {(aiWorkbookCount ?? 0) > 0 && (
+        <div class="mb-10">
+          <h2 class="text-xl font-bold text-gray-800 mb-4">{t(lang, 'myPortal.aiWorkbooks')}</h2>
+          <a
+            href="/workbook"
+            class="block bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-200 rounded-2xl p-5 hover:shadow-md transition-all"
+          >
+            <div class="flex items-center gap-4">
+              <div class="w-14 h-14 rounded-xl bg-orange-500 flex items-center justify-center text-white text-2xl shrink-0">
+                AI
+              </div>
+              <div class="flex-1">
+                <h3 class="font-bold text-lg">{t(lang, 'myPortal.aiWorkbookTitle')}</h3>
+                <p class="text-gray-500 text-sm mt-0.5">
+                  {aiWorkbookCount} {t(lang, 'myPortal.workbooks')}
+                </p>
+              </div>
+              <span class="text-gray-400 text-lg">→</span>
+            </div>
+          </a>
+        </div>
+      )}
+
+      {/* Quick links */}
+      <div class="grid grid-cols-2 gap-3">
+        <a href="/services" class="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-orange-300 transition-all text-sm font-medium text-gray-600 hover:text-orange-500">
+          {t(lang, 'nav.services')}
+        </a>
+        <a href="/profile" class="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-orange-300 transition-all text-sm font-medium text-gray-600 hover:text-orange-500">
+          {t(lang, 'nav.profile')}
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

@@ -48,6 +48,19 @@ if (storageRes.ok) {
 
 const prevDay = dayNum > 1 ? dayNum - 1 : null;
 const nextDay = dayNum < workbook.total_days ? dayNum + 1 : null;
+
+// Check completion status (only for multi-day workbooks)
+let isCompleted = false;
+if (workbook.total_days > 1) {
+  const { data: prog } = await supabase
+    .from('custom_workbook_progress')
+    .select('day_number')
+    .eq('workbook_id', workbook.id)
+    .eq('user_id', user.id)
+    .eq('day_number', dayNum)
+    .maybeSingle();
+  isCompleted = !!prog;
+}
 ---
 
 <Layout title={`${workbook.title} - Day ${dayNum}`} user={user}>
@@ -75,6 +88,42 @@ const nextDay = dayNum < workbook.total_days ? dayNum + 1 : null;
           <p class="text-gray-500">{t(lang, 'customWorkbook.contentNotAvailable')}</p>
         </div>
       )}
+
+      {/* Complete button (multi-day only) */}
+      {workbook.total_days > 1 && (
+        <div class="mt-8 flex justify-center" id="complete-btn-wrap">
+          <button
+            id="complete-btn"
+            data-workbook-id={workbook.id}
+            data-day={dayNum}
+            data-completed={isCompleted ? 'true' : 'false'}
+            class:list={[
+              'px-8 py-3 rounded-full font-semibold text-lg transition-all',
+              isCompleted
+                ? 'bg-teal-400 text-white'
+                : 'border-2 border-dashed border-gray-300 text-gray-500 hover:border-teal-400 hover:text-teal-500',
+            ]}
+          >
+            {isCompleted
+              ? `✓ ${t(lang, 'myPortal.dayCompleted')}`
+              : t(lang, 'myPortal.markComplete')}
+          </button>
+        </div>
+      )}
+
+      {/* Ask on board */}
+      <div class="mt-6 flex justify-center">
+        <a
+          id="ask-board-btn"
+          href={`/board/oshiete/new?title=${encodeURIComponent(`${workbook.title} - Day ${dayNum}`)}&context=${encodeURIComponent(`${workbook.title} Day ${dayNum}`)}`}
+          class="inline-flex items-center gap-2 px-6 py-2.5 border border-orange-200 text-orange-500 rounded-full text-sm font-medium hover:bg-orange-50 transition-colors"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          {t(lang, 'customWorkbook.askOnBoard')}
+        </a>
+      </div>
 
       <div class="flex justify-between mt-8">
         {prevDay ? (
@@ -104,6 +153,42 @@ const nextDay = dayNum < workbook.total_days ? dayNum + 1 : null;
     </div>
   </section>
 </Layout>
+
+<script>
+  const btn = document.getElementById('complete-btn') as HTMLButtonElement | null;
+  if (btn) {
+    btn.addEventListener('click', async () => {
+      const workbookId = btn.dataset.workbookId;
+      const day = parseInt(btn.dataset.day || '0', 10);
+      const wasCompleted = btn.dataset.completed === 'true';
+
+      btn.disabled = true;
+      try {
+        const res = await fetch('/api/custom-workbook/progress', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            workbookId,
+            dayNumber: day,
+            completed: !wasCompleted,
+          }),
+        });
+        if (res.ok) {
+          btn.dataset.completed = wasCompleted ? 'false' : 'true';
+          if (!wasCompleted) {
+            btn.className = 'px-8 py-3 rounded-full font-semibold text-lg transition-all bg-teal-400 text-white';
+            btn.textContent = '✓ 完了済み';
+          } else {
+            btn.className = 'px-8 py-3 rounded-full font-semibold text-lg transition-all border-2 border-dashed border-gray-300 text-gray-500 hover:border-teal-400 hover:text-teal-500';
+            btn.textContent = 'この日を完了にする';
+          }
+        }
+      } finally {
+        btn.disabled = false;
+      }
+    });
+  }
+</script>
 
 <style is:global>
   .custom-workbook-content img {
