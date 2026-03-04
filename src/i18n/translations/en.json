@@ -483,6 +483,12 @@
   "workbook.day.complete": "Complete!",
   "workbook.day.dayLabel": "Day",
 
+  "customWorkbook.myList": "My Custom Workbooks",
+  "customWorkbook.empty": "No custom workbooks yet. Your coach will create one for you!",
+  "customWorkbook.backToList": "Back to Custom Workbooks",
+  "customWorkbook.backToGrid": "Back to Overview",
+  "customWorkbook.contentNotAvailable": "This day's content is not available yet.",
+
   "quiz.correct": "Correct!",
   "quiz.incorrect": "Not quite! Try reading again.",
 

@@ -1,0 +1,120 @@
+---
+import Layout from '../../../../../../layouts/Layout.astro';
+import { t } from '../../../../../../i18n/index';
+import type { Lang } from '../../../../../../i18n/index';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+const supabase = Astro.locals.supabase;
+
+if (!user || !supabase) {
+  return Astro.redirect('/login');
+}
+
+const { slug, num } = Astro.params;
+const dayNum = parseInt(num || '0', 10);
+
+const { data: workbook } = await supabase
+  .from('custom_workbooks')
+  .select('*')
+  .eq('user_id', user.id)
+  .eq('slug', slug)
+  .single();
+
+if (!workbook || dayNum < 1 || dayNum > workbook.total_days) {
+  return Astro.redirect(`/my/workbook/custom/${slug}`);
+}
+
+// Fetch HTML content from Storage via API
+const runtime = (Astro.locals as any).runtime;
+const serviceRoleKey = runtime?.env?.SUPABASE_SERVICE_ROLE_KEY || import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+
+const storagePath = `${workbook.storage_path}/day${dayNum}.html`;
+const storageRes = await fetch(
+  `${supabaseUrl}/storage/v1/object/custom-workbooks/${storagePath}`,
+  {
+    headers: {
+      'apikey': serviceRoleKey,
+      'Authorization': `Bearer ${serviceRoleKey}`,
+    },
+  }
+);
+
+let html = '';
+if (storageRes.ok) {
+  html = await storageRes.text();
+}
+
+const prevDay = dayNum > 1 ? dayNum - 1 : null;
+const nextDay = dayNum < workbook.total_days ? dayNum + 1 : null;
+---
+
+<Layout title={`${workbook.title} - Day ${dayNum}`} user={user}>
+  <section class="py-8 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="flex items-center justify-between mb-6">
+        <a
+          href={`/my/workbook/custom/${slug}`}
+          class="text-gray-500 hover:text-orange-500 transition-colors text-sm"
+        >
+          ← {workbook.title}
+        </a>
+        <span class="text-sm text-gray-400">
+          Day {dayNum} / {workbook.total_days}
+        </span>
+      </div>
+
+      {html ? (
+        <div class="custom-workbook-content bg-white rounded-2xl border border-gray-200 p-6 md:p-8 shadow-sm">
+          <Fragment set:html={html} />
+        </div>
+      ) : (
+        <div class="text-center py-16">
+          <div class="text-6xl mb-4">📄</div>
+          <p class="text-gray-500">{t(lang, 'customWorkbook.contentNotAvailable')}</p>
+        </div>
+      )}
+
+      <div class="flex justify-between mt-8">
+        {prevDay ? (
+          <a
+            href={`/my/workbook/custom/${slug}/day/${prevDay}`}
+            class="px-6 py-3 bg-gray-100 text-gray-700 rounded-full font-semibold hover:bg-gray-200 transition-colors"
+          >
+            ← Day {prevDay}
+          </a>
+        ) : <div />}
+        {nextDay ? (
+          <a
+            href={`/my/workbook/custom/${slug}/day/${nextDay}`}
+            class="px-6 py-3 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition-colors"
+          >
+            Day {nextDay} →
+          </a>
+        ) : (
+          <a
+            href={`/my/workbook/custom/${slug}`}
+            class="px-6 py-3 bg-teal-500 text-white rounded-full font-semibold hover:bg-teal-600 transition-colors"
+          >
+            {t(lang, 'customWorkbook.backToGrid')}
+          </a>
+        )}
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<style is:global>
+  .custom-workbook-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.75rem;
+  }
+  .custom-workbook-content h1,
+  .custom-workbook-content h2,
+  .custom-workbook-content h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+</style>

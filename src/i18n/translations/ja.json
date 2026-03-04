@@ -483,6 +483,12 @@
   "workbook.day.complete": "完了！",
   "workbook.day.dayLabel": "日目",
 
+  "customWorkbook.myList": "カスタム教材",
+  "customWorkbook.empty": "カスタム教材はまだありません。コーチが作成します！",
+  "customWorkbook.backToList": "カスタム教材一覧に戻る",
+  "customWorkbook.backToGrid": "一覧に戻る",
+  "customWorkbook.contentNotAvailable": "この日のコンテンツはまだ準備中です。",
+
   "quiz.correct": "正解！",
   "quiz.incorrect": "残念！もう一度読んでみよう。",
 

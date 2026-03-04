@@ -1,0 +1,71 @@
+---
+import Layout from '../../../../layouts/Layout.astro';
+import { t } from '../../../../i18n/index';
+import type { Lang } from '../../../../i18n/index';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+const supabase = Astro.locals.supabase;
+
+if (!user || !supabase) {
+  return Astro.redirect('/login');
+}
+
+const { data: workbooks } = await supabase
+  .from('custom_workbooks')
+  .select('*')
+  .eq('user_id', user.id)
+  .order('created_at', { ascending: false });
+
+const items = workbooks ?? [];
+---
+
+<Layout title={t(lang, 'customWorkbook.myList')} user={user}>
+  <section class="py-8 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="flex items-center justify-between mb-8">
+        <h1 class="text-3xl font-bold">
+          <span class="text-orange-500">{t(lang, 'customWorkbook.myList')}</span>
+        </h1>
+        <a href="/workbook" class="text-gray-500 hover:text-orange-500 transition-colors text-sm">
+          ← {t(lang, 'workbook.day.backToList')}
+        </a>
+      </div>
+
+      {items.length === 0 ? (
+        <div class="text-center py-16">
+          <div class="text-6xl mb-4">📚</div>
+          <p class="text-gray-500 text-lg">{t(lang, 'customWorkbook.empty')}</p>
+        </div>
+      ) : (
+        <div class="grid gap-4">
+          {items.map((wb: any) => (
+            <a
+              href={`/my/workbook/custom/${wb.slug}`}
+              class="block bg-white border border-gray-200 rounded-2xl p-6 hover:border-orange-300 hover:shadow-md transition-all"
+            >
+              <div class="flex items-center gap-4">
+                <div
+                  class="w-12 h-12 rounded-xl flex items-center justify-center text-white font-bold text-lg"
+                  style={`background-color: ${wb.theme_color || '#e8a4b8'}`}
+                >
+                  {wb.title.charAt(0)}
+                </div>
+                <div class="flex-1">
+                  <h3 class="font-bold text-lg">{wb.title}</h3>
+                  {wb.description && (
+                    <p class="text-gray-500 text-sm mt-1">{wb.description}</p>
+                  )}
+                  <p class="text-gray-400 text-xs mt-1">
+                    {wb.total_days} days
+                  </p>
+                </div>
+                <span class="text-gray-400">→</span>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</Layout>

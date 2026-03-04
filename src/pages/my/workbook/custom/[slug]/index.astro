@@ -1,0 +1,70 @@
+---
+import Layout from '../../../../../layouts/Layout.astro';
+import { t } from '../../../../../i18n/index';
+import type { Lang } from '../../../../../i18n/index';
+
+const user = Astro.locals.user;
+const lang = Astro.locals.lang as Lang;
+const supabase = Astro.locals.supabase;
+
+if (!user || !supabase) {
+  return Astro.redirect('/login');
+}
+
+const { slug } = Astro.params;
+
+const { data: workbook } = await supabase
+  .from('custom_workbooks')
+  .select('*')
+  .eq('user_id', user.id)
+  .eq('slug', slug)
+  .single();
+
+if (!workbook) {
+  return Astro.redirect('/my/workbook/custom');
+}
+
+const days = Array.from({ length: workbook.total_days }, (_, i) => i + 1);
+---
+
+<Layout title={workbook.title} user={user}>
+  <section class="py-8 px-4">
+    <div class="max-w-4xl mx-auto">
+      <div class="flex items-center justify-between mb-6">
+        <a href="/my/workbook/custom" class="text-gray-500 hover:text-orange-500 transition-colors text-sm">
+          ← {t(lang, 'customWorkbook.backToList')}
+        </a>
+      </div>
+
+      <div class="text-center mb-8">
+        <div
+          class="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center text-white font-bold text-2xl"
+          style={`background-color: ${workbook.theme_color || '#e8a4b8'}`}
+        >
+          {workbook.title.charAt(0)}
+        </div>
+        <h1 class="text-3xl font-bold mb-2">{workbook.title}</h1>
+        {workbook.description && (
+          <p class="text-gray-500">{workbook.description}</p>
+        )}
+        {workbook.navigator_name && (
+          <p class="text-sm text-gray-400 mt-2">
+            Navigator: {workbook.navigator_name}
+          </p>
+        )}
+      </div>
+
+      <div class="grid grid-cols-5 sm:grid-cols-6 md:grid-cols-10 gap-3">
+        {days.map((day) => (
+          <a
+            href={`/my/workbook/custom/${slug}/day/${day}`}
+            class="aspect-square rounded-xl border-2 border-gray-200 hover:border-orange-400 flex items-center justify-center font-bold text-lg transition-all hover:shadow-md"
+            style={`color: ${workbook.theme_color || '#e8a4b8'}`}
+          >
+            {day}
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>

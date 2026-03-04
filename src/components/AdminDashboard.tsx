@@ -4,6 +4,7 @@ import type { Lang } from '../i18n/index';
 import UserManagement from './admin/UserManagement';
 import StudentArchiveManager from './admin/StudentArchiveManager';
 import BookingManager from './booking/admin/BookingManager';
+import CustomWorkbookManager from './admin/CustomWorkbookManager';
 
 interface UserStats {
   total_users: number;
@@ -45,7 +46,7 @@ interface StatsData {
   dailySignups: DailySignup[];
 }
 
-type AdminTab = 'stats' | 'users' | 'archives' | 'booking';
+type AdminTab = 'stats' | 'users' | 'archives' | 'booking' | 'custom-workbooks';
 
 export default function AdminDashboard({ lang, userId }: { lang: Lang; userId?: string }) {
   const { t } = useTranslation();
@@ -90,6 +91,7 @@ export default function AdminDashboard({ lang, userId }: { lang: Lang; userId?: 
     { key: 'users', label: 'Users' },
     { key: 'archives', label: 'Archives' },
     { key: 'booking', label: 'Booking' },
+    { key: 'custom-workbooks', label: 'Custom WB' },
   ];
 
   return (
@@ -122,6 +124,8 @@ export default function AdminDashboard({ lang, userId }: { lang: Lang; userId?: 
       {activeTab === 'archives' && userId && <StudentArchiveManager userId={userId} />}
 
       {activeTab === 'booking' && <BookingManager />}
+
+      {activeTab === 'custom-workbooks' && <CustomWorkbookManager />}
 
       {activeTab === 'stats' && (
         <>
