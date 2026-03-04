@@ -48,6 +48,30 @@ export default function ProfileEditor({
   // Billing portal
   const [billingLoading, setBillingLoading] = useState(false);
 
+  // Account deletion
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState('');
+
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+    setDeleteError('');
+    try {
+      const res = await fetch('/api/delete-account', { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        await supabase.auth.signOut();
+        window.location.href = '/';
+      } else {
+        setDeleteError(data.error || 'Failed to delete account');
+      }
+    } catch {
+      setDeleteError('An error occurred');
+    }
+    setDeleting(false);
+  };
+
   const handleNameSave = async () => {
     if (!displayName.trim()) return;
     setNameSaving(true);
@@ -425,6 +449,52 @@ export default function ProfileEditor({
         >
           {t('profile.viewHistory')}
         </a>
+      </div>
+
+      {/* Delete Account */}
+      <div className="bg-white rounded-2xl shadow-sm border border-red-100 p-8">
+        <h2 className="text-xl font-bold text-gray-800 mb-2">{t('profile.deleteAccount.title')}</h2>
+        <p className="text-gray-500 text-sm mb-4">{t('profile.deleteAccount.warning')}</p>
+
+        {!showDeleteConfirm ? (
+          <button
+            onClick={() => setShowDeleteConfirm(true)}
+            className="px-6 py-3 border border-red-300 text-red-500 rounded-xl font-medium hover:bg-red-50 transition-colors"
+          >
+            {t('profile.deleteAccount.button')}
+          </button>
+        ) : (
+          <div className="space-y-3 max-w-sm">
+            <p className="text-sm text-red-600 font-medium">
+              {t('profile.deleteAccount.confirmPrompt')}
+            </p>
+            <input
+              type="text"
+              value={deleteConfirmText}
+              onChange={(e) => setDeleteConfirmText(e.target.value)}
+              placeholder={t('profile.deleteAccount.confirmPlaceholder')}
+              className="w-full px-4 py-2 border border-red-300 rounded-xl focus:outline-none focus:border-red-500 focus:ring-1 focus:ring-red-500"
+            />
+            {deleteError && (
+              <p className="text-sm text-red-500">{deleteError}</p>
+            )}
+            <div className="flex gap-3">
+              <button
+                onClick={handleDeleteAccount}
+                disabled={deleting || deleteConfirmText !== 'DELETE'}
+                className="px-4 py-2 bg-red-500 text-white rounded-xl font-medium hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {deleting ? '...' : t('profile.deleteAccount.confirm')}
+              </button>
+              <button
+                onClick={() => { setShowDeleteConfirm(false); setDeleteConfirmText(''); setDeleteError(''); }}
+                className="px-4 py-2 border border-gray-200 rounded-xl text-gray-500 hover:bg-gray-50 transition-colors"
+              >
+                {t('profile.cancel')}
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
