@@ -2,9 +2,21 @@
 import Layout from '../../../layouts/Layout.astro';
 import { t } from '../../../i18n/index';
 import type { Lang } from '../../../i18n/index';
+import { getUserTier } from '../../../lib/tier';
+import { hasLineSupport } from '../../../lib/line-support';
 
 const user = Astro.locals.user;
 const lang = Astro.locals.lang as Lang;
+
+let showLineUpsell = false;
+if (user && Astro.locals.supabase) {
+  const runtime = (Astro.locals as any).runtime;
+  const linePriceId = runtime?.env?.STRIPE_LINE_SUPPORT_PRICE_ID || import.meta.env.STRIPE_LINE_SUPPORT_PRICE_ID;
+  if (linePriceId) {
+    const tier = await getUserTier(Astro.locals.supabase, user.id);
+    showLineUpsell = !(await hasLineSupport(Astro.locals.supabase, user.id, tier, linePriceId));
+  }
+}
 ---
 
 <Layout title={t(lang, 'services.thanks.workbook.title')} user={user}>
@@ -37,6 +49,42 @@ const lang = Astro.locals.lang as Lang;
           <p id="form-status" class="text-center text-sm text-green-600 hidden"></p>
         </form>
       </div>
+
+      {showLineUpsell && (
+        <div class="mt-6 bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200 rounded-2xl p-6">
+          <div class="text-center mb-4">
+            <span class="text-4xl block mb-2">💬</span>
+            <h2 class="text-xl font-bold text-gray-800">
+              {lang === 'ja' ? 'LINE無制限サポートで、さらに上へ' : 'Accelerate with Unlimited LINE Support'}
+            </h2>
+            <p class="text-gray-600 text-sm mt-2">
+              {lang === 'ja'
+                ? 'LINEでいつでも英語の質問OK。コーチからパーソナライズされた回答とガイダンスを受けられます。'
+                : 'Ask any English question anytime on LINE. Get personalized answers and guidance from your coach.'}
+            </p>
+          </div>
+
+          <div class="bg-white rounded-xl p-4 mb-4 text-center">
+            <p class="text-3xl font-bold text-teal-500">¥5,000<span class="text-base font-normal text-gray-400">/月</span></p>
+          </div>
+
+          <ul class="text-sm text-gray-600 space-y-2 mb-5">
+            <li class="flex items-center gap-2"><span class="text-teal-400">✓</span>{lang === 'ja' ? '24時間いつでも質問可能' : 'Ask anytime, 24/7'}</li>
+            <li class="flex items-center gap-2"><span class="text-teal-400">✓</span>{lang === 'ja' ? '質問回数無制限' : 'Unlimited questions'}</li>
+            <li class="flex items-center gap-2"><span class="text-teal-400">✓</span>{lang === 'ja' ? 'コーチからの個別フィードバック' : 'Personal feedback from your coach'}</li>
+          </ul>
+
+          <button
+            id="line-upsell-btn"
+            class="w-full py-3 bg-teal-500 text-white rounded-full font-semibold hover:bg-teal-600 transition-colors disabled:opacity-50"
+          >
+            {lang === 'ja' ? '今すぐLINEサポートを追加する' : 'Add LINE Support Now'}
+          </button>
+          <p class="text-xs text-gray-400 text-center mt-2">
+            {lang === 'ja' ? 'いつでもキャンセル可能' : 'Cancel anytime'}
+          </p>
+        </div>
+      )}
     </div>
   </section>
 </Layout>
@@ -72,5 +120,23 @@ const lang = Astro.locals.lang as Lang;
     }
     btn.disabled = false;
     btn.textContent = btn.dataset.label || 'Submit';
+  });
+
+  document.getElementById('line-upsell-btn')?.addEventListener('click', async (e) => {
+    const btn = e.currentTarget;
+    btn.disabled = true;
+    btn.textContent = '処理中...';
+    try {
+      const res = await fetch('/api/create-line-support-checkout', { method: 'POST' });
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+        return;
+      }
+    } catch (err) {
+      console.error(err);
+    }
+    btn.disabled = false;
+    btn.textContent = '今すぐLINEサポートを追加する';
   });
 </script>

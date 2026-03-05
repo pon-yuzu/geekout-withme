@@ -1,7 +1,9 @@
 ---
 import Layout from '../../../../../../layouts/Layout.astro';
+import { Quiz } from '../../../../../../components/workbook/Quiz';
 import { t } from '../../../../../../i18n/index';
 import type { Lang } from '../../../../../../i18n/index';
+import { createClient } from '@supabase/supabase-js';
 
 const user = Astro.locals.user;
 const lang = Astro.locals.lang as Lang;
@@ -25,25 +27,51 @@ if (!workbook || dayNum < 1 || dayNum > workbook.total_days) {
   return Astro.redirect(`/my/workbook/custom/${slug}`);
 }
 
-// Fetch HTML content from Storage via API
 const runtime = (Astro.locals as any).runtime;
 const serviceRoleKey = runtime?.env?.SUPABASE_SERVICE_ROLE_KEY || import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
-const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-
-const storagePath = `${workbook.storage_path}/day${dayNum}.html`;
-const storageRes = await fetch(
-  `${supabaseUrl}/storage/v1/object/custom-workbooks/${storagePath}`,
-  {
-    headers: {
-      'apikey': serviceRoleKey,
-      'Authorization': `Bearer ${serviceRoleKey}`,
-    },
-  }
-);
+const supabaseUrl = runtime?.env?.PUBLIC_SUPABASE_URL || import.meta.env.PUBLIC_SUPABASE_URL;
 
 let html = '';
-if (storageRes.ok) {
-  html = await storageRes.text();
+let contentJson: any = null;
+const isAdaptive = workbook.storage_path.startsWith('adaptive/');
+
+if (isAdaptive) {
+  // Fetch from adaptive_workbook_days
+  const serviceClient = createClient(supabaseUrl, serviceRoleKey);
+  const { data: config } = await serviceClient
+    .from('student_configs')
+    .select('id')
+    .eq('user_id', user.id)
+    .single();
+
+  if (config) {
+    const { data: dayData } = await serviceClient
+      .from('adaptive_workbook_days')
+      .select('content_json')
+      .eq('config_id', config.id)
+      .eq('day_number', dayNum)
+      .eq('review_status', 'approved')
+      .single();
+
+    if (dayData?.content_json) {
+      contentJson = dayData.content_json;
+    }
+  }
+} else {
+  // Fetch HTML from Storage
+  const storagePath = `${workbook.storage_path}/day${dayNum}.html`;
+  const storageRes = await fetch(
+    `${supabaseUrl}/storage/v1/object/custom-workbooks/${storagePath}`,
+    {
+      headers: {
+        'apikey': serviceRoleKey,
+        'Authorization': `Bearer ${serviceRoleKey}`,
+      },
+    }
+  );
+  if (storageRes.ok) {
+    html = await storageRes.text();
+  }
 }
 
 const prevDay = dayNum > 1 ? dayNum - 1 : null;
@@ -60,6 +88,14 @@ if (workbook.total_days > 1) {
     .eq('day_number', dayNum)
     .maybeSingle();
   isCompleted = !!prog;
+}
+
+function formatDetail(text: string): string {
+  return text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+}
+
+function formatTips(text: string): string {
+  return text.split('\n\n').filter(Boolean).map((p: string) => `<p class="mb-3 leading-relaxed">${p.trim()}</p>`).join('\n');
 }
 ---
 
@@ -78,7 +114,132 @@ if (workbook.total_days > 1) {
         </span>
       </div>
 
-      {html ? (
+      {contentJson ? (
+        <!-- Adaptive Workbook: JSON-rendered content -->
+        <div class="space-y-8">
+          <!-- Main Content -->
+          <div class="bg-white rounded-2xl border border-orange-100 p-6 md:p-8 shadow-sm">
+            <h2 class="text-2xl font-bold text-gray-800 mb-2">{contentJson.main.title}</h2>
+            <p class="text-orange-600 italic mb-4">{contentJson.main.intro}</p>
+            <div class="text-gray-700 mb-4 whitespace-pre-line">{contentJson.main.body}</div>
+            {contentJson.main.details?.length > 0 && (
+              <ol class="space-y-1 text-gray-600">
+                {contentJson.main.details.map((d: string, i: number) => (
+                  <li set:html={`${i + 1}. ${formatDetail(d)}`} />
+                ))}
+              </ol>
+            )}
+          </div>
+
+          <!-- Main Vocab -->
+          {contentJson.main_vocab?.length > 0 && (
+            <div class="bg-blue-50 rounded-2xl p-5">
+              <h3 class="text-sm font-semibold text-blue-700 uppercase mb-3">Vocabulary</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {contentJson.main_vocab.map((v: any) => (
+                  <div class="bg-white rounded-lg px-3 py-2 text-sm">
+                    <span class="font-medium text-gray-800">{v.word}</span>
+                    <span class="text-gray-500 ml-2">{v.meaning}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <!-- Quiz 1 -->
+          {contentJson.quiz1 && (
+            <Quiz client:load quiz={contentJson.quiz1} id="quiz1" />
+          )}
+
+          <!-- Review -->
+          {contentJson.review && (
+            <div class="bg-white rounded-2xl border border-green-100 p-6 shadow-sm">
+              <div class="flex items-center gap-2 mb-3">
+                <h3 class="font-semibold text-gray-800">{contentJson.review.place}</h3>
+                <span class="text-sm text-gray-500">({contentJson.review.location})</span>
+                <span class="text-yellow-500">{'★'.repeat(contentJson.review.stars)}</span>
+              </div>
+              <p class="text-gray-700 leading-relaxed">{contentJson.review.content}</p>
+            </div>
+          )}
+
+          <!-- Review Vocab -->
+          {contentJson.review_vocab?.length > 0 && (
+            <div class="bg-blue-50 rounded-2xl p-5">
+              <h3 class="text-sm font-semibold text-blue-700 uppercase mb-3">Review Vocabulary</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {contentJson.review_vocab.map((v: any) => (
+                  <div class="bg-white rounded-lg px-3 py-2 text-sm">
+                    <span class="font-medium text-gray-800">{v.word}</span>
+                    <span class="text-gray-500 ml-2">{v.meaning}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <!-- Quiz 2 -->
+          {contentJson.quiz2 && (
+            <Quiz client:load quiz={contentJson.quiz2} id="quiz2" />
+          )}
+
+          <!-- Tips -->
+          {contentJson.tips && (
+            <div class="bg-teal-50 rounded-2xl p-6">
+              <h3 class="font-semibold text-teal-800 mb-3">{contentJson.tips.title}</h3>
+              <div class="text-gray-700" set:html={formatTips(contentJson.tips.content)} />
+            </div>
+          )}
+
+          <!-- Conversation -->
+          {contentJson.conversation && (
+            <div class="bg-white rounded-2xl border border-indigo-100 p-6 shadow-sm">
+              <h3 class="text-sm font-semibold text-indigo-700 uppercase mb-2">Conversation</h3>
+              <p class="text-gray-500 italic mb-4">{contentJson.conversation.scene}</p>
+              <div class="space-y-2">
+                {contentJson.conversation.lines.map((line: any) => (
+                  <div class={`flex gap-3 ${line.speaker === 'A' ? '' : 'flex-row-reverse'}`}>
+                    <div class={`px-1.5 py-0.5 rounded-full text-xs font-bold ${line.speaker === 'A' ? 'bg-indigo-100 text-indigo-700' : 'bg-orange-100 text-orange-700'}`}>
+                      {line.speaker}
+                    </div>
+                    <div class={`max-w-[80%] px-4 py-2 rounded-2xl text-sm ${line.speaker === 'A' ? 'bg-indigo-50 text-gray-800' : 'bg-orange-50 text-gray-800'}`}>
+                      {line.text}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <!-- Conversation Vocab -->
+          {contentJson.conversation_vocab?.length > 0 && (
+            <div class="bg-blue-50 rounded-2xl p-5">
+              <h3 class="text-sm font-semibold text-blue-700 uppercase mb-3">Conversation Vocabulary</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {contentJson.conversation_vocab.map((v: any) => (
+                  <div class="bg-white rounded-lg px-3 py-2 text-sm">
+                    <span class="font-medium text-gray-800">{v.word}</span>
+                    <span class="text-gray-500 ml-2">{v.meaning}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <!-- Quiz 3 -->
+          {contentJson.quiz3 && (
+            <Quiz client:load quiz={contentJson.quiz3} id="quiz3" />
+          )}
+
+          <!-- Try It -->
+          {contentJson.try_it_hint && (
+            <div class="bg-orange-50 rounded-2xl p-6 text-center">
+              <h3 class="font-semibold text-orange-700 mb-2">Try It!</h3>
+              <p class="text-gray-700">{contentJson.try_it_hint}</p>
+            </div>
+          )}
+        </div>
+      ) : html ? (
         <div class="custom-workbook-content bg-white rounded-2xl border border-gray-200 p-6 md:p-8 shadow-sm">
           <Fragment set:html={html} />
         </div>

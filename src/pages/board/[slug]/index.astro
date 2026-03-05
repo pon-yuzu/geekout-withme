@@ -35,6 +35,19 @@ if (board.access_tier) {
   }
 }
 
+// Check password lock
+if (board.password_hash) {
+  const { data: unlock } = await supabase
+    .from('board_unlocks')
+    .select('id')
+    .eq('user_id', user.id)
+    .eq('board_id', board.id)
+    .maybeSingle();
+  if (!unlock) {
+    return Astro.redirect('/board');
+  }
+}
+
 const boardName = lang === 'ja' ? board.name_ja : board.name_en;
 const boardDesc = lang === 'ja' ? board.description_ja : board.description_en;
 const userIsAdmin = isAdmin(user.email, Astro.locals);

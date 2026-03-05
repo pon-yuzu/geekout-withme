@@ -153,6 +153,6 @@ We may revise these Terms from time to time. Continued use after changes constit
 
 本規約に関するお問い合わせは、以下までご連絡ください。
 
-**メール / Email:** contact@geekout-withme.com
+**メール / Email:** contact@uchiwai.app
 
 For inquiries about these Terms, please contact us at the email above.

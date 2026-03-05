@@ -134,6 +134,6 @@ We may update this policy from time to time. Significant changes will be communi
 
 プライバシーに関するお問い合わせは、以下までご連絡ください。
 
-**メール / Email:** contact@geekout-withme.com
+**メール / Email:** contact@uchiwai.app
 
 For privacy-related inquiries, please contact us at the email above.

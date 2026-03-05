@@ -6,6 +6,8 @@ import {
   validateCoupon,
   useCoupon,
 } from '../../../lib/booking/db';
+import { createZoomMeeting } from '../../../lib/zoom';
+import { sendBookingConfirmation } from '../../../lib/email';
 
 const DEFAULT_PRICE_YEN = 10000;
 
@@ -62,6 +64,29 @@ export const POST: APIRoute = async ({ request, locals }) => {
         notes,
       });
       if (couponId) await useCoupon(serviceClient, couponId);
+
+      // Zoom + Email (non-blocking)
+      const dur = Math.round((new Date(slot_end).getTime() - new Date(slot_start).getTime()) / 60000);
+      let zoomUrl: string | undefined;
+      try {
+        const zoom = await createZoomMeeting(locals, `GOWM Session — ${guestName}`, slot_start, dur);
+        await serviceClient.from('bookings').update({ zoom_url: zoom.join_url, zoom_meeting_id: String(zoom.meeting_id) }).eq('id', booking.id);
+        zoomUrl = zoom.join_url;
+      } catch (e) { console.error('Zoom creation failed:', e); }
+
+      try {
+        await sendBookingConfirmation(locals, {
+          to: guestEmail,
+          userName: guestName,
+          slotStart: slot_start,
+          slotEnd: slot_end,
+          durationMinutes: dur,
+          zoomUrl,
+          notes,
+          bookingId: booking.id,
+        });
+      } catch (e) { console.error('Confirmation email failed:', e); }
+
       return new Response(JSON.stringify({
         booking: { id: booking.id, slot_start: booking.slot_start, slot_end: booking.slot_end },
       }), {

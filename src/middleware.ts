@@ -3,6 +3,12 @@ import { createSupabaseServerClient } from './lib/supabase';
 import { setServerLang, type Lang } from './i18n/index';
 
 export const onRequest = defineMiddleware(async ({ request, locals, redirect }, next) => {
+  // Redirect old domain to new domain
+  const url = new URL(request.url);
+  if (url.hostname === 'geekout-withme.pages.dev') {
+    return Response.redirect(`https://uchiwai.app${url.pathname}${url.search}`, 301);
+  }
+
   const isWebSocket = request.headers.get('Upgrade') === 'websocket';
 
   // ── Language detection ──

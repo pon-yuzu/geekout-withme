@@ -5,6 +5,8 @@ import UserManagement from './admin/UserManagement';
 import StudentArchiveManager from './admin/StudentArchiveManager';
 import BookingManager from './booking/admin/BookingManager';
 import CustomWorkbookManager from './admin/CustomWorkbookManager';
+import AdaptiveWorkbookManager from './admin/AdaptiveWorkbookManager';
+import BoardPasswordManager from './admin/BoardPasswordManager';
 
 interface UserStats {
   total_users: number;
@@ -46,7 +48,7 @@ interface StatsData {
   dailySignups: DailySignup[];
 }
 
-type AdminTab = 'stats' | 'users' | 'archives' | 'booking' | 'custom-workbooks';
+type AdminTab = 'stats' | 'users' | 'archives' | 'booking' | 'custom-workbooks' | 'adaptive-wb' | 'boards';
 
 export default function AdminDashboard({ lang, userId }: { lang: Lang; userId?: string }) {
   const { t } = useTranslation();
@@ -92,6 +94,8 @@ export default function AdminDashboard({ lang, userId }: { lang: Lang; userId?: 
     { key: 'archives', label: 'Archives' },
     { key: 'booking', label: 'Booking' },
     { key: 'custom-workbooks', label: 'Custom WB' },
+    { key: 'adaptive-wb', label: 'Adaptive WB' },
+    { key: 'boards', label: 'Boards' },
   ];
 
   return (
@@ -126,6 +130,9 @@ export default function AdminDashboard({ lang, userId }: { lang: Lang; userId?: 
       {activeTab === 'booking' && <BookingManager />}
 
       {activeTab === 'custom-workbooks' && <CustomWorkbookManager />}
+
+      {activeTab === 'adaptive-wb' && <AdaptiveWorkbookManager />}
+      {activeTab === 'boards' && <BoardPasswordManager />}
 
       {activeTab === 'stats' && (
         <>

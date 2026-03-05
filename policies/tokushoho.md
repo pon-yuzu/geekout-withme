@@ -22,7 +22,7 @@ Address will be disclosed without delay upon request.
 
 ## 連絡先 / Contact
 
-**メール / Email:** contact@geekout-withme.com
+**メール / Email:** contact@uchiwai.app
 
 ※ 電話番号は請求があった場合、遅滞なく開示いたします。
 Phone number will be disclosed without delay upon request.

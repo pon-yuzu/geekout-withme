@@ -247,11 +247,19 @@ const { count: aiWorkbookCount } = await supabase
       )}
 
       {/* Quick links */}
-      <div class="grid grid-cols-2 gap-3">
-        <a href="/services" class="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-orange-300 transition-all text-sm font-medium text-gray-600 hover:text-orange-500">
-          {t(lang, 'nav.services')}
+      <div class="space-y-3">
+        <a href="/booking" class="block w-full bg-orange-500 text-white rounded-xl p-4 text-center font-semibold text-base hover:bg-orange-600 transition-colors shadow-sm">
+          {lang === 'ja' ? '予約する' : 'Book a Session'}
         </a>
-        <a href="/profile" class="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-orange-300 transition-all text-sm font-medium text-gray-600 hover:text-orange-500">
+        <div class="grid grid-cols-2 gap-3">
+          <a href="/services" class="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-orange-300 transition-all text-sm font-medium text-gray-600 hover:text-orange-500">
+            {t(lang, 'nav.services')}
+          </a>
+          <a href="/my-bookings" class="bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-orange-300 transition-all text-sm font-medium text-gray-600 hover:text-orange-500">
+            {lang === 'ja' ? '予約履歴' : 'My Bookings'}
+          </a>
+        </div>
+        <a href="/profile" class="block bg-white border border-gray-200 rounded-xl p-4 text-center hover:border-orange-300 transition-all text-sm font-medium text-gray-600 hover:text-orange-500">
           {t(lang, 'nav.profile')}
         </a>
       </div>

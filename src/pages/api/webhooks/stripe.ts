@@ -2,6 +2,8 @@ import type { APIRoute } from 'astro';
 import { createStripeClient } from '../../../lib/stripe';
 import { createClient } from '@supabase/supabase-js';
 import { createMemberBooking, createGuestBooking, useCoupon } from '../../../lib/booking/db';
+import { createZoomMeeting } from '../../../lib/zoom';
+import { sendBookingConfirmation } from '../../../lib/email';
 
 export const POST: APIRoute = async ({ request, locals }) => {
   const runtime = (locals as any).runtime;
@@ -83,6 +85,32 @@ export const POST: APIRoute = async ({ request, locals }) => {
               notes: meta.notes || undefined,
             });
             if (meta.coupon_id) await useCoupon(supabase, meta.coupon_id);
+
+            // Zoom + Email
+            const dur = Math.round((new Date(meta.slot_end).getTime() - new Date(meta.slot_start).getTime()) / 60000);
+            let zoomUrl: string | undefined;
+            try {
+              const zoom = await createZoomMeeting(locals, `GOWM Session`, meta.slot_start, dur);
+              await supabase.from('bookings').update({ zoom_url: zoom.join_url, zoom_meeting_id: String(zoom.meeting_id) }).eq('id', booking.id);
+              zoomUrl = zoom.join_url;
+            } catch (e) { console.error('Zoom creation failed:', e); }
+
+            try {
+              const { data: userData } = await supabase.auth.admin.getUserById(meta.user_id);
+              const email = userData?.user?.email;
+              if (email) {
+                await sendBookingConfirmation(locals, {
+                  to: email,
+                  userName: userData?.user?.user_metadata?.display_name || email,
+                  slotStart: meta.slot_start,
+                  slotEnd: meta.slot_end,
+                  durationMinutes: dur,
+                  zoomUrl,
+                  notes: meta.notes,
+                  bookingId: booking.id,
+                });
+              }
+            } catch (e) { console.error('Confirmation email failed:', e); }
           } catch (err: any) {
             console.error('Webhook booking creation failed:', err.message);
           }
@@ -103,6 +131,28 @@ export const POST: APIRoute = async ({ request, locals }) => {
               notes: meta.notes || undefined,
             });
             if (meta.coupon_id) await useCoupon(supabase, meta.coupon_id);
+
+            // Zoom + Email
+            const dur = Math.round((new Date(meta.slot_end).getTime() - new Date(meta.slot_start).getTime()) / 60000);
+            let zoomUrl: string | undefined;
+            try {
+              const zoom = await createZoomMeeting(locals, `GOWM Session — ${meta.guest_name}`, meta.slot_start, dur);
+              await supabase.from('bookings').update({ zoom_url: zoom.join_url, zoom_meeting_id: String(zoom.meeting_id) }).eq('id', booking.id);
+              zoomUrl = zoom.join_url;
+            } catch (e) { console.error('Zoom creation failed:', e); }
+
+            try {
+              await sendBookingConfirmation(locals, {
+                to: meta.guest_email,
+                userName: meta.guest_name || 'Guest',
+                slotStart: meta.slot_start,
+                slotEnd: meta.slot_end,
+                durationMinutes: dur,
+                zoomUrl,
+                notes: meta.notes,
+                bookingId: booking.id,
+              });
+            } catch (e) { console.error('Confirmation email failed:', e); }
           } catch (err: any) {
             console.error('Webhook guest booking creation failed:', err.message);
           }
