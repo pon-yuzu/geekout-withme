@@ -80,7 +80,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   if (!supabase) return serverError('Server configuration error');
 
   const body = await request.json();
-  const { user_id, config_json, total_days } = body;
+  const { user_id, config_json, total_days, generation_mode } = body;
 
   if (!user_id || !config_json) {
     return json({ error: 'Missing required fields: user_id, config_json' }, 400);
@@ -92,6 +92,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       user_id,
       config_json,
       total_days: total_days || 30,
+      generation_mode: generation_mode || 'batch',
       status: 'draft',
       days_completed: 0,
       updated_at: new Date().toISOString(),
@@ -113,7 +114,7 @@ export const PUT: APIRoute = async ({ request, locals }) => {
   if (!supabase) return serverError('Server configuration error');
 
   const body = await request.json();
-  const { id, config_json, status } = body;
+  const { id, config_json, status, generation_mode } = body;
 
   if (!id) {
     return json({ error: 'Missing config id' }, 400);
@@ -122,6 +123,7 @@ export const PUT: APIRoute = async ({ request, locals }) => {
   const updates: Record<string, unknown> = { updated_at: new Date().toISOString() };
   if (config_json) updates.config_json = config_json;
   if (status) updates.status = status;
+  if (generation_mode) updates.generation_mode = generation_mode;
 
   const { data, error } = await supabase
     .from('student_configs')

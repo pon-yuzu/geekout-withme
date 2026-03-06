@@ -20,17 +20,6 @@ export default function ServicesPage({ isLoggedIn, isPremium, purchases, hasLine
   const [loading, setLoading] = useState<string | null>(null);
 
   // Purchase state helpers
-  const hasCoaching = purchases.some((p) => p.product_type === 'coaching');
-  const recentCoaching = purchases.find((p) => {
-    if (p.product_type !== 'coaching') return false;
-    const threeMonthsAgo = new Date();
-    threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
-    return new Date(p.created_at) > threeMonthsAgo;
-  });
-  const coachingNextDate = recentCoaching
-    ? new Date(new Date(recentCoaching.created_at).setMonth(new Date(recentCoaching.created_at).getMonth() + 3))
-        .toLocaleDateString()
-    : null;
 
   const handleCheckout = async (productType: string) => {
     setLoading(productType);
@@ -241,53 +230,13 @@ export default function ServicesPage({ isLoggedIn, isPremium, purchases, hasLine
           >
             {t('services.login')}
           </a>
-        ) : recentCoaching ? (
-          <div>
-            <span className="inline-block px-6 py-3 bg-gray-200 text-gray-500 rounded-full font-semibold cursor-not-allowed">
-              {t('services.coaching.purchased')}
-            </span>
-            {coachingNextDate && (
-              <p className="text-sm text-gray-500 mt-2">
-                {t('services.coaching.nextAvailable').replace('{{date}}', coachingNextDate)}
-              </p>
-            )}
-          </div>
         ) : (
-          <button
-            onClick={() => handleCheckout('coaching')}
-            disabled={loading === 'coaching'}
-            className="px-6 py-3 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition-colors disabled:opacity-50"
-          >
-            {loading === 'coaching' ? t('services.loading') : t('services.coaching.cta')}
-          </button>
-        )}
-      </ServiceCard>
-
-      <ServiceCard
-        icon="🚀"
-        title={t('services.session.title')}
-        desc={t('services.session.desc')}
-        price={t('services.session.price')}
-      >
-        {!isLoggedIn ? (
           <a
-            href="/login"
+            href="/booking"
             className="inline-block px-6 py-3 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition-colors"
           >
-            {t('services.login')}
+            {t('services.coaching.cta')}
           </a>
-        ) : !hasCoaching ? (
-          <span className="inline-block px-6 py-3 bg-gray-200 text-gray-500 rounded-full font-semibold cursor-not-allowed">
-            {t('services.session.requiresCoaching')}
-          </span>
-        ) : (
-          <button
-            onClick={() => handleCheckout('session')}
-            disabled={loading === 'session'}
-            className="px-6 py-3 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition-colors disabled:opacity-50"
-          >
-            {loading === 'session' ? t('services.loading') : t('services.session.cta')}
-          </button>
         )}
       </ServiceCard>
 

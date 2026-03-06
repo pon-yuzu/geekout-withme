@@ -52,7 +52,14 @@ type AdminTab = 'stats' | 'users' | 'archives' | 'booking' | 'custom-workbooks' 
 
 export default function AdminDashboard({ lang, userId }: { lang: Lang; userId?: string }) {
   const { t } = useTranslation();
-  const [activeTab, setActiveTab] = useState<AdminTab>('stats');
+  const [activeTab, setActiveTab] = useState<AdminTab>(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.replace('#', '') as AdminTab;
+      const validTabs: AdminTab[] = ['stats', 'users', 'archives', 'booking', 'custom-workbooks', 'adaptive-wb', 'boards'];
+      if (validTabs.includes(hash)) return hash;
+    }
+    return 'stats';
+  });
   const [stats, setStats] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -111,7 +118,7 @@ export default function AdminDashboard({ lang, userId }: { lang: Lang; userId?: 
         {tabs.map((tab) => (
           <button
             key={tab.key}
-            onClick={() => setActiveTab(tab.key)}
+            onClick={() => { setActiveTab(tab.key); window.location.hash = tab.key; }}
             className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
               activeTab === tab.key
                 ? 'bg-orange-500 text-white'

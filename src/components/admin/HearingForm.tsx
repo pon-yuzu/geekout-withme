@@ -23,9 +23,7 @@ const EMPTY_CONFIG: StudentConfig = {
   navigator: { name: '', personality: '', speech_samples: [''] },
   scenario: { workplace: '', scenes: [''] },
   monthly_themes: [
-    { theme: '', cooking_tie_in: '' },
-    { theme: '', cooking_tie_in: '' },
-    { theme: '', cooking_tie_in: '' },
+    { theme: '' },
   ],
   tech: { difficulty: 'normal', tts: 'browser' },
 };
@@ -35,6 +33,9 @@ export default function HearingForm({ existingConfig, onBack, onSaved, onGenerat
     existingConfig?.config_json || EMPTY_CONFIG
   );
   const [configId, setConfigId] = useState<string | null>(existingConfig?.id || null);
+  const [generationMode, setGenerationMode] = useState<'batch' | 'weekly' | 'daily'>(
+    existingConfig?.generation_mode || 'batch'
+  );
   const [users, setUsers] = useState<UserOption[]>([]);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -140,8 +141,8 @@ export default function HearingForm({ existingConfig, onBack, onSaved, onGenerat
     try {
       const method = configId ? 'PUT' : 'POST';
       const body = configId
-        ? { id: configId, config_json: config }
-        : { user_id: config.student.user_id, config_json: config };
+        ? { id: configId, config_json: config, generation_mode: generationMode }
+        : { user_id: config.student.user_id, config_json: config, generation_mode: generationMode };
 
       const res = await fetch('/api/admin/wb-configs', {
         method,
@@ -165,7 +166,6 @@ export default function HearingForm({ existingConfig, onBack, onSaved, onGenerat
   };
 
   const handleGenerate = async () => {
-    // Save first, then trigger generation
     if (!config.student.user_id) {
       setError('Please select a student');
       return;
@@ -175,11 +175,10 @@ export default function HearingForm({ existingConfig, onBack, onSaved, onGenerat
     setError(null);
 
     try {
-      // Save config
       const method = configId ? 'PUT' : 'POST';
       const body = configId
-        ? { id: configId, config_json: config }
-        : { user_id: config.student.user_id, config_json: config };
+        ? { id: configId, config_json: config, generation_mode: generationMode }
+        : { user_id: config.student.user_id, config_json: config, generation_mode: generationMode };
 
       const saveRes = await fetch('/api/admin/wb-configs', {
         method,
@@ -481,23 +480,40 @@ export default function HearingForm({ existingConfig, onBack, onSaved, onGenerat
         </Section>
 
         {/* Section 6: Monthly Themes */}
-        <Section title="Monthly Themes (x3)">
+        <Section title={`Monthly Themes (${config.monthly_themes.length})`}>
           {config.monthly_themes.map((theme, i) => (
-            <div key={i} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 pb-4 border-b border-gray-100 last:border-0">
-              <InputField
-                label={`Month ${i + 1} Theme`}
-                value={theme.theme}
-                onChange={(v) => updateTheme(i, 'theme', v)}
-                placeholder="e.g., Daily Life, Travel, Business"
-              />
-              <InputField
-                label="Cooking Tie-in"
-                value={theme.cooking_tie_in}
-                onChange={(v) => updateTheme(i, 'cooking_tie_in', v)}
-                placeholder="e.g., Comfort food recipes for busy weekdays"
-              />
+            <div key={i} className="flex items-end gap-2 mb-3">
+              <div className="flex-1">
+                <InputField
+                  label={`Month ${i + 1} Theme`}
+                  value={theme.theme}
+                  onChange={(v) => updateTheme(i, 'theme', v)}
+                  placeholder="e.g., Daily Life, Travel, Business"
+                />
+              </div>
+              {config.monthly_themes.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => setConfig((prev) => ({
+                    ...prev,
+                    monthly_themes: prev.monthly_themes.filter((_, idx) => idx !== i),
+                  }))}
+                  className="mb-0.5 px-2 py-2 text-red-500 hover:text-red-700 text-sm"
+                  title="Remove"
+                >✕</button>
+              )}
             </div>
           ))}
+          {config.monthly_themes.length < 3 && (
+            <button
+              type="button"
+              onClick={() => setConfig((prev) => ({
+                ...prev,
+                monthly_themes: [...prev.monthly_themes, { theme: '' }],
+              }))}
+              className="text-sm text-teal-600 hover:text-teal-800 font-medium"
+            >+ Add month</button>
+          )}
         </Section>
 
         {/* Section 7: Tech Settings */}
@@ -529,6 +545,39 @@ export default function HearingForm({ existingConfig, onBack, onSaved, onGenerat
           </div>
         </Section>
 
+        {/* Section 8: Generation Mode */}
+        <Section title="Generation Mode">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {([
+              { value: 'batch' as const, label: 'Batch (一括)', desc: 'Generate all 30 days in one session' },
+              { value: 'weekly' as const, label: 'Weekly (週次)', desc: 'Cron generates 7 days per week' },
+              { value: 'daily' as const, label: 'Daily (日次)', desc: 'Cron generates 1 day per day' },
+            ]).map((opt) => (
+              <label
+                key={opt.value}
+                className={`flex items-start gap-2 p-3 border rounded-lg cursor-pointer transition-colors ${
+                  generationMode === opt.value
+                    ? 'border-orange-400 bg-orange-50'
+                    : 'border-gray-200 hover:bg-gray-50'
+                }`}
+              >
+                <input
+                  type="radio"
+                  name="generation_mode"
+                  value={opt.value}
+                  checked={generationMode === opt.value}
+                  onChange={() => setGenerationMode(opt.value)}
+                  className="mt-1"
+                />
+                <div>
+                  <div className="font-medium text-sm text-gray-700">{opt.label}</div>
+                  <div className="text-xs text-gray-500">{opt.desc}</div>
+                </div>
+              </label>
+            ))}
+          </div>
+        </Section>
+
         {/* Actions */}
         <div className="flex items-center gap-3 pt-4 border-t">
           <button
@@ -543,7 +592,7 @@ export default function HearingForm({ existingConfig, onBack, onSaved, onGenerat
             disabled={saving}
             className="px-6 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:opacity-50 transition-colors text-sm font-medium"
           >
-            {saving ? 'Starting...' : 'Save & Generate 30 Days'}
+            {saving ? 'Starting...' : generationMode === 'batch' ? 'Save & Generate 30 Days' : `Save & Start (${generationMode})`}
           </button>
           <button
             onClick={onBack}

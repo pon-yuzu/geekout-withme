@@ -251,7 +251,7 @@ ${config.navigator.speech_samples.map((s) => `  - "${s}"`).join('\n')}
 - Weave these workplace scenarios into conversations and tips.
 
 ### Monthly Themes:
-${config.monthly_themes.map((t, i) => `- Month ${i + 1}: "${t.theme}" (cooking tie-in: ${t.cooking_tie_in})`).join('\n')}
+${config.monthly_themes.map((t, i) => `- Month ${i + 1}: "${t.theme}"`).join('\n')}
 
 ### Difficulty: ${config.tech.difficulty}
 ${config.tech.difficulty === 'easy' ? '- Use simpler vocabulary within the CEFR range. Shorter texts. More repetition.' : ''}
@@ -276,7 +276,6 @@ export function buildUserPrompt(dayNumber: number, totalDays: number, config: St
   return `Generate content for **Day ${dayNumber}** of ${totalDays}.
 
 ## Current Theme: "${theme.theme}"
-Cooking tie-in: ${theme.cooking_tie_in}
 
 ## Day Position: ${position} section of the workbook
 ${dayNumber === 1 ? '- This is the FIRST day. Make the intro especially welcoming and set the tone for the journey.' : ''}

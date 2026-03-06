@@ -33,7 +33,6 @@ export interface StudentConfig {
   };
   monthly_themes: {
     theme: string;
-    cooking_tie_in: string;
   }[];
   tech: {
     difficulty: 'easy' | 'normal' | 'hard';

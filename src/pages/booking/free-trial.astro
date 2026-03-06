@@ -1,0 +1,48 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import FreeTrialBooking from '../../components/booking/FreeTrialBooking';
+
+const focus = Astro.url.searchParams.get('focus') || '';
+---
+
+<Layout title="ライフコーチング初回無料体験">
+  <section class="py-12 px-4">
+    <div class="max-w-3xl mx-auto">
+      {/* Hero */}
+      <div class="text-center mb-10">
+        <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
+          「焦ってるのに動けない」を、<br class="hidden sm:inline" />60分で見える化する。
+        </h1>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-orange-100 p-6 md:p-8 text-left space-y-4 text-gray-600 text-sm md:text-base leading-relaxed">
+          <p>ライフバランス診断で現在地が見えたあなたへ。</p>
+          <p>
+            この無料セッションでは、あなたの飛行石の方角を一緒に確認します。<br />
+            「何が自分を止めてるか」が見えたら、次に何をすべきかも見えてくる。
+          </p>
+          <ul class="space-y-2 text-gray-700">
+            <li class="flex items-center gap-2">
+              <span class="text-orange-500">⏱</span> 所要時間：60分
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-orange-500">💻</span> 形式：オンライン（Zoom）
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-orange-500">🆓</span> 料金：無料
+            </li>
+            <li class="flex items-center gap-2">
+              <span class="text-orange-500">👤</span> 定員：各回1名<span class="text-gray-400 text-xs ml-1">（※今後グループセッションも予定）</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Booking flow */}
+      <div class="mb-4 text-center">
+        <h2 class="text-lg font-bold text-gray-700">ご希望の日時をお選びください</h2>
+      </div>
+
+      <FreeTrialBooking client:load focusParam={focus} />
+    </div>
+  </section>
+</Layout>

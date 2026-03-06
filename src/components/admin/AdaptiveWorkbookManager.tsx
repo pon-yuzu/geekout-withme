@@ -17,7 +17,7 @@ export default function AdaptiveWorkbookManager() {
 
   const handleEditConfig = (config: StudentConfigRow) => {
     setSelectedConfig(config);
-    if (config.status === 'review' || config.status === 'active') {
+    if (config.status === 'generating' || config.status === 'review' || config.status === 'active') {
       setView('review');
     } else {
       setView('form');

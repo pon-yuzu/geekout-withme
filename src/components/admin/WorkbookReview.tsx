@@ -25,9 +25,11 @@ export default function WorkbookReview({ config, onBack }: Props) {
     }
   }, [config.id]);
 
-  // Poll for generation progress
+  const isCronMode = config.generation_mode === 'weekly' || config.generation_mode === 'daily';
+
+  // Poll for generation progress (batch mode only)
   useEffect(() => {
-    if (!generating) return;
+    if (!generating || isCronMode) return;
 
     const poll = async () => {
       try {
@@ -47,14 +49,14 @@ export default function WorkbookReview({ config, onBack }: Props) {
     };
 
     const interval = setInterval(poll, 5000);
-    poll(); // Immediate first call
+    poll();
     return () => clearInterval(interval);
-  }, [generating, config.id, fetchDays]);
+  }, [generating, isCronMode, config.id, fetchDays]);
 
-  // Initial fetch
+  // Initial fetch (always load existing days)
   useEffect(() => {
-    if (!generating) fetchDays();
-  }, [generating, fetchDays]);
+    fetchDays();
+  }, [fetchDays]);
 
   const handleReview = async (dayId: string, status: 'approved' | 'rejected', notes?: string) => {
     try {
@@ -175,9 +177,11 @@ export default function WorkbookReview({ config, onBack }: Props) {
       {generating && (
         <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-5 mb-6">
           <div className="flex items-center gap-3 mb-3">
-            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-orange-500" />
+            {!isCronMode && <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-orange-500" />}
             <span className="font-medium text-yellow-800">
-              Generating Day {progress.completed}/{progress.total}...
+              {isCronMode
+                ? `${config.generation_mode === 'weekly' ? 'Weekly' : 'Daily'} mode — ${progress.completed}/${progress.total} days generated`
+                : `Generating Day ${progress.completed}/${progress.total}...`}
             </span>
           </div>
           <div className="bg-yellow-100 rounded-full h-3">
@@ -186,6 +190,13 @@ export default function WorkbookReview({ config, onBack }: Props) {
               style={{ width: `${(progress.completed / progress.total) * 100}%` }}
             />
           </div>
+          {isCronMode && (
+            <p className="text-xs text-yellow-700 mt-2">
+              {config.generation_mode === 'weekly'
+                ? 'Cron generates 7 days per run. Refresh to see latest progress.'
+                : 'Cron generates 1 day per run. Refresh to see latest progress.'}
+            </p>
+          )}
         </div>
       )}
 

@@ -593,18 +593,10 @@
   "services.workbook.price": "¥3,000",
   "services.workbook.cta": "Purchase",
 
-  "services.coaching.title": "First Coaching Session",
-  "services.coaching.desc": "A 60-minute 1-on-1 session to assess your goals, create a personalized plan, and experience passion-based coaching firsthand.",
-  "services.coaching.price": "¥2,000",
+  "services.coaching.title": "Single Coaching Session",
+  "services.coaching.desc": "A 60-minute 1-on-1 session to assess your goals, create a personalized plan, and experience passion-based coaching. First-time discount available with coupon!",
+  "services.coaching.price": "¥10,000",
   "services.coaching.cta": "Book Session",
-  "services.coaching.purchased": "Purchased",
-  "services.coaching.nextAvailable": "Next available: {{date}}",
-
-  "services.session.title": "Single Coaching Session",
-  "services.session.desc": "A focused 60-minute 1-on-1 coaching session. Requires a completed First Coaching Session.",
-  "services.session.price": "¥10,000",
-  "services.session.cta": "Book Session",
-  "services.session.requiresCoaching": "Complete First Coaching first",
 
   "services.gowm.title": "YouTube English Learning Consulting",
   "services.gowm.desc": "Share your passion with the world in English! A full-support program to build practical English skills through YouTube appearances.",

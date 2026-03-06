@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { createSupabaseBrowserClient } from '../../lib/supabase';
 
 interface CustomWorkbook {
@@ -37,6 +37,10 @@ export default function CustomWorkbookManager() {
     navigator_name: '',
   });
   const [saving, setSaving] = useState(false);
+  const [uploadingFor, setUploadingFor] = useState<string | null>(null);
+  const [uploadProgress, setUploadProgress] = useState('');
+  const [dragOver, setDragOver] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const supabase = createSupabaseBrowserClient();
 
@@ -97,6 +101,41 @@ export default function CustomWorkbookManager() {
     if (!confirm('Delete this custom workbook?')) return;
     const res = await fetch(`/api/admin/custom-workbooks?id=${id}`, { method: 'DELETE' });
     if (res.ok) fetchWorkbooks();
+  };
+
+  const handleUpload = async (workbookId: string, files: FileList | File[]) => {
+    const htmlFiles = Array.from(files).filter((f) => f.name.endsWith('.html'));
+    if (htmlFiles.length === 0) {
+      setUploadProgress('No HTML files found.');
+      return;
+    }
+
+    setUploadingFor(workbookId);
+    setUploadProgress(`Uploading ${htmlFiles.length} file(s)...`);
+
+    const formData = new FormData();
+    formData.append('workbook_id', workbookId);
+    htmlFiles.forEach((f) => formData.append('files', f));
+
+    try {
+      const res = await fetch('/api/admin/custom-workbook-upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setUploadProgress(`Uploaded ${data.uploaded} file(s) successfully.`);
+        fetchWorkbooks();
+      } else {
+        setUploadProgress(`Error: ${data.error}`);
+      }
+    } catch (e: any) {
+      setUploadProgress(`Upload failed: ${e.message}`);
+    }
+    setTimeout(() => {
+      setUploadingFor(null);
+      setUploadProgress('');
+    }, 3000);
   };
 
   if (loading) {
@@ -214,10 +253,7 @@ export default function CustomWorkbookManager() {
             </button>
           </div>
           <p className="text-xs text-gray-400 mt-3">
-            After creating metadata here, upload HTML files using:<br />
-            <code className="bg-white px-2 py-1 rounded text-xs">
-              node scripts/upload-custom-workbook.mjs --user-id UUID --slug SLUG --title TITLE --dir /path/to/html
-            </code>
+            After creating, use the upload button on each workbook card to upload HTML files (day1.html, day2.html, ...).
           </p>
         </div>
       )}
@@ -227,25 +263,47 @@ export default function CustomWorkbookManager() {
           <p className="text-gray-400 text-center py-10">No custom workbooks yet.</p>
         ) : (
           workbooks.map((wb) => (
-            <div key={wb.id} className="bg-white border border-gray-200 rounded-xl p-4 flex items-center gap-4">
-              <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold"
-                style={{ backgroundColor: wb.theme_color }}
-              >
-                {wb.title.charAt(0)}
-              </div>
-              <div className="flex-1 min-w-0">
-                <div className="font-medium">{wb.title}</div>
-                <div className="text-sm text-gray-400">
-                  {wb.display_name || wb.user_email || wb.user_id} · {wb.slug} · {wb.total_days} days
+            <div key={wb.id} className="bg-white border border-gray-200 rounded-xl p-4">
+              <div className="flex items-center gap-4">
+                <div
+                  className="w-10 h-10 rounded-lg flex items-center justify-center text-white font-bold shrink-0"
+                  style={{ backgroundColor: wb.theme_color }}
+                >
+                  {wb.title.charAt(0)}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium">{wb.title}</div>
+                  <div className="text-sm text-gray-400">
+                    {wb.display_name || wb.user_email || wb.user_id} · {wb.slug} · {wb.total_days} days
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  <label className="px-3 py-1.5 bg-teal-500 text-white rounded-lg text-xs font-medium hover:bg-teal-600 transition-colors cursor-pointer">
+                    Upload HTML
+                    <input
+                      type="file"
+                      accept=".html"
+                      multiple
+                      className="hidden"
+                      onChange={(e) => {
+                        if (e.target.files?.length) handleUpload(wb.id, e.target.files);
+                        e.target.value = '';
+                      }}
+                    />
+                  </label>
+                  <button
+                    onClick={() => handleDelete(wb.id)}
+                    className="text-red-400 hover:text-red-600 text-sm"
+                  >
+                    Delete
+                  </button>
                 </div>
               </div>
-              <button
-                onClick={() => handleDelete(wb.id)}
-                className="text-red-400 hover:text-red-600 text-sm"
-              >
-                Delete
-              </button>
+              {uploadingFor === wb.id && uploadProgress && (
+                <div className="mt-2 text-xs text-teal-600 bg-teal-50 rounded-lg px-3 py-2">
+                  {uploadProgress}
+                </div>
+              )}
             </div>
           ))
         )}
