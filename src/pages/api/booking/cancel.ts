@@ -48,9 +48,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
     if (booking) {
       const dur = Math.round((new Date(booking.slot_end).getTime() - new Date(booking.slot_start).getTime()) / 60000);
       try {
+        const cancelEmail = booking.guest_email || user.email!;
+        const cancelName = booking.guest_name || user.user_metadata?.display_name || user.email!;
         await sendBookingCancellation(locals, {
-          to: user.email!,
-          userName: user.user_metadata?.display_name || user.email!,
+          to: cancelEmail,
+          userName: cancelName,
           slotStart: booking.slot_start,
           slotEnd: booking.slot_end,
           durationMinutes: dur,
