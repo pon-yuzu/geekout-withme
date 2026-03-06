@@ -5,7 +5,12 @@
       "Read(**/secrets/**)",
       "Read(**/*.pem)",
       "Read(**/*.key)",
-      "Read(~/.ssh/**)"
+      "Read(~/.ssh/**)",
+      "Bash(cat **/.env*)",
+      "Bash(source **/.env*)",
+      "Bash(grep * .env*)",
+      "Bash(head **/.env*)",
+      "Bash(tail **/.env*)"
     ]
   }
 }

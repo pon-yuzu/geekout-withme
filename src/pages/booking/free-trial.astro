@@ -3,6 +3,14 @@ import Layout from '../../layouts/Layout.astro';
 import FreeTrialBooking from '../../components/booking/FreeTrialBooking';
 
 const focus = Astro.url.searchParams.get('focus') || '';
+const user = Astro.locals.user;
+const userProp = user
+  ? {
+      id: user.id,
+      email: user.email ?? '',
+      displayName: (user.user_metadata?.display_name as string) || user.email || '',
+    }
+  : null;
 ---
 
 <Layout title="ライフコーチング初回無料体験">
@@ -15,10 +23,10 @@ const focus = Astro.url.searchParams.get('focus') || '';
         </h1>
 
         <div class="bg-white rounded-2xl shadow-sm border border-orange-100 p-6 md:p-8 text-left space-y-4 text-gray-600 text-sm md:text-base leading-relaxed">
-          <p>ライフバランス診断で現在地が見えたあなたへ。</p>
+          <p>まずは一度、話してみませんか？</p>
           <p>
-            この無料セッションでは、あなたの飛行石の方角を一緒に確認します。<br />
-            「何が自分を止めてるか」が見えたら、次に何をすべきかも見えてくる。
+            この無料セッションでは、ライフバランス診断であなたの現在地を一緒に確認し、<br class="hidden sm:inline" />
+            「何が自分を止めてるか」を見える化します。見えたら、次に何をすべきかも見えてくる。
           </p>
           <ul class="space-y-2 text-gray-700">
             <li class="flex items-center gap-2">
@@ -42,7 +50,7 @@ const focus = Astro.url.searchParams.get('focus') || '';
         <h2 class="text-lg font-bold text-gray-700">ご希望の日時をお選びください</h2>
       </div>
 
-      <FreeTrialBooking client:load focusParam={focus} />
+      <FreeTrialBooking client:load focusParam={focus} user={userProp} />
     </div>
   </section>
 </Layout>

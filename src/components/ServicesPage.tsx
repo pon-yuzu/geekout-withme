@@ -16,7 +16,7 @@ interface Props {
 const LINE_URL = 'https://lin.ee/9Nobyp8';
 
 export default function ServicesPage({ isLoggedIn, isPremium, purchases, hasLineSupport = false }: Props) {
-  const { t } = useTranslation();
+  const { t, lang } = useTranslation();
   const [loading, setLoading] = useState<string | null>(null);
 
   // Purchase state helpers
