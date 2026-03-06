@@ -611,8 +611,8 @@
   "services.seminar.desc": "イベント、ポッドキャスト、YouTubeでの出演や、学校・企業・コミュニティ向けのカスタムワークショップに対応します。",
   "services.seminar.cta": "お問い合わせ",
 
-  "services.personal.title": "パーソナルコーチング（月額）",
-  "services.personal.desc": "パーソナライズされたカリキュラム、週次チェックイン、チャット無制限サポート付きの継続1対1月額コーチング。",
+  "services.personal.title": "パーソナルコーチング",
+  "services.personal.desc": "パーソナライズされたカリキュラム、週次チェックイン、チャット無制限サポート付きの継続1対1コーチング。",
   "services.personal.cta": "お問い合わせ",
 
   "services.lineSupport.title": "LINE\u7121\u5236\u9650\u30b5\u30dd\u30fc\u30c8",
@@ -758,11 +758,11 @@
   "home.quota.exhausted": "本日の上限に達しました",
   "home.quota.resetNote": "毎日 0:00（日本時間）にリセット",
 
-  "promo.banner": "3月末まで全機能無料開放中！無料会員登録するだけでPremium機能が使えます",
+  "promo.banner": "4月末まで全機能無料開放中！無料会員登録するだけでPremium機能が使えます",
   "promo.bannerCta": "無料で始める",
-  "promo.signupCta": "無料会員登録するだけで3月末まで使えます",
+  "promo.signupCta": "無料会員登録するだけで4月末まで使えます",
   "promo.signupBtn": "無料で登録する",
-  "promo.badge": "Premium体験中（3月末まで無料）",
+  "promo.badge": "Premium体験中（4月末まで無料）",
 
   "nav.board": "掲示板",
   "board.title": "掲示板",

@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { getServiceClient, cancelBooking } from '../../../lib/booking/db';
 import { deleteZoomMeeting } from '../../../lib/zoom';
+import { deleteCalendarEvent } from '../../../lib/google-calendar';
 import { sendBookingCancellation } from '../../../lib/email';
 
 export const POST: APIRoute = async ({ request, locals }) => {
@@ -29,7 +30,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   // Fetch booking details before cancellation (for Zoom deletion + email)
   const { data: booking } = await serviceClient
     .from('bookings')
-    .select('id, user_id, guest_email, guest_name, slot_start, slot_end, zoom_meeting_id, zoom_url, notes, status')
+    .select('id, user_id, guest_email, guest_name, slot_start, slot_end, zoom_meeting_id, zoom_url, google_event_id, notes, status')
     .eq('id', booking_id)
     .eq('user_id', user.id)
     .single();
@@ -42,6 +43,13 @@ export const POST: APIRoute = async ({ request, locals }) => {
       try {
         await deleteZoomMeeting(locals, booking.zoom_meeting_id);
       } catch (e) { console.error('Zoom deletion failed:', e); }
+    }
+
+    // Delete Google Calendar event if exists
+    if (booking?.google_event_id) {
+      try {
+        await deleteCalendarEvent(locals, booking.google_event_id);
+      } catch (e) { console.error('Google Calendar deletion failed:', e); }
     }
 
     // Send cancellation email

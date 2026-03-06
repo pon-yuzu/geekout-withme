@@ -4,10 +4,10 @@
  * and the normal premium gating resumes.
  */
 
-const PROMO_END = new Date('2026-03-31T23:59:59+09:00');
+const PROMO_END = new Date('2026-04-30T23:59:59+09:00');
 
 export function isPromoActive(): boolean {
   return new Date() < PROMO_END;
 }
 
-export const PROMO_END_LABEL = '3/31';
+export const PROMO_END_LABEL = '4/30';

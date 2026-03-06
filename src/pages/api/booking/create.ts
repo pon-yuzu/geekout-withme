@@ -9,6 +9,7 @@ import {
 } from '../../../lib/booking/db';
 import { getUserTier, hasTierAccess } from '../../../lib/tier';
 import { createZoomMeeting } from '../../../lib/zoom';
+import { createCalendarEvent } from '../../../lib/google-calendar';
 import { sendBookingConfirmation } from '../../../lib/email';
 
 const DEFAULT_PRICE_YEN = 10000;
@@ -59,13 +60,18 @@ export const POST: APIRoute = async ({ request, locals }) => {
         notes,
       });
 
-      // Zoom + Email (non-blocking)
+      // Zoom + Google Calendar + Email (non-blocking)
       const duration = Math.round((new Date(slot_end).getTime() - new Date(slot_start).getTime()) / 60000);
       try {
         const zoom = await createZoomMeeting(locals, `GOWM Session — ${user.email}`, slot_start, duration);
         await serviceClient.from('bookings').update({ zoom_url: zoom.join_url, zoom_meeting_id: String(zoom.meeting_id) }).eq('id', booking.id);
         booking.zoom_url = zoom.join_url;
       } catch (e) { console.error('Zoom creation failed:', e); }
+
+      try {
+        const gcal = await createCalendarEvent(locals, { summary: `GOWM Session — ${user.email}`, startTime: slot_start, endTime: slot_end });
+        await serviceClient.from('bookings').update({ google_event_id: gcal.id }).eq('id', booking.id);
+      } catch (e) { console.error('Google Calendar creation failed:', e); }
 
       try {
         await sendBookingConfirmation(locals, {
@@ -128,13 +134,18 @@ export const POST: APIRoute = async ({ request, locals }) => {
       });
       if (couponId) await useCoupon(serviceClient, couponId);
 
-      // Zoom + Email (non-blocking)
+      // Zoom + Google Calendar + Email (non-blocking)
       const dur = Math.round((new Date(slot_end).getTime() - new Date(slot_start).getTime()) / 60000);
       try {
         const zoom = await createZoomMeeting(locals, `GOWM Session — ${user.email}`, slot_start, dur);
         await serviceClient.from('bookings').update({ zoom_url: zoom.join_url, zoom_meeting_id: String(zoom.meeting_id) }).eq('id', booking.id);
         booking.zoom_url = zoom.join_url;
       } catch (e) { console.error('Zoom creation failed:', e); }
+
+      try {
+        const gcal = await createCalendarEvent(locals, { summary: `GOWM Session — ${user.email}`, startTime: slot_start, endTime: slot_end });
+        await serviceClient.from('bookings').update({ google_event_id: gcal.id }).eq('id', booking.id);
+      } catch (e) { console.error('Google Calendar creation failed:', e); }
 
       try {
         await sendBookingConfirmation(locals, {

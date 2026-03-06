@@ -121,14 +121,25 @@ function formatTips(text: string): string {
           <div class="bg-white rounded-2xl border border-orange-100 p-6 md:p-8 shadow-sm">
             <h2 class="text-2xl font-bold text-gray-800 mb-2">{contentJson.main.title}</h2>
             <p class="text-orange-600 italic mb-4">{contentJson.main.intro}</p>
-            <div class="text-gray-700 mb-4 whitespace-pre-line">{contentJson.main.body}</div>
+            <div id="main-text" class="text-gray-700 mb-4 whitespace-pre-line">{contentJson.main.body}</div>
             {contentJson.main.details?.length > 0 && (
-              <ol class="space-y-1 text-gray-600">
+              <ol id="main-details" class="space-y-1 text-gray-600 mb-4">
                 {contentJson.main.details.map((d: string, i: number) => (
                   <li set:html={`${i + 1}. ${formatDetail(d)}`} />
                 ))}
               </ol>
             )}
+            <div class="wb-action-row">
+              <button class="wb-action-btn" onclick="copyText('main-text')">📋 コピー</button>
+              <button class="wb-action-btn wb-tts-btn" onclick="speakText('main-text', this)">🔊 読み上げ</button>
+              <a class="wb-action-btn" href="https://www.naturalreaders.com/online/" target="_blank" rel="noopener">🔊 Natural Reader</a>
+              <select class="wb-speed-select" onchange="currentSpeed=parseFloat(this.value)">
+                <option value="0.7">0.7x</option>
+                <option value="0.85" selected>0.85x</option>
+                <option value="1">1.0x</option>
+                <option value="1.2">1.2x</option>
+              </select>
+            </div>
           </div>
 
           <!-- Main Vocab -->
@@ -159,7 +170,12 @@ function formatTips(text: string): string {
                 <span class="text-sm text-gray-500">({contentJson.review.location})</span>
                 <span class="text-yellow-500">{'★'.repeat(contentJson.review.stars)}</span>
               </div>
-              <p class="text-gray-700 leading-relaxed">{contentJson.review.content}</p>
+              <p id="review-text" class="text-gray-700 leading-relaxed mb-4">{contentJson.review.content}</p>
+              <div class="wb-action-row">
+                <button class="wb-action-btn" onclick="copyText('review-text')">📋 コピー</button>
+                <button class="wb-action-btn wb-tts-btn" onclick="speakText('review-text', this)">🔊 読み上げ</button>
+                <a class="wb-action-btn" href="https://www.naturalreaders.com/online/" target="_blank" rel="noopener">🔊 Natural Reader</a>
+              </div>
             </div>
           )}
 
@@ -196,7 +212,7 @@ function formatTips(text: string): string {
             <div class="bg-white rounded-2xl border border-indigo-100 p-6 shadow-sm">
               <h3 class="text-sm font-semibold text-indigo-700 uppercase mb-2">Conversation</h3>
               <p class="text-gray-500 italic mb-4">{contentJson.conversation.scene}</p>
-              <div class="space-y-2">
+              <div class="space-y-2" id="convo-display">
                 {contentJson.conversation.lines.map((line: any) => (
                   <div class={`flex gap-3 ${line.speaker === 'A' ? '' : 'flex-row-reverse'}`}>
                     <div class={`px-1.5 py-0.5 rounded-full text-xs font-bold ${line.speaker === 'A' ? 'bg-indigo-100 text-indigo-700' : 'bg-orange-100 text-orange-700'}`}>
@@ -207,6 +223,12 @@ function formatTips(text: string): string {
                     </div>
                   </div>
                 ))}
+              </div>
+              <div id="convo-tts" style="display:none">{contentJson.conversation.lines.map((line: any) => `${line.speaker}: ${line.text}`).join(' ... ')}</div>
+              <div class="wb-action-row mt-4">
+                <button class="wb-action-btn" onclick="copyText('convo-tts')">📋 コピー</button>
+                <button class="wb-action-btn wb-tts-btn" onclick="speakText('convo-tts', this)">🔊 読み上げ</button>
+                <a class="wb-action-btn" href="https://www.naturalreaders.com/online/" target="_blank" rel="noopener">🔊 Natural Reader</a>
               </div>
             </div>
           )}
@@ -233,11 +255,25 @@ function formatTips(text: string): string {
 
           <!-- Try It -->
           {contentJson.try_it_hint && (
-            <div class="bg-orange-50 rounded-2xl p-6 text-center">
-              <h3 class="font-semibold text-orange-700 mb-2">Try It!</h3>
-              <p class="text-gray-700">{contentJson.try_it_hint}</p>
+            <div class="bg-orange-50 rounded-2xl p-6">
+              <h3 class="font-semibold text-orange-700 mb-2 text-center">Try It!</h3>
+              <p class="text-gray-700 mb-3">{contentJson.try_it_hint}</p>
+              <textarea id="tryit-text" class="w-full px-4 py-3 border border-orange-200 rounded-xl text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-300 outline-none resize-none bg-white" rows={4} placeholder="ここに英語で書いてみよう..." />
             </div>
           )}
+
+          <!-- Summary / ChatGPT -->
+          <div class="bg-gray-50 rounded-2xl p-6">
+            <h3 class="font-semibold text-gray-700 mb-1">📊 学習サマリー</h3>
+            <p class="text-sm text-gray-400 mb-3">ChatGPTやClaudeにコピペして解説をもらおう</p>
+            <button id="generate-summary-btn" class="wb-action-btn" style="margin-bottom:0.75rem" onclick="generateSummary()">📋 サマリーを生成する</button>
+            <pre id="summary-output" class="hidden whitespace-pre-wrap text-sm text-gray-700 bg-white border border-gray-200 rounded-xl p-4 mb-3 max-h-64 overflow-y-auto"></pre>
+            <div id="summary-actions" class="wb-action-row hidden">
+              <button class="wb-action-btn" onclick="copySummary()">📋 コピー</button>
+              <a class="wb-action-btn" href="https://chat.openai.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
+              <a class="wb-action-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
+            </div>
+          </div>
         </div>
       ) : html ? (
         <div class="custom-workbook-content bg-white rounded-2xl border border-gray-200 p-6 md:p-8 shadow-sm">
@@ -316,6 +352,7 @@ function formatTips(text: string): string {
 </Layout>
 
 <script>
+  // --- Complete button ---
   const btn = document.getElementById('complete-btn') as HTMLButtonElement | null;
   if (btn) {
     btn.addEventListener('click', async () => {
@@ -349,6 +386,100 @@ function formatTips(text: string): string {
       }
     });
   }
+
+  // --- Interactive workbook tools ---
+  let currentSpeed = 0.85;
+
+  function copyText(id: string) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const text = el.textContent || '';
+    navigator.clipboard.writeText(text).then(() => {
+      const caller = document.activeElement as HTMLButtonElement | null;
+      if (caller) {
+        const orig = caller.textContent;
+        caller.textContent = '✓ コピー済み';
+        setTimeout(() => { caller.textContent = orig; }, 1500);
+      }
+    });
+  }
+
+  function speakText(elementId: string, btn: HTMLButtonElement) {
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.cancel();
+      btn.textContent = '🔊 読み上げ';
+      btn.classList.remove('wb-tts-playing');
+      return;
+    }
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    const text = el.textContent || '';
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-AU';
+    utterance.rate = currentSpeed;
+    utterance.pitch = 1;
+
+    const voices = window.speechSynthesis.getVoices();
+    const enVoice = voices.find(v => v.lang.startsWith('en-AU')) ||
+                    voices.find(v => v.lang.startsWith('en-GB')) ||
+                    voices.find(v => v.lang.startsWith('en'));
+    if (enVoice) utterance.voice = enVoice;
+
+    btn.textContent = '⏹ 停止';
+    btn.classList.add('wb-tts-playing');
+
+    utterance.onend = () => { btn.textContent = '🔊 読み上げ'; btn.classList.remove('wb-tts-playing'); };
+    utterance.onerror = () => { btn.textContent = '🔊 読み上げ'; btn.classList.remove('wb-tts-playing'); };
+    window.speechSynthesis.speak(utterance);
+  }
+
+  window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+
+  function generateSummary() {
+    const title = document.title || 'Workbook';
+    const tryIt = (document.getElementById('tryit-text') as HTMLTextAreaElement)?.value || '(未記入)';
+
+    let s = `【${title} 学習サマリー】\n\n`;
+    s += `■ Try It（自由記述）:\n${tryIt}\n\n`;
+    s += `---\n上の内容をもとに、以下を教えてください：\n`;
+    s += `1. Try Itの文法・表現の添削（修正箇所の説明付き）\n`;
+    s += `2. より自然な言い回しの提案\n`;
+    s += `3. 今日の学習内容に関連する追加フレーズ・表現\n`;
+    s += `4. 発展的な練習問題（1〜2問）`;
+
+    const output = document.getElementById('summary-output')!;
+    const actions = document.getElementById('summary-actions')!;
+    output.textContent = s;
+    output.classList.remove('hidden');
+    actions.classList.remove('hidden');
+  }
+
+  function copySummary() {
+    const text = document.getElementById('summary-output')?.textContent || '';
+    navigator.clipboard.writeText(text).then(() => {
+      const caller = document.activeElement as HTMLButtonElement | null;
+      if (caller) {
+        const orig = caller.textContent;
+        caller.textContent = '✓ コピー済み';
+        setTimeout(() => { caller.textContent = orig; }, 1500);
+      }
+    });
+  }
+
+  // Expose functions to inline onclick handlers
+  (window as any).copyText = copyText;
+  (window as any).speakText = speakText;
+  (window as any).generateSummary = generateSummary;
+  (window as any).copySummary = copySummary;
+  (window as any).currentSpeed = currentSpeed;
+
+  // Sync speed selector with global
+  document.querySelectorAll('.wb-speed-select').forEach(sel => {
+    sel.addEventListener('change', (e) => {
+      currentSpeed = parseFloat((e.target as HTMLSelectElement).value);
+      (window as any).currentSpeed = currentSpeed;
+    });
+  });
 </script>
 
 <style is:global>
@@ -362,5 +493,49 @@ function formatTips(text: string): string {
   .custom-workbook-content h3 {
     margin-top: 1.5rem;
     margin-bottom: 0.75rem;
+  }
+
+  /* Workbook action buttons */
+  .wb-action-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .wb-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #374151;
+    background: white;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+  .wb-action-btn:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+  }
+  .wb-tts-btn.wb-tts-playing {
+    background: #ef4444;
+    color: white;
+    border-color: #ef4444;
+  }
+  .wb-tts-btn.wb-tts-playing:hover {
+    background: #dc2626;
+  }
+  .wb-speed-select {
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.5rem;
+    font-size: 0.7rem;
+    color: #6b7280;
+    background: white;
+    cursor: pointer;
   }
 </style>

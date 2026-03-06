@@ -3,6 +3,7 @@ import { createStripeClient } from '../../../lib/stripe';
 import { createClient } from '@supabase/supabase-js';
 import { createMemberBooking, createGuestBooking, useCoupon } from '../../../lib/booking/db';
 import { createZoomMeeting } from '../../../lib/zoom';
+import { createCalendarEvent } from '../../../lib/google-calendar';
 import { sendBookingConfirmation } from '../../../lib/email';
 
 export const POST: APIRoute = async ({ request, locals }) => {
@@ -86,7 +87,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             });
             if (meta.coupon_id) await useCoupon(supabase, meta.coupon_id);
 
-            // Zoom + Email
+            // Zoom + Google Calendar + Email
             const dur = Math.round((new Date(meta.slot_end).getTime() - new Date(meta.slot_start).getTime()) / 60000);
             let zoomUrl: string | undefined;
             try {
@@ -94,6 +95,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
               await supabase.from('bookings').update({ zoom_url: zoom.join_url, zoom_meeting_id: String(zoom.meeting_id) }).eq('id', booking.id);
               zoomUrl = zoom.join_url;
             } catch (e) { console.error('Zoom creation failed:', e); }
+
+            try {
+              const gcal = await createCalendarEvent(locals, { summary: `GOWM Session`, startTime: meta.slot_start, endTime: meta.slot_end });
+              await supabase.from('bookings').update({ google_event_id: gcal.id }).eq('id', booking.id);
+            } catch (e) { console.error('Google Calendar creation failed:', e); }
 
             try {
               const { data: userData } = await supabase.auth.admin.getUserById(meta.user_id);
@@ -132,7 +138,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
             });
             if (meta.coupon_id) await useCoupon(supabase, meta.coupon_id);
 
-            // Zoom + Email
+            // Zoom + Google Calendar + Email
             const dur = Math.round((new Date(meta.slot_end).getTime() - new Date(meta.slot_start).getTime()) / 60000);
             let zoomUrl: string | undefined;
             try {
@@ -140,6 +146,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
               await supabase.from('bookings').update({ zoom_url: zoom.join_url, zoom_meeting_id: String(zoom.meeting_id) }).eq('id', booking.id);
               zoomUrl = zoom.join_url;
             } catch (e) { console.error('Zoom creation failed:', e); }
+
+            try {
+              const gcal = await createCalendarEvent(locals, { summary: `GOWM Session — ${meta.guest_name}`, startTime: meta.slot_start, endTime: meta.slot_end, attendeeEmail: meta.guest_email });
+              await supabase.from('bookings').update({ google_event_id: gcal.id }).eq('id', booking.id);
+            } catch (e) { console.error('Google Calendar creation failed:', e); }
 
             try {
               await sendBookingConfirmation(locals, {

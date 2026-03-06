@@ -611,8 +611,8 @@
   "services.seminar.desc": "Invite me to speak at your event, podcast, or YouTube channel. Custom workshops for schools, companies, or communities also available.",
   "services.seminar.cta": "Contact Us",
 
-  "services.personal.title": "Personal Coaching (Monthly)",
-  "services.personal.desc": "Ongoing 1-on-1 monthly coaching with personalized curriculum, weekly check-ins, and unlimited chat support.",
+  "services.personal.title": "Personal Coaching",
+  "services.personal.desc": "Ongoing 1-on-1 coaching with personalized curriculum, weekly check-ins, and unlimited chat support.",
   "services.personal.cta": "Contact Us",
 
   "services.lineSupport.title": "LINE Unlimited Support",
@@ -758,11 +758,11 @@
   "home.quota.exhausted": "Today's limit reached",
   "home.quota.resetNote": "Resets daily at 0:00 (JST)",
 
-  "promo.banner": "All Premium features free until March 31! Just sign up for a free account",
+  "promo.banner": "All Premium features free until April 30! Just sign up for a free account",
   "promo.bannerCta": "Get Started Free",
-  "promo.signupCta": "Sign up free to use this until March 31!",
+  "promo.signupCta": "Sign up free to use this until April 30!",
   "promo.signupBtn": "Sign Up Free",
-  "promo.badge": "Free Trial (until 3/31)",
+  "promo.badge": "Free Trial (until 4/30)",
 
   "nav.board": "Board",
   "board.title": "Board",

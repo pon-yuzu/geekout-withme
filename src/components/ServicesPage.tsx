@@ -109,7 +109,8 @@ export default function ServicesPage({ isLoggedIn, isPremium, purchases, hasLine
           <span className="text-3xl">✨</span>
           <div>
             <h3 className="text-2xl font-bold">{t('services.premium.title')}</h3>
-            <span className="text-orange-600 font-semibold">{t('services.premium.price')}</span>
+            <span className="text-orange-600 font-semibold line-through text-sm mr-2">{t('services.premium.price')}</span>
+            <span className="text-green-600 font-bold">{lang === 'ja' ? '4月末まで無料！' : 'Free until April 30!'}</span>
           </div>
         </div>
         <p className="text-gray-600 mb-6">{t('services.premium.desc')}</p>
