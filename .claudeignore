@@ -7,3 +7,5 @@
 *.p12
 secrets/
 credentials/
+.dev.vars
+.dev.vars.*

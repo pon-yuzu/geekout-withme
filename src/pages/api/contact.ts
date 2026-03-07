@@ -36,7 +36,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   try {
     await resend.emails.send({
-      from: 'Geek Out With Me <noreply@uchiwai.app>',
+      from: 'Uchiwai <noreply@uchiwai.app>',
       to: 'ponglish.yukarizu@gmail.com',
       replyTo: email,
       subject: `[${categoryLabel}] ${name}`,

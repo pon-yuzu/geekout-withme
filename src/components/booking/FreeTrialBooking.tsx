@@ -1,17 +1,7 @@
 import { useState } from 'react';
+import { useTranslation } from '../../i18n/index';
 import type { AvailableSlot } from '../../lib/booking/types';
 import BookingCalendar from './BookingCalendar';
-
-const LIFE_WHEEL_CATEGORIES = [
-  { value: 'health', label: '健康・体' },
-  { value: 'money', label: 'お金' },
-  { value: 'career', label: '仕事・キャリア' },
-  { value: 'relationships', label: '人間関係' },
-  { value: 'time', label: '自分の時間' },
-  { value: 'living', label: '暮らし・環境' },
-  { value: 'mind', label: '心・内面' },
-  { value: 'vision', label: '将来・ビジョン' },
-] as const;
 
 type Step = 'calendar' | 'form' | 'success';
 
@@ -26,18 +16,8 @@ interface Props {
   user?: UserInfo | null;
 }
 
-function formatDateTime(dateStr: string): string {
-  return new Intl.DateTimeFormat('ja-JP', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    weekday: 'long',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(dateStr));
-}
-
 export default function FreeTrialBooking({ focusParam, user }: Props) {
+  const { t, lang } = useTranslation();
   const [step, setStep] = useState<Step>('calendar');
   const [selectedSlot, setSelectedSlot] = useState<AvailableSlot | null>(null);
   const [confirmedTime, setConfirmedTime] = useState('');
@@ -53,6 +33,28 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
   const [error, setError] = useState('');
   const [showLoginLink, setShowLoginLink] = useState(false);
 
+  const LIFE_WHEEL_CATEGORIES = [
+    { value: 'health', label: t('freeTrial.category.health') },
+    { value: 'money', label: t('freeTrial.category.money') },
+    { value: 'career', label: t('freeTrial.category.career') },
+    { value: 'relationships', label: t('freeTrial.category.relationships') },
+    { value: 'time', label: t('freeTrial.category.time') },
+    { value: 'living', label: t('freeTrial.category.living') },
+    { value: 'mind', label: t('freeTrial.category.mind') },
+    { value: 'vision', label: t('freeTrial.category.vision') },
+  ];
+
+  function formatDateTime(dateStr: string): string {
+    return new Intl.DateTimeFormat(lang === 'ja' ? 'ja-JP' : 'en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(new Date(dateStr));
+  }
+
   const handleSlotSelect = (slot: AvailableSlot) => {
     setSelectedSlot(slot);
     setStep('form');
@@ -65,9 +67,8 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
     setError('');
     setShowLoginLink(false);
 
-    // Client-side password validation (guest only)
     if (!user && password.length < 6) {
-      setError('パスワードは6文字以上で入力してください。');
+      setError(t('freeTrial.error.passwordMin'));
       setSubmitting(false);
       return;
     }
@@ -88,7 +89,6 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
       let res: Response;
 
       if (user) {
-        // Logged-in → use existing create.ts
         res = await fetch('/api/booking/create', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -101,7 +101,6 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
           }),
         });
       } else {
-        // Guest → create-with-signup
         res = await fetch('/api/booking/create-with-signup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -119,15 +118,15 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
       if (!res.ok) {
         const data = await res.json();
         if (data.error === 'SLOT_TAKEN') {
-          setError('申し訳ありません。この時間枠は他の方に予約されました。別の時間をお選びください。');
+          setError(t('freeTrial.error.slotTaken'));
           setStep('calendar');
         } else if (data.error === 'ALREADY_REGISTERED') {
-          setError('このメールアドレスはすでに登録されています。ログインしてから予約してください。');
+          setError(t('freeTrial.error.alreadyRegistered'));
           setShowLoginLink(true);
         } else if (data.error === 'FREE_TRIAL_USED') {
-          setError('無料体験セッションはお一人様1回限りです。');
+          setError(t('freeTrial.error.freeTrialUsed'));
         } else {
-          setError(data.error || '予約の作成に失敗しました。もう一度お試しください。');
+          setError(data.error || t('freeTrial.error.generic'));
         }
         return;
       }
@@ -135,7 +134,7 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
       setConfirmedTime(formatDateTime(selectedSlot.slot_start));
       setStep('success');
     } catch {
-      setError('ネットワークエラーが発生しました。もう一度お試しください。');
+      setError(t('freeTrial.error.network'));
     } finally {
       setSubmitting(false);
     }
@@ -147,10 +146,10 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
       <div className="text-center py-12">
         <div className="text-5xl mb-4">🎉</div>
         <h2 className="text-2xl font-bold text-gray-800 mb-2">
-          ご予約が確定しました！
+          {t('freeTrial.success.title')}
         </h2>
         <p className="text-gray-500 mb-2">
-          確認メールをお送りしました。Zoomリンクもメールに記載されています。
+          {t('freeTrial.success.emailSent')}
         </p>
         <p className="text-lg font-medium text-orange-600 mb-6" suppressHydrationWarning>
           {confirmedTime}
@@ -158,11 +157,10 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
 
         {!user && (
           <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 mb-6 text-sm text-gray-600 max-w-md mx-auto">
-            <p className="font-medium text-orange-700 mb-1">アカウントが作成されました</p>
+            <p className="font-medium text-orange-700 mb-1">{t('freeTrial.success.accountCreated')}</p>
             <p>
-              ご入力のメールアドレスとパスワードで
-              <a href="/login" className="text-orange-600 underline ml-1">ログイン</a>
-              できます。予約管理や診断結果の確認にお使いください。
+              {t('freeTrial.success.accountDesc')}
+              <a href="/login" className="text-orange-600 underline ml-1">{t('freeTrial.success.loginLink')}</a>
             </p>
           </div>
         )}
@@ -171,7 +169,7 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
           href="/"
           className="inline-block px-6 py-3 bg-orange-500 text-white rounded-xl font-medium hover:bg-orange-600 transition-colors"
         >
-          トップに戻る
+          {t('freeTrial.success.backHome')}
         </a>
       </div>
     );
@@ -183,19 +181,19 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
       <div className="max-w-md mx-auto">
         {/* Slot summary */}
         <div className="bg-orange-50 rounded-xl p-4 mb-6 space-y-1">
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-500">日時</span>
+          <div className="flex flex-col sm:flex-row sm:justify-between text-sm gap-1">
+            <span className="text-gray-500">{t('freeTrial.form.dateTime')}</span>
             <span className="font-medium text-gray-800" suppressHydrationWarning>
               {formatDateTime(selectedSlot.slot_start)}
             </span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-500">所要時間</span>
-            <span className="font-medium text-gray-800">60分</span>
+            <span className="text-gray-500">{t('freeTrial.form.duration')}</span>
+            <span className="font-medium text-gray-800">{t('freeTrial.form.durationValue')}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-500">料金</span>
-            <span className="font-medium text-green-600">無料</span>
+            <span className="text-gray-500">{t('freeTrial.form.price')}</span>
+            <span className="font-medium text-green-600">{t('freeTrial.form.priceValue')}</span>
           </div>
         </div>
 
@@ -205,21 +203,21 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
             <div className="bg-orange-50 rounded-lg p-3 text-sm text-gray-600">
               <span className="font-medium">{user.displayName}</span>
               <span className="text-gray-400 ml-2">（{user.email}）</span>
-              <span className="ml-1">でご予約します</span>
+              <span className="ml-1">{t('freeTrial.form.loggedInAs')}</span>
             </div>
           ) : (
             <>
               {/* Name */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  お名前 <span className="text-red-500">*</span>
+                  {t('freeTrial.form.name')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
                   required
-                  placeholder="山田 花子"
+                  placeholder={t('freeTrial.form.namePlaceholder')}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-300 outline-none"
                 />
               </div>
@@ -227,7 +225,7 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
               {/* Email */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  メールアドレス <span className="text-red-500">*</span>
+                  {t('freeTrial.form.email')} <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="email"
@@ -242,11 +240,11 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
               {/* Password */}
               <div>
                 <p className="text-xs text-gray-500 mb-2">
-                  予約と同時に無料アカウントが作成されます。今後の予約管理や診断結果の確認にお使いいただけます。
+                  {t('freeTrial.form.passwordNote')}
                 </p>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  パスワード <span className="text-red-500">*</span>
-                  <span className="text-gray-400 text-xs font-normal ml-1">（6文字以上）</span>
+                  {t('freeTrial.form.password')} <span className="text-red-500">*</span>
+                  <span className="text-gray-400 text-xs font-normal ml-1">{t('freeTrial.form.passwordMin')}</span>
                 </label>
                 <input
                   type="password"
@@ -254,14 +252,14 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   minLength={6}
-                  placeholder="6文字以上"
+                  placeholder={t('freeTrial.form.passwordPlaceholder')}
                   autoComplete="new-password"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-300 outline-none"
                 />
                 <p className="text-xs text-gray-400 mt-1">
-                  <a href="/terms" className="underline hover:text-gray-500">利用規約</a>・
-                  <a href="/privacy" className="underline hover:text-gray-500">プライバシーポリシー</a>
-                  に同意の上、予約してください。
+                  <a href="/terms" className="underline hover:text-gray-500">{t('freeTrial.form.terms')}</a>・
+                  <a href="/privacy" className="underline hover:text-gray-500">{t('freeTrial.form.privacy')}</a>
+                  {t('freeTrial.form.termsPrefix')}
                 </p>
               </div>
             </>
@@ -270,14 +268,14 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
           {/* Focus area dropdown */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              診断で一番気になった項目は？
+              {t('freeTrial.form.focusLabel')}
             </label>
             <select
               value={focusArea}
               onChange={(e) => setFocusArea(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-300 outline-none bg-white"
             >
-              <option value="">選択してください（任意）</option>
+              <option value="">{t('freeTrial.form.focusPlaceholder')}</option>
               {LIFE_WHEEL_CATEGORIES.map((cat) => (
                 <option key={cat.value} value={cat.value}>
                   {cat.label}
@@ -289,7 +287,7 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
           {/* Session language */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              セッション希望言語
+              {t('freeTrial.form.sessionLang')}
             </label>
             <select
               value={sessionLang}
@@ -304,12 +302,12 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
           {/* Memo */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              セッションで聞きたいこと、気になっていること
+              {t('freeTrial.form.memo')}
             </label>
             <textarea
               value={memo}
               onChange={(e) => setMemo(e.target.value)}
-              placeholder="自由にお書きください（任意）"
+              placeholder={t('freeTrial.form.memoPlaceholder')}
               rows={3}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-300 outline-none resize-none"
             />
@@ -321,7 +319,7 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
               {showLoginLink && (
                 <div className="mt-2">
                   <a href="/login" className="text-orange-600 underline font-medium">
-                    ログインはこちら
+                    {t('freeTrial.error.loginLink')}
                   </a>
                 </div>
               )}
@@ -334,14 +332,14 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
               onClick={() => setStep('calendar')}
               className="flex-1 py-2.5 px-4 text-sm font-medium text-gray-600 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors"
             >
-              戻る
+              {t('freeTrial.form.back')}
             </button>
             <button
               type="submit"
               disabled={submitting}
               className="flex-1 py-2.5 px-4 text-sm font-medium text-white bg-orange-500 rounded-xl hover:bg-orange-600 disabled:opacity-50 transition-colors"
             >
-              {submitting ? '予約中...' : '予約を確定する（無料）'}
+              {submitting ? t('freeTrial.form.submitting') : t('freeTrial.form.submit')}
             </button>
           </div>
         </form>

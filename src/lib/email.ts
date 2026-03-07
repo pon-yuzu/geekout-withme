@@ -3,7 +3,7 @@
  */
 import { Resend } from 'resend';
 
-const FROM = 'Geek Out With Me <noreply@uchiwai.app>';
+const FROM = 'Uchiwai <noreply@uchiwai.app>';
 const ADMIN_EMAIL = 'ponglish.yukarizu@gmail.com';
 
 function getResendClient(locals: any): Resend | null {
@@ -98,7 +98,7 @@ export async function sendBookingConfirmation(locals: any, opts: BookingEmailOpt
         <p style="color: #6b7280; font-size: 14px;">※ 開始24時間前までキャンセル可能です</p>
 
         <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
-        <p style="color: #9ca3af; font-size: 12px;">Geek Out With Me</p>
+        <p style="color: #9ca3af; font-size: 12px;">Uchiwai</p>
       </div>
     `,
   });
@@ -157,7 +157,7 @@ export async function sendBookingReminder(
         <p>お会いできるのを楽しみにしています！<br />Sayaka</p>
 
         <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
-        <p style="color: #9ca3af; font-size: 12px;">Geek Out With Me</p>
+        <p style="color: #9ca3af; font-size: 12px;">Uchiwai</p>
       </div>
     `,
   });
@@ -195,7 +195,7 @@ export async function sendBookingCancellation(locals: any, opts: Omit<BookingEma
         </p>
 
         <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
-        <p style="color: #9ca3af; font-size: 12px;">Geek Out With Me</p>
+        <p style="color: #9ca3af; font-size: 12px;">Uchiwai</p>
       </div>
     `,
   });

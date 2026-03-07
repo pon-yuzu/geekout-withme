@@ -10,7 +10,12 @@
       "Bash(source **/.env*)",
       "Bash(grep * .env*)",
       "Bash(head **/.env*)",
-      "Bash(tail **/.env*)"
+      "Bash(tail **/.env*)",
+      "Read(**/.dev.vars*)",
+      "Bash(cat **/.dev.vars*)",
+      "Bash(head **/.dev.vars*)",
+      "Bash(tail **/.dev.vars*)",
+      "Bash(grep * .dev.vars*)"
     ]
   }
 }

@@ -111,7 +111,7 @@ const socialLinks = [
                 <img
                   src={video.thumbnail}
                   alt={video.title}
-                  class="w-36 h-20 object-cover rounded-lg shrink-0"
+                  class="w-24 sm:w-36 h-14 sm:h-20 object-cover rounded-lg shrink-0"
                   loading="lazy"
                 />
                 <p class="text-sm font-medium text-gray-700 line-clamp-3 pt-1">{video.title}</p>
@@ -163,6 +163,37 @@ const socialLinks = [
           </div>
         </div>
       </a>
+
+      <!-- Site Services -->
+      <div class="bg-white rounded-2xl border border-orange-100 shadow-sm p-6 mb-6">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">{t(lang, 'nav.more')}</h2>
+        <div class="space-y-3">
+          <a href="/free-session" class="flex items-center gap-3 p-3 -mx-1 rounded-xl bg-orange-50 hover:bg-orange-100 transition-colors border border-orange-100">
+            <span class="text-2xl shrink-0">🌱</span>
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-gray-800 text-sm">{t(lang, 'services.freeTrial.title')}</p>
+              <p class="text-xs text-gray-500 truncate">{t(lang, 'services.freeTrial.desc')}</p>
+            </div>
+            <span class="text-orange-400 shrink-0">→</span>
+          </a>
+          <a href="/level-check" class="flex items-center gap-3 p-3 -mx-1 rounded-xl hover:bg-orange-50 transition-colors">
+            <span class="text-2xl shrink-0">🎯</span>
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-gray-800 text-sm">{t(lang, 'services.levelCheck.title')}</p>
+              <p class="text-xs text-gray-500 truncate">{t(lang, 'services.levelCheck.desc')}</p>
+            </div>
+            <span class="text-orange-400 shrink-0">→</span>
+          </a>
+          <a href="/services" class="flex items-center gap-3 p-3 -mx-1 rounded-xl hover:bg-orange-50 transition-colors">
+            <span class="text-2xl shrink-0">📋</span>
+            <div class="flex-1 min-w-0">
+              <p class="font-semibold text-gray-800 text-sm">{t(lang, 'services.title')}</p>
+              <p class="text-xs text-gray-500 truncate">{t(lang, 'services.subtitle')}</p>
+            </div>
+            <span class="text-orange-400 shrink-0">→</span>
+          </a>
+        </div>
+      </div>
 
       <!-- Contact -->
       <div class="text-center">

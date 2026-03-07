@@ -83,6 +83,28 @@ export default function ServicesPage({ isLoggedIn, isPremium, purchases, hasLine
 
   return (
     <div className="space-y-6">
+      {/* Free Trial Session - Top banner */}
+      <a
+        href="/free-session"
+        className="block bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl p-5 md:p-8 text-white shadow-md hover:shadow-lg transition-shadow group"
+      >
+        <div className="flex items-center gap-4">
+          <span className="text-4xl shrink-0">🌱</span>
+          <div className="flex-1">
+            <span className="inline-block text-xs font-bold px-2 py-0.5 bg-white/25 rounded-full border border-white/40 mb-1">
+              {t('services.freeTrial.badge')}
+            </span>
+            <h3 className="text-xl font-bold">
+              {t('services.freeTrial.title')}
+            </h3>
+            <p className="text-white/85 text-sm mt-1">
+              {t('services.freeTrial.desc')}
+            </p>
+          </div>
+          <span className="text-xl font-bold group-hover:translate-x-1 transition-transform">→</span>
+        </div>
+      </a>
+
       {/* Community - Free */}
       <ServiceCard
         icon="💬"
@@ -99,7 +121,7 @@ export default function ServicesPage({ isLoggedIn, isPremium, purchases, hasLine
       </ServiceCard>
 
       {/* Premium subscription - highlighted */}
-      <div className="bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-300 rounded-2xl p-8 relative overflow-hidden shadow-md">
+      <div className="bg-gradient-to-br from-orange-50 to-orange-100 border-2 border-orange-300 rounded-2xl p-5 md:p-8 relative overflow-hidden shadow-md">
         <div className="absolute top-4 right-4">
           <span className="bg-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full">
             {t('services.premium.badge')}
@@ -110,7 +132,7 @@ export default function ServicesPage({ isLoggedIn, isPremium, purchases, hasLine
           <div>
             <h3 className="text-2xl font-bold">{t('services.premium.title')}</h3>
             <span className="text-orange-600 font-semibold line-through text-sm mr-2">{t('services.premium.price')}</span>
-            <span className="text-green-600 font-bold">{lang === 'ja' ? '4月末まで無料！' : 'Free until April 30!'}</span>
+            <span className="text-green-600 font-bold">{t('services.premium.promoPrice')}</span>
           </div>
         </div>
         <p className="text-gray-600 mb-6">{t('services.premium.desc')}</p>
@@ -170,7 +192,7 @@ export default function ServicesPage({ isLoggedIn, isPremium, purchases, hasLine
       </ServiceCard>
 
       {/* LINE Unlimited Support */}
-      <div className={`rounded-2xl p-8 shadow-sm ${
+      <div className={`rounded-2xl p-5 md:p-8 shadow-sm ${
         hasLineSupport
           ? 'bg-gradient-to-br from-green-50 to-teal-50 border-2 border-teal-300'
           : 'bg-white border border-gray-200'
@@ -305,7 +327,7 @@ function ServiceCard({
 }) {
   return (
     <div
-      className={`rounded-2xl p-8 shadow-sm ${
+      className={`rounded-2xl p-5 md:p-8 shadow-sm ${
         muted
           ? 'bg-gray-50 border border-gray-200'
           : 'bg-white border border-gray-200'

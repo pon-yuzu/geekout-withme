@@ -1,7 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { t } from '../../i18n/index';
+import type { Lang } from '../../i18n/index';
 import FreeTrialBooking from '../../components/booking/FreeTrialBooking';
 
+const lang = Astro.locals.lang as Lang;
 const focus = Astro.url.searchParams.get('focus') || '';
 const user = Astro.locals.user;
 const userProp = user
@@ -13,33 +16,30 @@ const userProp = user
   : null;
 ---
 
-<Layout title="ライフコーチング初回無料体験">
+<Layout title={t(lang, 'freeTrial.pageTitle')}>
   <section class="py-12 px-4">
     <div class="max-w-3xl mx-auto">
       {/* Hero */}
       <div class="text-center mb-10">
         <h1 class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
-          「焦ってるのに動けない」を、<br class="hidden sm:inline" />60分で見える化する。
+          {t(lang, 'freeTrial.hero.title')}
         </h1>
 
         <div class="bg-white rounded-2xl shadow-sm border border-orange-100 p-6 md:p-8 text-left space-y-4 text-gray-600 text-sm md:text-base leading-relaxed">
-          <p>まずは一度、話してみませんか？</p>
-          <p>
-            この無料セッションでは、ライフバランス診断であなたの現在地を一緒に確認し、<br class="hidden sm:inline" />
-            「何が自分を止めてるか」を見える化します。見えたら、次に何をすべきかも見えてくる。
-          </p>
+          <p>{t(lang, 'freeTrial.hero.intro')}</p>
+          <p>{t(lang, 'freeTrial.hero.desc')}</p>
           <ul class="space-y-2 text-gray-700">
             <li class="flex items-center gap-2">
-              <span class="text-orange-500">⏱</span> 所要時間：60分
+              <span class="text-orange-500">⏱</span> {t(lang, 'freeTrial.hero.duration')}
             </li>
             <li class="flex items-center gap-2">
-              <span class="text-orange-500">💻</span> 形式：オンライン（Zoom）
+              <span class="text-orange-500">💻</span> {t(lang, 'freeTrial.hero.format')}
             </li>
             <li class="flex items-center gap-2">
-              <span class="text-orange-500">🆓</span> 料金：無料
+              <span class="text-orange-500">🆓</span> {t(lang, 'freeTrial.hero.price')}
             </li>
             <li class="flex items-center gap-2">
-              <span class="text-orange-500">👤</span> 定員：各回1名<span class="text-gray-400 text-xs ml-1">（※今後グループセッションも予定）</span>
+              <span class="text-orange-500">👤</span> {t(lang, 'freeTrial.hero.capacity')}<span class="text-gray-400 text-xs ml-1">（{t(lang, 'freeTrial.hero.capacityNote')}）</span>
             </li>
           </ul>
         </div>
@@ -47,7 +47,7 @@ const userProp = user
 
       {/* Booking flow */}
       <div class="mb-4 text-center">
-        <h2 class="text-lg font-bold text-gray-700">ご希望の日時をお選びください</h2>
+        <h2 class="text-lg font-bold text-gray-700">{t(lang, 'freeTrial.selectTime')}</h2>
       </div>
 
       <FreeTrialBooking client:load focusParam={focus} user={userProp} />

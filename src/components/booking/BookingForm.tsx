@@ -198,7 +198,7 @@ export default function BookingForm({ slot, mode, bookingType = 'public', onConf
         </h3>
 
         <div className="bg-orange-50 rounded-xl p-4 mb-4 space-y-1">
-          <div className="flex justify-between text-sm">
+          <div className="flex flex-col sm:flex-row sm:justify-between text-sm gap-1">
             <span className="text-gray-500">{t('booking.form.dateTime')}</span>
             <span className="font-medium text-gray-800" suppressHydrationWarning>
               {formatDateTime(slot.slot_start, lang)}

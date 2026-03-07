@@ -37,9 +37,10 @@ if (user && Astro.locals.supabase) {
     <meta name="description" content={description} />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>{title} | Geek Out With Me</title>
+    <title>{title} | Uchiwai</title>
 
     <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -55,22 +56,22 @@ if (user && Astro.locals.supabase) {
 
     <!-- OGP -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content={`${title} | Geek Out With Me`} />
+    <meta property="og:title" content={`${title} | Uchiwai`} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content="https://uchiwai.app/ogp-1200x630.png" />
     <meta property="og:url" content="https://uchiwai.app" />
-    <meta property="og:site_name" content="Geek out with Me!" />
+    <meta property="og:site_name" content="Uchiwai" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={`${title} | Geek Out With Me`} />
+    <meta name="twitter:title" content={`${title} | Uchiwai`} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content="https://uchiwai.app/ogp-1200x630.png" />
 
     <script is:inline>if(!globalThis.process)globalThis.process={env:{NODE_ENV:"production"},browser:true,version:""};</script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Outfit:wght@600&display=swap" rel="stylesheet" />
   </head>
   <body class="min-h-screen bg-orange-50 text-gray-800">
     {!hasLangCookie && (
@@ -79,8 +80,8 @@ if (user && Astro.locals.supabase) {
 
     <nav class="fixed top-0 w-full bg-white/90 backdrop-blur-md z-50 border-b border-orange-100 shadow-sm">
       <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-        <a href="/" class="text-xl font-bold text-orange-500 whitespace-nowrap">
-          Geek Out With Me
+        <a href="/" class="shrink-0">
+          <img src="/logo.svg" alt="Uchiwai" class="h-8" />
         </a>
 
         <!-- Desktop nav -->
@@ -132,7 +133,7 @@ if (user && Astro.locals.supabase) {
             <div class="absolute top-full right-0 pt-2 hidden group-hover:block">
               <div class="bg-white border border-orange-100 rounded-xl shadow-lg py-2 min-w-[180px]">
                 <a href="/services" class="block px-4 py-2 text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">{t(lang, 'nav.services')}</a>
-                <a href="/booking/free-trial" class="block px-4 py-2 text-orange-600 font-medium hover:bg-orange-50 transition-colors">{lang === 'ja' ? '無料体験セッション' : 'Free Trial Session'}</a>
+                <a href="/free-session" class="block px-4 py-2 text-orange-600 font-medium hover:bg-orange-50 transition-colors">{t(lang, 'nav.freeSession')}</a>
                 <a href="/booking" class="block px-4 py-2 text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">{t(lang, 'booking.title')}</a>
                 <a href="/links" class="block px-4 py-2 text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">{t(lang, 'nav.links')}</a>
                 <a href="/contact" class="block px-4 py-2 text-gray-600 hover:text-orange-500 hover:bg-orange-50 transition-colors">{t(lang, 'nav.contact')}</a>
@@ -195,7 +196,7 @@ if (user && Astro.locals.supabase) {
           </a>
           <div class="border-t border-orange-100 mt-2 pt-2">
             <a href="/services" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.services')}</a>
-            <a href="/booking/free-trial" class="block text-orange-600 font-medium transition-colors py-2">{lang === 'ja' ? '無料体験セッション' : 'Free Trial Session'}</a>
+            <a href="/free-session" class="block text-orange-600 font-medium transition-colors py-2">{t(lang, 'nav.freeSession')}</a>
             <a href="/booking" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'booking.title')}</a>
             <a href="/links" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.links')}</a>
             <a href="/contact" class="block text-gray-600 hover:text-orange-500 transition-colors py-2">{t(lang, 'nav.contact')}</a>
@@ -265,7 +266,7 @@ if (user && Astro.locals.supabase) {
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/><path d="M12 2L2 7l10 5 10-5-10-5z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2 12l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2 17l10 5 10-5" fill="none" stroke="currentColor" stroke-width="2"/></svg>
           </a>
         </div>
-        <div class="flex justify-center items-center gap-4 mb-3 text-sm">
+        <div class="flex flex-wrap justify-center items-center gap-4 mb-3 text-sm">
           <a href="/contact" class="text-gray-400 hover:text-orange-500 transition-colors">{t(lang, 'footer.contact')}</a>
           <span class="text-gray-300">|</span>
           <a href="/terms" class="text-gray-400 hover:text-orange-500 transition-colors">{t(lang, 'footer.terms')}</a>
