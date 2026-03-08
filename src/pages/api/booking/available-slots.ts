@@ -53,7 +53,8 @@ export const GET: APIRoute = async ({ request, locals }) => {
     return new Response(JSON.stringify({ slots }), {
       headers: { 'Content-Type': 'application/json' },
     });
-  } catch (err: any) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+  } catch (err) {
+    console.error('Available slots error:', err);
+    return new Response(JSON.stringify({ error: import.meta.env.DEV ? (err as Error).message : 'An error occurred' }), { status: 500 });
   }
 };

@@ -29,7 +29,8 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
     .eq('id', fileId);
 
   if (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    console.error('Pin error:', error);
+    return new Response(JSON.stringify({ error: import.meta.env.DEV ? error.message : 'An error occurred' }), { status: 500 });
   }
 
   return new Response(JSON.stringify({ success: true }), {

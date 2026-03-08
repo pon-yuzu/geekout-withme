@@ -6,6 +6,7 @@ import {
   useCoupon,
 } from '../../../lib/booking/db';
 import { runPostBookingSteps } from '../../../lib/booking/post-booking';
+import { verifyTurnstile } from '../../../lib/turnstile';
 
 export const POST: APIRoute = async ({ request, locals }) => {
   let body: any;
@@ -15,7 +16,16 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400 });
   }
 
-  const { guest_name, guest_email, password, slot_start, slot_end, notes } = body;
+  const { guest_name, guest_email, password, slot_start, slot_end, notes, turnstileToken } = body;
+
+  // 0. Turnstile verification
+  const runtime = (locals as any).runtime;
+  const turnstileSecret = runtime?.env?.TURNSTILE_SECRET_KEY || import.meta.env.TURNSTILE_SECRET_KEY;
+  const clientIp = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || undefined;
+  const turnstileResult = await verifyTurnstile(turnstileToken, clientIp, turnstileSecret);
+  if (!turnstileResult.success) {
+    return new Response(JSON.stringify({ error: turnstileResult.error || 'CAPTCHA verification failed' }), { status: 400 });
+  }
 
   // 1. Validation
   if (!guest_name?.trim() || !guest_email?.trim() || !password || !slot_start || !slot_end) {

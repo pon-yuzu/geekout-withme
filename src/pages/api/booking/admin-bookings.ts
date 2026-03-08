@@ -30,7 +30,8 @@ export const GET: APIRoute = async ({ request, locals }) => {
   const { data, error } = await query;
 
   if (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    console.error('Admin bookings error:', error);
+    return new Response(JSON.stringify({ error: import.meta.env.DEV ? error.message : 'An error occurred' }), { status: 500 });
   }
 
   // Enrich with user display names
@@ -94,7 +95,8 @@ export const PATCH: APIRoute = async ({ request, locals }) => {
     .single();
 
   if (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    console.error('Admin bookings error:', error);
+    return new Response(JSON.stringify({ error: import.meta.env.DEV ? error.message : 'An error occurred' }), { status: 500 });
   }
 
   return new Response(JSON.stringify({ booking: data }), {

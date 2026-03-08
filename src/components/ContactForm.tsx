@@ -1,5 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from '../i18n/index';
+import TurnstileWidget from './TurnstileWidget';
+
+const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
 
 export default function ContactForm() {
   const { t } = useTranslation();
@@ -10,6 +13,7 @@ export default function ContactForm() {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState('');
 
   const categories = [
     { value: 'bug', label: t('contact.category.bug') },
@@ -28,7 +32,7 @@ export default function ContactForm() {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, category, message }),
+        body: JSON.stringify({ name, email, category, message, turnstileToken }),
       });
 
       if (!res.ok) throw new Error();
@@ -99,6 +103,14 @@ export default function ContactForm() {
           className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-300 focus:border-orange-400 resize-vertical"
         />
       </div>
+
+      {TURNSTILE_SITE_KEY && (
+        <TurnstileWidget
+          siteKey={TURNSTILE_SITE_KEY}
+          onVerify={setTurnstileToken}
+          onExpire={() => setTurnstileToken('')}
+        />
+      )}
 
       {error && (
         <p className="text-red-500 text-sm text-center">{error}</p>

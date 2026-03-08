@@ -20,7 +20,8 @@ export const GET: APIRoute = async ({ request, locals }) => {
     .order('start_time');
 
   if (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    console.error('Admin oneoff slots error:', error);
+    return new Response(JSON.stringify({ error: import.meta.env.DEV ? error.message : 'An error occurred' }), { status: 500 });
   }
 
   return new Response(JSON.stringify({ slots: data }), {
@@ -63,7 +64,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     .single();
 
   if (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    console.error('Admin oneoff slots error:', error);
+    return new Response(JSON.stringify({ error: import.meta.env.DEV ? error.message : 'An error occurred' }), { status: 500 });
   }
 
   return new Response(JSON.stringify({ slot: data }), {
@@ -101,7 +103,8 @@ export const DELETE: APIRoute = async ({ request, locals }) => {
     .eq('id', id);
 
   if (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    console.error('Admin oneoff slots error:', error);
+    return new Response(JSON.stringify({ error: import.meta.env.DEV ? error.message : 'An error occurred' }), { status: 500 });
   }
 
   return new Response(JSON.stringify({ success: true }), {

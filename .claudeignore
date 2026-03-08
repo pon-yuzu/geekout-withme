@@ -9,3 +9,4 @@ secrets/
 credentials/
 .dev.vars
 .dev.vars.*
+~/.geekout-dev-vars

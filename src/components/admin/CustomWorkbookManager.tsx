@@ -278,6 +278,14 @@ export default function CustomWorkbookManager() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
+                  <a
+                    href={`/my/workbook/custom/${wb.slug}?user_id=${wb.user_id}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3 py-1.5 bg-orange-500 text-white rounded-lg text-xs font-medium hover:bg-orange-600 transition-colors"
+                  >
+                    👁 生徒画面
+                  </a>
                   <label className="px-3 py-1.5 bg-teal-500 text-white rounded-lg text-xs font-medium hover:bg-teal-600 transition-colors cursor-pointer">
                     Upload HTML
                     <input

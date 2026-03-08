@@ -78,7 +78,7 @@ export const GET: APIRoute = async ({ url, locals }) => {
 
         results.push({ config_id: config.id, day_number: dayNum, status: 'ok' });
       } catch (err: any) {
-        results.push({ config_id: config.id, day_number: dayNum, status: 'error', error: err.message });
+        results.push({ config_id: config.id, day_number: dayNum, status: 'error', error: import.meta.env.DEV ? err.message : 'Generation error' });
         break;
       }
     }

@@ -15,7 +15,18 @@
       "Bash(cat **/.dev.vars*)",
       "Bash(head **/.dev.vars*)",
       "Bash(tail **/.dev.vars*)",
-      "Bash(grep * .dev.vars*)"
+      "Bash(grep * .dev.vars*)",
+      "Read(~/.geekout-dev-vars)",
+      "Read(**/*geekout-dev-vars*)",
+      "Bash(cat ~/.geekout-dev-vars)",
+      "Bash(cat *geekout-dev-vars*)",
+      "Bash(head ~/.geekout-dev-vars)",
+      "Bash(tail ~/.geekout-dev-vars)",
+      "Bash(grep * ~/.geekout-dev-vars)",
+      "Bash(*readFileSync*geekout-dev-vars*)",
+      "Bash(*readFileSync*.env*)",
+      "Bash(*readFileSync*.dev.vars*)",
+      "Bash(*dotenv*)"
     ]
   }
 }

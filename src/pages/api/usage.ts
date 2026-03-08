@@ -2,6 +2,9 @@ import type { APIRoute } from 'astro';
 import { DAILY_LIMITS } from '../../lib/quota';
 
 export const GET: APIRoute = async ({ locals }) => {
+  if (!locals.user) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+  }
   const supabase = locals.supabase;
   if (!supabase) {
     return new Response(JSON.stringify({ error: 'Not configured' }), { status: 500 });

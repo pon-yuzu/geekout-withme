@@ -47,7 +47,8 @@ export const PUT: APIRoute = async ({ request, locals }) => {
     .single();
 
   if (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    console.error('WB review error:', error);
+    return new Response(JSON.stringify({ error: import.meta.env.DEV ? error.message : 'An error occurred' }), { status: 500 });
   }
 
   return new Response(JSON.stringify({ day: data }), {
@@ -128,13 +129,15 @@ export const POST: APIRoute = async ({ request, locals }) => {
       .single();
 
     if (updateError) {
-      return new Response(JSON.stringify({ error: updateError.message }), { status: 500 });
+      console.error('WB review update error:', updateError);
+      return new Response(JSON.stringify({ error: import.meta.env.DEV ? updateError.message : 'An error occurred' }), { status: 500 });
     }
 
     return new Response(JSON.stringify({ day: updated }), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (err: any) {
-    return new Response(JSON.stringify({ error: `Regeneration failed: ${err.message}` }), { status: 500 });
+    console.error('WB regeneration error:', err);
+    return new Response(JSON.stringify({ error: import.meta.env.DEV ? `Regeneration failed: ${err.message}` : 'Regeneration failed' }), { status: 500 });
   }
 };

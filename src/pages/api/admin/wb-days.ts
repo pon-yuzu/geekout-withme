@@ -34,7 +34,8 @@ export const GET: APIRoute = async ({ url, locals }) => {
       .single();
 
     if (error) {
-      return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+      console.error('WB days error:', error);
+      return new Response(JSON.stringify({ error: import.meta.env.DEV ? error.message : 'An error occurred' }), { status: 500 });
     }
 
     return new Response(JSON.stringify({ day: data }), {
@@ -51,7 +52,8 @@ export const GET: APIRoute = async ({ url, locals }) => {
       .order('day_number', { ascending: true });
 
     if (error) {
-      return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+      console.error('WB days error:', error);
+      return new Response(JSON.stringify({ error: import.meta.env.DEV ? error.message : 'An error occurred' }), { status: 500 });
     }
 
     return new Response(JSON.stringify({ days: data || [] }), {

@@ -3,6 +3,8 @@ import Layout from '../../../../../../layouts/Layout.astro';
 import { Quiz } from '../../../../../../components/workbook/Quiz';
 import { t } from '../../../../../../i18n/index';
 import type { Lang } from '../../../../../../i18n/index';
+import { isAdmin } from '../../../../../../lib/admin';
+import { sanitizeHtml } from '../../../../../../lib/sanitize-html';
 import { createClient } from '@supabase/supabase-js';
 
 const user = Astro.locals.user;
@@ -15,21 +17,28 @@ if (!user || !supabase) {
 
 const { slug, num } = Astro.params;
 const dayNum = parseInt(num || '0', 10);
+const admin = isAdmin(user.email, Astro.locals);
+const targetUserId = admin ? (Astro.url.searchParams.get('user_id') || user.id) : user.id;
 
-const { data: workbook } = await supabase
+const runtime = (Astro.locals as any).runtime;
+const serviceRoleKey = runtime?.env?.SUPABASE_SERVICE_ROLE_KEY || import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseUrl = runtime?.env?.PUBLIC_SUPABASE_URL || import.meta.env.PUBLIC_SUPABASE_URL;
+
+// Admin needs service role client to bypass RLS for other users' workbooks
+const queryClient = (admin && targetUserId !== user.id)
+  ? createClient(supabaseUrl, serviceRoleKey)
+  : supabase;
+
+const { data: workbook } = await queryClient
   .from('custom_workbooks')
   .select('*')
-  .eq('user_id', user.id)
+  .eq('user_id', targetUserId)
   .eq('slug', slug)
   .single();
 
 if (!workbook || dayNum < 1 || dayNum > workbook.total_days) {
   return Astro.redirect(`/my/workbook/custom/${slug}`);
 }
-
-const runtime = (Astro.locals as any).runtime;
-const serviceRoleKey = runtime?.env?.SUPABASE_SERVICE_ROLE_KEY || import.meta.env.SUPABASE_SERVICE_ROLE_KEY;
-const supabaseUrl = runtime?.env?.PUBLIC_SUPABASE_URL || import.meta.env.PUBLIC_SUPABASE_URL;
 
 let html = '';
 let contentJson: any = null;
@@ -41,7 +50,7 @@ if (isAdaptive) {
   const { data: config } = await serviceClient
     .from('student_configs')
     .select('id')
-    .eq('user_id', user.id)
+    .eq('user_id', targetUserId)
     .single();
 
   if (config) {
@@ -71,6 +80,12 @@ if (isAdaptive) {
   );
   if (storageRes.ok) {
     html = await storageRes.text();
+    // Rewrite relative image/asset paths to Supabase Storage absolute URLs
+    const storageBase = `${supabaseUrl}/storage/v1/object/public/custom-workbooks/${workbook.storage_path}/`;
+    html = html.replace(/(src|href)=["'](?!https?:\/\/|\/|data:|#)([^"']+)["']/g, (match, attr, path) => {
+      return `${attr}="${storageBase}${path}"`;
+    });
+    html = sanitizeHtml(html);
   }
 }
 
@@ -80,11 +95,11 @@ const nextDay = dayNum < workbook.total_days ? dayNum + 1 : null;
 // Check completion status (only for multi-day workbooks)
 let isCompleted = false;
 if (workbook.total_days > 1) {
-  const { data: prog } = await supabase
+  const { data: prog } = await queryClient
     .from('custom_workbook_progress')
     .select('day_number')
     .eq('workbook_id', workbook.id)
-    .eq('user_id', user.id)
+    .eq('user_id', targetUserId)
     .eq('day_number', dayNum)
     .maybeSingle();
   isCompleted = !!prog;
@@ -97,6 +112,8 @@ function formatDetail(text: string): string {
 function formatTips(text: string): string {
   return text.split('\n\n').filter(Boolean).map((p: string) => `<p class="mb-3 leading-relaxed">${p.trim()}</p>`).join('\n');
 }
+
+const adminQs = admin && targetUserId !== user.id ? `?user_id=${targetUserId}` : '';
 ---
 
 <Layout title={`${workbook.title} - Day ${dayNum}`} user={user}>
@@ -104,7 +121,7 @@ function formatTips(text: string): string {
     <div class="max-w-4xl mx-auto">
       <div class="flex items-center justify-between mb-6">
         <a
-          href={`/my/workbook/custom/${slug}`}
+          href={`/my/workbook/custom/${slug}${adminQs}`}
           class="text-gray-500 hover:text-orange-500 transition-colors text-sm"
         >
           ← {workbook.title}
@@ -325,7 +342,7 @@ function formatTips(text: string): string {
       <div class="flex justify-between mt-8">
         {prevDay ? (
           <a
-            href={`/my/workbook/custom/${slug}/day/${prevDay}`}
+            href={`/my/workbook/custom/${slug}/day/${prevDay}${adminQs}`}
             class="px-6 py-3 bg-gray-100 text-gray-700 rounded-full font-semibold hover:bg-gray-200 transition-colors"
           >
             ← Day {prevDay}
@@ -333,14 +350,14 @@ function formatTips(text: string): string {
         ) : <div />}
         {nextDay ? (
           <a
-            href={`/my/workbook/custom/${slug}/day/${nextDay}`}
+            href={`/my/workbook/custom/${slug}/day/${nextDay}${adminQs}`}
             class="px-6 py-3 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition-colors"
           >
             Day {nextDay} →
           </a>
         ) : (
           <a
-            href={`/my/workbook/custom/${slug}`}
+            href={`/my/workbook/custom/${slug}${adminQs}`}
             class="px-6 py-3 bg-teal-500 text-white rounded-full font-semibold hover:bg-teal-600 transition-colors"
           >
             {t(lang, 'customWorkbook.backToGrid')}

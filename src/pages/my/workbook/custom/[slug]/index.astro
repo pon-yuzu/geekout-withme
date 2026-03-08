@@ -2,6 +2,8 @@
 import Layout from '../../../../../layouts/Layout.astro';
 import { t } from '../../../../../i18n/index';
 import type { Lang } from '../../../../../i18n/index';
+import { isAdmin } from '../../../../../lib/admin';
+import { createClient } from '@supabase/supabase-js';
 
 const user = Astro.locals.user;
 const lang = Astro.locals.lang as Lang;
@@ -12,11 +14,22 @@ if (!user || !supabase) {
 }
 
 const { slug } = Astro.params;
+const admin = isAdmin(user.email, Astro.locals);
+const targetUserId = admin ? (Astro.url.searchParams.get('user_id') || user.id) : user.id;
 
-const { data: workbook } = await supabase
+// Admin needs service role client to bypass RLS for other users' workbooks
+const runtime = (Astro.locals as any).runtime;
+const queryClient = (admin && targetUserId !== user.id)
+  ? createClient(
+      runtime?.env?.PUBLIC_SUPABASE_URL || import.meta.env.PUBLIC_SUPABASE_URL,
+      runtime?.env?.SUPABASE_SERVICE_ROLE_KEY || import.meta.env.SUPABASE_SERVICE_ROLE_KEY
+    )
+  : supabase;
+
+const { data: workbook } = await queryClient
   .from('custom_workbooks')
   .select('*')
-  .eq('user_id', user.id)
+  .eq('user_id', targetUserId)
   .eq('slug', slug)
   .single();
 
@@ -26,21 +39,23 @@ if (!workbook) {
 
 // For single-page workbooks, redirect directly to content
 if (workbook.total_days === 1) {
-  return Astro.redirect(`/my/workbook/custom/${slug}/day/1`);
+  const qs = admin && targetUserId !== user.id ? `?user_id=${targetUserId}` : '';
+  return Astro.redirect(`/my/workbook/custom/${slug}/day/1${qs}`);
 }
 
 const days = Array.from({ length: workbook.total_days }, (_, i) => i + 1);
 
 // Fetch progress
-const { data: progressData } = await supabase
+const { data: progressData } = await queryClient
   .from('custom_workbook_progress')
   .select('day_number')
   .eq('workbook_id', workbook.id)
-  .eq('user_id', user.id);
+  .eq('user_id', targetUserId);
 
 const completedDays = new Set((progressData ?? []).map((p: any) => p.day_number));
 const completedCount = completedDays.size;
 const pct = Math.round((completedCount / workbook.total_days) * 100);
+const adminQs = admin && targetUserId !== user.id ? `?user_id=${targetUserId}` : '';
 ---
 
 <Layout title={workbook.title} user={user}>
@@ -86,7 +101,7 @@ const pct = Math.round((completedCount / workbook.total_days) * 100);
           const done = completedDays.has(day);
           return (
             <a
-              href={`/my/workbook/custom/${slug}/day/${day}`}
+              href={`/my/workbook/custom/${slug}/day/${day}${adminQs}`}
               class:list={[
                 'aspect-square rounded-xl border-2 flex items-center justify-center font-bold text-lg transition-all hover:shadow-md relative',
                 done

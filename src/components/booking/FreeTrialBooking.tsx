@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useTranslation } from '../../i18n/index';
 import type { AvailableSlot } from '../../lib/booking/types';
 import BookingCalendar from './BookingCalendar';
+import TurnstileWidget from '../TurnstileWidget';
+
+const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
 
 type Step = 'calendar' | 'form' | 'success';
 
@@ -32,6 +35,7 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [showLoginLink, setShowLoginLink] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState('');
 
   const LIFE_WHEEL_CATEGORIES = [
     { value: 'health', label: t('freeTrial.category.health') },
@@ -111,6 +115,7 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
             slot_start: selectedSlot.slot_start,
             slot_end: selectedSlot.slot_end,
             notes: notesStr,
+            turnstileToken,
           }),
         });
       }
@@ -312,6 +317,14 @@ export default function FreeTrialBooking({ focusParam, user }: Props) {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-300 outline-none resize-none"
             />
           </div>
+
+          {!user && TURNSTILE_SITE_KEY && (
+            <TurnstileWidget
+              siteKey={TURNSTILE_SITE_KEY}
+              onVerify={setTurnstileToken}
+              onExpire={() => setTurnstileToken('')}
+            />
+          )}
 
           {error && (
             <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">

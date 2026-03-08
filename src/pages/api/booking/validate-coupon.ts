@@ -1,7 +1,21 @@
 import type { APIRoute } from 'astro';
 import { getServiceClient, validateCoupon } from '../../../lib/booking/db';
+import { checkRateLimit } from '../../../lib/rate-limit';
 
 export const POST: APIRoute = async ({ request, locals }) => {
+  // Rate limiting: 5 requests per minute per IP
+  const clientIp = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || 'unknown';
+  const rl = checkRateLimit(`validate-coupon:${clientIp}`, { maxRequests: 5, windowMs: 60_000 });
+  if (!rl.allowed) {
+    return new Response(JSON.stringify({ error: 'Too many requests. Please try again later.' }), {
+      status: 429,
+      headers: {
+        'Content-Type': 'application/json',
+        'Retry-After': String(Math.ceil(rl.retryAfterMs / 1000)),
+      },
+    });
+  }
+
   let body: any;
   try {
     body = await request.json();

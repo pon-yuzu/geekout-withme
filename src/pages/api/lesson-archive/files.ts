@@ -47,7 +47,8 @@ export const GET: APIRoute = async ({ request, locals }) => {
     .order('created_at', { ascending: false });
 
   if (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    console.error('Lesson files error:', error);
+    return new Response(JSON.stringify({ error: import.meta.env.DEV ? error.message : 'An error occurred' }), { status: 500 });
   }
 
   // Generate signed URLs for each file
@@ -130,7 +131,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     });
 
   if (uploadError) {
-    return new Response(JSON.stringify({ error: 'Upload failed: ' + uploadError.message }), { status: 500 });
+    console.error('Upload error:', uploadError);
+    return new Response(JSON.stringify({ error: import.meta.env.DEV ? 'Upload failed: ' + uploadError.message : 'Upload failed' }), { status: 500 });
   }
 
   // Insert metadata
@@ -152,7 +154,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
   if (dbError) {
     // Clean up uploaded file on DB error
     await serviceClient.storage.from('lesson-archive').remove([storagePath]);
-    return new Response(JSON.stringify({ error: dbError.message }), { status: 500 });
+    console.error('Lesson file DB error:', dbError);
+    return new Response(JSON.stringify({ error: import.meta.env.DEV ? dbError.message : 'An error occurred' }), { status: 500 });
   }
 
   return new Response(JSON.stringify(record), {

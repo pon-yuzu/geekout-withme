@@ -31,13 +31,12 @@ export const onRequest = defineMiddleware(async ({ request, locals, redirect }, 
   const responseHeaders = new Headers();
   const supabase = createSupabaseServerClient(request, responseHeaders);
 
-  // Use getSession() for fast JWT-based validation (no DB round-trip).
-  // getSession() decodes the JWT locally, which is sufficient for
-  // routing and UI display. API endpoints that mutate data already
-  // go through Supabase RLS which re-validates the token server-side.
-  const { data: { session } } = await supabase.auth.getSession();
+  // Use getUser() for server-side JWT re-validation via Supabase Auth.
+  // Unlike getSession(), this makes a round-trip to verify the token
+  // has not been tampered with or revoked.
+  const { data: { user } } = await supabase.auth.getUser();
 
-  locals.user = session?.user ?? null;
+  locals.user = user ?? null;
   locals.supabase = supabase;
 
   // If logged-in user has no lang cookie, restore from user_metadata

@@ -51,13 +51,18 @@ function formatWeekRange(monday: Date, lang: string): string {
 
 export default function BookingCalendar({ mode, duration = 60, bookingType = 'public', onGuestBook }: Props) {
   const { t, lang } = useTranslation();
-  const [weekStart, setWeekStart] = useState(() => getMonday(new Date()));
+  const [weekStart, setWeekStart] = useState<Date | null>(null);
+
+  useEffect(() => {
+    setWeekStart(getMonday(new Date()));
+  }, []);
   const [slots, setSlots] = useState<AvailableSlot[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedSlot, setSelectedSlot] = useState<AvailableSlot | null>(null);
   const [bookingSuccess, setBookingSuccess] = useState(false);
 
   const fetchSlots = useCallback(async () => {
+    if (!weekStart) return;
     setLoading(true);
     try {
       const weekStr = `${weekStart.getFullYear()}-${String(weekStart.getMonth() + 1).padStart(2, '0')}-${String(weekStart.getDate()).padStart(2, '0')}`;
@@ -78,6 +83,7 @@ export default function BookingCalendar({ mode, duration = 60, bookingType = 'pu
   }, [fetchSlots]);
 
   const handlePrevWeek = () => {
+    if (!weekStart) return;
     const prev = new Date(weekStart);
     prev.setDate(prev.getDate() - 7);
     const today = getMonday(new Date());
@@ -85,6 +91,7 @@ export default function BookingCalendar({ mode, duration = 60, bookingType = 'pu
   };
 
   const handleNextWeek = () => {
+    if (!weekStart) return;
     const next = new Date(weekStart);
     next.setDate(next.getDate() + 7);
     const maxWeek = new Date();
@@ -109,6 +116,14 @@ export default function BookingCalendar({ mode, duration = 60, bookingType = 'pu
     fetchSlots();
     setTimeout(() => setBookingSuccess(false), 5000);
   };
+
+  if (!weekStart) {
+    return (
+      <div className="flex justify-center py-12">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500" />
+      </div>
+    );
+  }
 
   // Group slots by local date
   const slotsByDate = slots.reduce<Record<string, AvailableSlot[]>>((acc, slot) => {

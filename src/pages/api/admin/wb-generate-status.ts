@@ -127,7 +127,7 @@ export const GET: APIRoute = async ({ url, locals }) => {
       status: 'generating',
       days_completed: config.days_completed,
       total_days: config.total_days,
-      error: `Day ${nextDay} failed: ${err.message}`,
+      error: import.meta.env.DEV ? `Day ${nextDay} failed: ${err.message}` : `Day ${nextDay} failed`,
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },

@@ -50,8 +50,8 @@ You MUST return a single JSON object with exactly these 11 sections. No markdown
     "correct": 1
   },
   "tips": {
-    "title": "Practical tip title (e.g., 'How to order at a café')",
-    "content": "3-4 paragraphs of practical advice, separated by \\n\\n"
+    "title": "日本語のタイトル (e.g., 'カフェでの注文のコツ')",
+    "content": "日本語で3-4段落の実用的なアドバイス。文化背景や実践的なヒントを含める。段落は \\n\\n で区切る"
   },
   "conversation": {
     "scene": "Scene description (e.g., 'At a cooking class in Melbourne')",
@@ -70,9 +70,16 @@ You MUST return a single JSON object with exactly these 11 sections. No markdown
     "options": ["Option A", "Option B", "Option C"],
     "correct": 2
   },
-  "try_it_hint": "A fun, encouraging prompt for the learner to practice (1-2 sentences)"
+  "try_it_hint": "日本語で、今日の内容を活かした楽しい練習のヒント（1-2文）"
 }
 \`\`\`
+
+## LANGUAGE RULES FOR ENGLISH LEARNER WORKBOOKS
+- tips: 必ず日本語で書く（学習者の母語で実用アドバイス）
+- try_it_hint: 必ず日本語で書く（学習者への指示）
+- quiz questions: 日本語で書く
+- main, review, conversation: 英語で書く（学習対象言語）
+- vocab meaning: 日本語で書く
 
 ## LEVEL GUIDELINES
 

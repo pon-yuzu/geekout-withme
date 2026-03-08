@@ -46,7 +46,8 @@ export const POST: APIRoute = async ({ locals }) => {
   const { error } = await adminClient.auth.admin.deleteUser(user.id);
 
   if (error) {
-    return new Response(JSON.stringify({ error: error.message }), { status: 500 });
+    console.error('Delete account error:', error);
+    return new Response(JSON.stringify({ error: import.meta.env.DEV ? error.message : 'An error occurred' }), { status: 500 });
   }
 
   return new Response(JSON.stringify({ success: true }), {

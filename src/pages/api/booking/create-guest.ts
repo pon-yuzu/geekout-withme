@@ -9,6 +9,7 @@ import {
 import { createZoomMeeting } from '../../../lib/zoom';
 import { createCalendarEvent } from '../../../lib/google-calendar';
 import { sendBookingConfirmation } from '../../../lib/email';
+import { verifyTurnstile } from '../../../lib/turnstile';
 
 const DEFAULT_PRICE_YEN = 10000;
 
@@ -20,7 +21,16 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400 });
   }
 
-  const { guest_name, guest_email, slot_start, slot_end, coupon_code, notes } = body;
+  const { guest_name, guest_email, slot_start, slot_end, coupon_code, notes, turnstileToken } = body;
+
+  // Turnstile verification
+  const runtime = (locals as any).runtime;
+  const turnstileSecret = runtime?.env?.TURNSTILE_SECRET_KEY || import.meta.env.TURNSTILE_SECRET_KEY;
+  const clientIp = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || undefined;
+  const turnstileResult = await verifyTurnstile(turnstileToken, clientIp, turnstileSecret);
+  if (!turnstileResult.success) {
+    return new Response(JSON.stringify({ error: turnstileResult.error || 'CAPTCHA verification failed' }), { status: 400 });
+  }
 
   if (!guest_name?.trim() || !guest_email?.trim() || !slot_start || !slot_end) {
     return new Response(JSON.stringify({ error: 'Missing required fields' }), { status: 400 });
@@ -108,7 +118,6 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   // --- Price > 0: Stripe Checkout only (booking created in webhook) ---
-  const runtime = (locals as any).runtime;
   const stripeSecretKey = runtime?.env?.STRIPE_SECRET_KEY || import.meta.env.STRIPE_SECRET_KEY;
   if (!stripeSecretKey) {
     return new Response(JSON.stringify({ error: 'Stripe not configured' }), { status: 500 });

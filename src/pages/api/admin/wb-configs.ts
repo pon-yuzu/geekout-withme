@@ -15,7 +15,8 @@ function forbidden() {
 }
 
 function serverError(msg: string) {
-  return new Response(JSON.stringify({ error: msg }), { status: 500 });
+  console.error('WB configs error:', msg);
+  return new Response(JSON.stringify({ error: import.meta.env.DEV ? msg : 'An error occurred' }), { status: 500 });
 }
 
 function json(data: unknown, status = 200) {

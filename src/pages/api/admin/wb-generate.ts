@@ -116,6 +116,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       .update({ status: 'draft', updated_at: new Date().toISOString() })
       .eq('id', config_id);
 
-    return new Response(JSON.stringify({ error: `Generation failed: ${err.message}` }), { status: 500 });
+    console.error('WB generation error:', err);
+    return new Response(JSON.stringify({ error: import.meta.env.DEV ? `Generation failed: ${err.message}` : 'Generation failed' }), { status: 500 });
   }
 };

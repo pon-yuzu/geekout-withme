@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from '../../i18n/index';
 import type { AvailableSlot, BookingType, CouponValidationResult } from '../../lib/booking/types';
+import TurnstileWidget from '../TurnstileWidget';
+
+const TURNSTILE_SITE_KEY = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '';
 
 interface Props {
   slot: AvailableSlot;
@@ -47,6 +50,7 @@ export default function BookingForm({ slot, mode, bookingType = 'public', onConf
   const [appliedCoupon, setAppliedCoupon] = useState<CouponValidationResult | null>(null);
   const [autoCoupon, setAutoCoupon] = useState<AutoCoupon | null>(null);
   const [couponError, setCouponError] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState('');
 
   const isPublic = bookingType === 'public';
   const isPersonal = bookingType === 'personal';
@@ -135,6 +139,7 @@ export default function BookingForm({ slot, mode, bookingType = 'public', onConf
             slot_end: slot.slot_end,
             coupon_code: appliedCoupon ? couponCode.trim() : undefined,
             notes: notes || undefined,
+            turnstileToken,
           }),
         });
       } else {
@@ -342,6 +347,14 @@ export default function BookingForm({ slot, mode, bookingType = 'public', onConf
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-orange-300 focus:border-orange-300 outline-none resize-none"
             />
           </div>
+
+          {mode === 'guest' && TURNSTILE_SITE_KEY && (
+            <TurnstileWidget
+              siteKey={TURNSTILE_SITE_KEY}
+              onVerify={setTurnstileToken}
+              onExpire={() => setTurnstileToken('')}
+            />
+          )}
 
           {error && (
             <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">

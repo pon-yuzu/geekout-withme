@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { Resend } from 'resend';
+import { verifyTurnstile } from '../../lib/turnstile';
 
 export const POST: APIRoute = async ({ request, locals }) => {
   const runtime = (locals as any).runtime;
@@ -16,7 +17,15 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400 });
   }
 
-  const { name, email, category, message } = body;
+  const { name, email, category, message, turnstileToken } = body;
+
+  // Turnstile verification
+  const turnstileSecret = runtime?.env?.TURNSTILE_SECRET_KEY || import.meta.env.TURNSTILE_SECRET_KEY;
+  const clientIp = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || undefined;
+  const turnstileResult = await verifyTurnstile(turnstileToken, clientIp, turnstileSecret);
+  if (!turnstileResult.success) {
+    return new Response(JSON.stringify({ error: turnstileResult.error || 'CAPTCHA verification failed' }), { status: 400 });
+  }
 
   if (!name || !email || !category || !message) {
     return new Response(JSON.stringify({ error: 'Missing required fields' }), { status: 400 });

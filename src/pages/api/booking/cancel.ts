@@ -73,7 +73,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return new Response(JSON.stringify({ success: true }), {
       headers: { 'Content-Type': 'application/json' },
     });
-  } catch (err: any) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+  } catch (err) {
+    console.error('Booking cancel error:', err);
+    return new Response(JSON.stringify({ error: import.meta.env.DEV ? (err as Error).message : 'An error occurred' }), { status: 500 });
   }
 };
