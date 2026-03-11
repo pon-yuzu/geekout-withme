@@ -73,7 +73,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const itemsPrompt = buildTopicItemsPrompt(config);
   let items: TopicItem[];
   try {
-    const itemsResponse = await claudeGenerate(apiKey, itemsPrompt);
+    const accountId = locals.runtime?.env?.CF_ACCOUNT_ID || import.meta.env.CF_ACCOUNT_ID;
+    const itemsResponse = await claudeGenerate(apiKey, itemsPrompt, { accountId });
     items = extractJSON<TopicItem[]>(itemsResponse);
   } catch (err) {
     console.error('Failed to generate topic items:', err);

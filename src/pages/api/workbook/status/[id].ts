@@ -82,7 +82,8 @@ export const GET: APIRoute = async ({ params, locals }) => {
     };
 
     const prompt = buildContentPrompt(config, item);
-    const response = await claudeGenerate(apiKey, prompt, { maxTokens: 4096 });
+    const accountId = locals.runtime?.env?.CF_ACCOUNT_ID || import.meta.env.CF_ACCOUNT_ID;
+    const response = await claudeGenerate(apiKey, prompt, { maxTokens: 4096, accountId });
 
     const content = extractJSON<DayContent>(response);
     content.meta = item;

@@ -54,9 +54,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const typeLabel = assessmentType === 'listening' ? 'listening' : 'reading/writing';
     const userMessage = `The learner completed the ${typeLabel} assessment at level ${level}. Their answer history: ${JSON.stringify(answers)}. Provide feedback.`;
 
+    const accountId = runtime?.env?.CF_ACCOUNT_ID || import.meta.env.CF_ACCOUNT_ID;
     const result = await analyze({
       ai: runtime?.env?.AI,
       claudeApiKey: useClaudeApi ? claudeApiKey : undefined,
+      accountId,
       systemPrompt,
       userMessage,
     });

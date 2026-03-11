@@ -30,13 +30,14 @@ export async function analyzeWithWorkersAI(
 async function callWorkersAiRest(
   token: string,
   messages: AiMessage[],
-  maxTokens?: number
+  maxTokens?: number,
+  accountId?: string
 ): Promise<string> {
-  const accountId = import.meta.env.CF_ACCOUNT_ID;
-  if (!accountId) throw new Error('CF_ACCOUNT_ID is not set');
+  const acctId = accountId || import.meta.env.CF_ACCOUNT_ID;
+  if (!acctId) throw new Error('CF_ACCOUNT_ID is not set');
 
   const response = await fetch(
-    `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/${CF_MODEL}`,
+    `https://api.cloudflare.com/client/v4/accounts/${acctId}/ai/run/${CF_MODEL}`,
     {
       method: 'POST',
       headers: {
@@ -66,29 +67,32 @@ async function callWorkersAiRest(
 export async function analyzeWithClaude(
   systemPrompt: string,
   messages: { role: 'user' | 'assistant'; content: string }[],
-  apiToken: string
+  apiToken: string,
+  accountId?: string
 ): Promise<string> {
   const aiMessages: AiMessage[] = [
     { role: 'system', content: systemPrompt },
     ...messages,
   ];
-  return callWorkersAiRest(apiToken, aiMessages);
+  return callWorkersAiRest(apiToken, aiMessages, undefined, accountId);
 }
 
 // Unified: tries REST API if token set, otherwise Workers AI binding
 export async function analyze(opts: {
   ai?: { run(model: string, inputs: Record<string, unknown>): Promise<{ response: string }> };
   claudeApiKey?: string; // now CF_AI_TOKEN — kept param name for caller compat
+  accountId?: string;
   systemPrompt: string;
   userMessage: string;
 }): Promise<string> {
-  const { ai, claudeApiKey: cfToken, systemPrompt, userMessage } = opts;
+  const { ai, claudeApiKey: cfToken, accountId, systemPrompt, userMessage } = opts;
 
   if (cfToken) {
     return analyzeWithClaude(
       systemPrompt,
       [{ role: 'user', content: userMessage }],
-      cfToken
+      cfToken,
+      accountId
     );
   }
 
@@ -161,27 +165,27 @@ export async function claudeChat(
   systemPrompt: string,
   messages: { role: 'user' | 'assistant'; content: string }[],
   apiToken: string,
-  options?: { maxTokens?: number }
+  options?: { maxTokens?: number; accountId?: string }
 ): Promise<string> {
   const aiMessages: AiMessage[] = [
     { role: 'system', content: systemPrompt },
     ...messages,
   ];
-  return callWorkersAiRest(apiToken, aiMessages, options?.maxTokens ?? 1024);
+  return callWorkersAiRest(apiToken, aiMessages, options?.maxTokens ?? 1024, options?.accountId);
 }
 
 // Content generation via Workers AI REST API
 export async function claudeGenerate(
   apiToken: string,
   prompt: string,
-  options?: { maxTokens?: number; system?: string }
+  options?: { maxTokens?: number; system?: string; accountId?: string }
 ): Promise<string> {
   const aiMessages: AiMessage[] = [];
   if (options?.system) {
     aiMessages.push({ role: 'system', content: options.system });
   }
   aiMessages.push({ role: 'user', content: prompt });
-  return callWorkersAiRest(apiToken, aiMessages, options?.maxTokens ?? 4096);
+  return callWorkersAiRest(apiToken, aiMessages, options?.maxTokens ?? 4096, options?.accountId);
 }
 
 // Extract JSON from markdown code blocks

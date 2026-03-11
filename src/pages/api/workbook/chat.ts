@@ -138,7 +138,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     { role: 'user' as const, content: message },
   ];
 
-  const responseText = await claudeChat(systemPrompt, aiMessages, apiKey, { maxTokens: 1024 });
+  const accountId = locals.runtime?.env?.CF_ACCOUNT_ID || import.meta.env.CF_ACCOUNT_ID;
+  const responseText = await claudeChat(systemPrompt, aiMessages, apiKey, { maxTokens: 1024, accountId });
   const { cleanText, slot } = extractSlotFromResponse(responseText);
 
   const validSlot = slot && validateSlot(currentState, slot, session.slots) ? slot : null;

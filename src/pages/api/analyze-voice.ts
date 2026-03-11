@@ -50,9 +50,11 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   try {
     const systemPrompt = buildVoiceAnalysisPrompt(language, level, uiLang);
+    const accountId = runtime?.env?.CF_ACCOUNT_ID || import.meta.env.CF_ACCOUNT_ID;
     const result = await analyze({
       ai: runtime?.env?.AI,
       claudeApiKey: useClaudeApi ? claudeApiKey : undefined,
+      accountId,
       systemPrompt,
       userMessage: `Spoken response transcript: "${transcript}"`,
     });
