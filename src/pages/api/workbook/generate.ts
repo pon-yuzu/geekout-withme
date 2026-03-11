@@ -21,7 +21,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     return quotaExceededResponse('workbook');
   }
 
-  const apiKey = import.meta.env.CF_AI_TOKEN ?? locals.runtime?.env?.CF_AI_TOKEN;
+  const apiKey = locals.runtime?.env?.CF_AI_TOKEN || import.meta.env.CF_AI_TOKEN;
   if (!apiKey) return new Response('AI not configured', { status: 500 });
 
   // 月1冊制限チェック
