@@ -187,47 +187,141 @@ export default function BookingCalendar({ mode, duration = 60, bookingType = 'pu
           <p>{t('booking.noSlots')}</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
-          {weekDays.map((dateKey) => {
+        (() => {
+          // Build a lookup: dateKey -> timeKey -> slot
+          const slotMap = new Map<string, Map<string, AvailableSlot>>();
+          const allTimeKeys = new Set<string>();
+
+          for (const dateKey of weekDays) {
             const daySlots = slotsByDate[dateKey] || [];
-            const isPast = new Date(dateKey + 'T23:59:59') < new Date();
+            const timeMap = new Map<string, AvailableSlot>();
+            for (const slot of daySlots) {
+              const timeKey = formatTime(slot.slot_start, lang);
+              timeMap.set(timeKey, slot);
+              allTimeKeys.add(timeKey);
+            }
+            slotMap.set(dateKey, timeMap);
+          }
 
-            return (
-              <div key={dateKey} className={`${isPast ? 'opacity-40' : ''}`}>
-                <div className="text-center text-sm font-medium text-gray-600 mb-2 pb-2 border-b border-gray-100">
-                  {formatDate(dateKey + 'T12:00:00', lang)}
-                </div>
-                <div className="space-y-2">
-                  {daySlots.length === 0 ? (
-                    <div className="text-center text-xs text-gray-300 py-4">—</div>
-                  ) : (
-                    daySlots.map((slot) => {
-                      const slotPast = new Date(slot.slot_start) < new Date();
-                      const available = !slot.is_booked && !slotPast;
+          // Sort time rows chronologically using a reference slot's actual timestamp
+          const timeKeysArr = [...allTimeKeys];
+          const timeKeyOrder = new Map<string, number>();
+          for (const slot of slots) {
+            const tk = formatTime(slot.slot_start, lang);
+            if (!timeKeyOrder.has(tk)) {
+              timeKeyOrder.set(tk, new Date(slot.slot_start).getHours() * 60 + new Date(slot.slot_start).getMinutes());
+            }
+          }
+          timeKeysArr.sort((a, b) => (timeKeyOrder.get(a) ?? 0) - (timeKeyOrder.get(b) ?? 0));
 
-                      return (
-                        <button
-                          key={slot.slot_start}
-                          onClick={() => handleSlotClick(slot)}
-                          disabled={!available}
-                          className={`w-full px-2 py-2 rounded-lg text-xs font-medium transition-all ${
-                            available
-                              ? 'bg-orange-50 border-2 border-orange-300 text-orange-700 hover:bg-orange-100 hover:border-orange-400 cursor-pointer'
-                              : slot.is_booked
-                                ? 'bg-gray-100 border border-gray-200 text-gray-400 cursor-not-allowed line-through'
-                                : 'bg-gray-50 border border-gray-200 text-gray-300 cursor-not-allowed'
+          // Filter days that have slots for mobile view
+          const daysWithSlots = weekDays.filter(dk => (slotsByDate[dk] || []).length > 0);
+
+          return (
+            <>
+              {/* ── Desktop: timetable grid (md+) ── */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="w-full border-collapse text-center">
+                  <thead>
+                    <tr>
+                      <th className="py-2 px-2 text-xs text-gray-400 w-20"></th>
+                      {weekDays.map((dateKey) => (
+                        <th
+                          key={dateKey}
+                          className={`py-2 px-2 text-sm font-medium text-gray-600 border-b border-gray-100 ${
+                            new Date(dateKey + 'T23:59:59') < new Date() ? 'opacity-40' : ''
                           }`}
                         >
-                          {formatTime(slot.slot_start, lang)}
-                        </button>
-                      );
-                    })
-                  )}
-                </div>
+                          {formatDate(dateKey + 'T12:00:00', lang)}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {timeKeysArr.map((timeKey) => (
+                      <tr key={timeKey}>
+                        <td className="py-1.5 px-2 text-sm text-gray-400 font-medium whitespace-nowrap">
+                          {timeKey}
+                        </td>
+                        {weekDays.map((dateKey) => {
+                          const slot = slotMap.get(dateKey)?.get(timeKey);
+                          if (!slot) {
+                            return <td key={dateKey} className="py-1.5 px-2" />;
+                          }
+                          const slotPast = new Date(slot.slot_start) < new Date();
+                          const available = !slot.is_booked && !slotPast;
+                          const dayPast = new Date(dateKey + 'T23:59:59') < new Date();
+
+                          return (
+                            <td key={dateKey} className={`py-1.5 px-2 ${dayPast ? 'opacity-40' : ''}`}>
+                              <button
+                                onClick={() => handleSlotClick(slot)}
+                                disabled={!available}
+                                className={`w-full px-2 py-2.5 rounded-lg text-sm font-medium transition-all ${
+                                  available
+                                    ? 'bg-orange-50 border-2 border-orange-300 text-orange-700 hover:bg-orange-100 hover:border-orange-400 cursor-pointer'
+                                    : slot.is_booked
+                                      ? 'bg-gray-100 border border-gray-200 text-gray-400 cursor-not-allowed line-through'
+                                      : 'bg-gray-50 border border-gray-200 text-gray-300 cursor-not-allowed'
+                                }`}
+                              >
+                                {timeKey}
+                              </button>
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
-            );
-          })}
-        </div>
+
+              {/* ── Mobile: day-by-day cards (<md) ── */}
+              <div className="md:hidden space-y-4">
+                {daysWithSlots.length === 0 ? (
+                  <p className="text-center text-gray-400 py-8">{t('booking.noSlots')}</p>
+                ) : (
+                  daysWithSlots.map((dateKey) => {
+                    const daySlots = slotsByDate[dateKey] || [];
+                    const dayPast = new Date(dateKey + 'T23:59:59') < new Date();
+
+                    return (
+                      <div key={dateKey} className={`${dayPast ? 'opacity-40' : ''}`}>
+                        <h3 className="text-sm font-semibold text-gray-700 mb-2 pb-1 border-b border-gray-100">
+                          {formatDate(dateKey + 'T12:00:00', lang)}
+                        </h3>
+                        <div className="grid grid-cols-3 gap-2">
+                          {daySlots.map((slot) => {
+                            const timeKey = formatTime(slot.slot_start, lang);
+                            const slotPast = new Date(slot.slot_start) < new Date();
+                            const available = !slot.is_booked && !slotPast;
+
+                            return (
+                              <button
+                                key={slot.slot_start}
+                                onClick={() => handleSlotClick(slot)}
+                                disabled={!available}
+                                className={`px-2 py-3 rounded-xl text-sm font-medium transition-all ${
+                                  available
+                                    ? 'bg-orange-50 border-2 border-orange-300 text-orange-700 hover:bg-orange-100 active:bg-orange-100'
+                                    : slot.is_booked
+                                      ? 'bg-gray-100 border border-gray-200 text-gray-400 line-through'
+                                      : 'bg-gray-50 border border-gray-200 text-gray-300'
+                                }`}
+                              >
+                                {timeKey}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </>
+          );
+        })()
       )}
 
       {/* Legend */}

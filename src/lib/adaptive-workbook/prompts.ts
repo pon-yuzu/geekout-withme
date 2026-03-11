@@ -27,7 +27,7 @@ You MUST return a single JSON object with exactly these 11 sections. No markdown
   },
   "main_vocab": [
     {"word": "English word/phrase", "meaning": "日本語の意味"},
-    ... (8-12 items, difficulty-appropriate)
+    ... (15-20 items for A1/A2 learners; 8-12 for B1+)
   ],
   "quiz1": {
     "question": "Comprehension question about main content",
@@ -51,7 +51,7 @@ You MUST return a single JSON object with exactly these 11 sections. No markdown
   },
   "tips": {
     "title": "日本語のタイトル (e.g., 'カフェでの注文のコツ')",
-    "content": "日本語で3-4段落の実用的なアドバイス。文化背景や実践的なヒントを含める。段落は \\n\\n で区切る"
+    "content": "すべて日本語で書く。ポイントとなる英単語だけカッコで挟む（例: '注文（order）する時は...'）。3-4段落の実用的なアドバイス。文化背景や実践的なヒントを含める。段落は \\n\\n で区切る"
   },
   "conversation": {
     "scene": "Scene description (e.g., 'At a cooking class in Melbourne')",
@@ -75,7 +75,7 @@ You MUST return a single JSON object with exactly these 11 sections. No markdown
 \`\`\`
 
 ## LANGUAGE RULES FOR ENGLISH LEARNER WORKBOOKS
-- tips: 必ず日本語で書く（学習者の母語で実用アドバイス）
+- tips: すべて日本語で書く。ポイントとなる英単語のみカッコ付きで挟む（例: 「焼く（bake）」「注文（order）」）。英語の文は入れない。
 - try_it_hint: 必ず日本語で書く（学習者への指示）
 - quiz questions: 日本語で書く
 - main, review, conversation: 英語で書く（学習対象言語）
@@ -85,6 +85,9 @@ You MUST return a single JSON object with exactly these 11 sections. No markdown
 
 ### Vocabulary & Grammar by CEFR Level:
 - **A1**: ~600 words. Simple present/past. Short sentences only. Basic daily vocabulary.
+  - For A1 learners: vocab lists MUST include fundamental 600-word-level words and phrases (e.g., cook, cut, hot, cold, table, plate, please, thank you, I like, I want, How much, etc.). Prioritize high-frequency words the learner will encounter daily. Include basic phrasal verbs and set phrases (e.g., "turn on", "look at", "a lot of").
+  - main_vocab: 15-20 items covering both the day's theme vocabulary AND essential basic words.
+  - review_vocab / conversation_vocab: 8-10 items each, reinforcing basics from earlier days plus new words.
 - **A2**: ~1200 words. Add comparatives, infinitives, simple conjunctions. 2-clause sentences OK.
 - **B1**: ~2100 words. Add passive voice, relative clauses, conditionals. Can explain opinions.
 - **B2**: ~4000 words. All grammar. Idioms OK. Natural, varied sentence structures.
@@ -268,7 +271,7 @@ ${config.tech.difficulty === 'hard' ? '- Push toward the upper boundary of the C
 /**
  * User Layer: day-specific instructions (changes each day).
  */
-export function buildUserPrompt(dayNumber: number, totalDays: number, config: StudentConfig): string {
+export function buildUserPrompt(dayNumber: number, totalDays: number, config: StudentConfig, adjustmentNotes?: string): string {
   // Determine which monthly theme applies
   const weekIndex = Math.floor((dayNumber - 1) / 10);
   const theme = config.monthly_themes[Math.min(weekIndex, config.monthly_themes.length - 1)];
@@ -301,5 +304,5 @@ Available scenes: ${config.scenario.scenes.join(', ')}
 - Stay within ${config.level.cefr}${config.level.jlpt ? ` / JLPT ${config.level.jlpt}` : ''} level vocabulary and grammar
 ${config.target_language === 'japanese' ? '- Include furigana for kanji appropriate to the student\'s level\n- Main content, review, and conversation should be written in Japanese' : ''}
 - Navigator "${config.navigator.name}" speaks in intro and try_it_hint
-- Return ONLY the JSON object, no other text`;
+${adjustmentNotes ? `\n## ADDITIONAL INSTRUCTIONS FROM COACH\n${adjustmentNotes}\n` : ''}- Return ONLY the JSON object, no other text`;
 }

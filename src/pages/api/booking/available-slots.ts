@@ -7,7 +7,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
   const week = url.searchParams.get('week');
   const weeks = Math.min(4, parseInt(url.searchParams.get('weeks') || '2'));
   const duration = Math.min(120, Math.max(30, parseInt(url.searchParams.get('duration') || '60')));
-  const buffer = parseInt(url.searchParams.get('buffer') || '10');
+  const buffer = parseInt(url.searchParams.get('buffer') || '0');
 
   if (!week || !/^\d{4}-\d{2}-\d{2}$/.test(week)) {
     return new Response(JSON.stringify({ error: 'Invalid week parameter' }), { status: 400 });

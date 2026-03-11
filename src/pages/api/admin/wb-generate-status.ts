@@ -74,9 +74,10 @@ export const GET: APIRoute = async ({ url, locals }) => {
 
   const nextDay = config.days_completed + 1;
   const studentConfig = config.config_json as StudentConfig;
+  const adjustmentNotes = config.adjustment_notes || undefined;
   const systemPrompt = buildSystemPrompt(studentConfig.target_language || 'english');
   const contextPrompt = buildContextPrompt(studentConfig);
-  const userPrompt = buildUserPrompt(nextDay, config.total_days, studentConfig);
+  const userPrompt = buildUserPrompt(nextDay, config.total_days, studentConfig, adjustmentNotes);
 
   try {
     const response = await generateDay({

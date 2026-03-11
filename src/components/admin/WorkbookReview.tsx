@@ -6,26 +6,31 @@ interface Props {
   onBack: () => void;
 }
 
-export default function WorkbookReview({ config, onBack }: Props) {
+export default function WorkbookReview({ config: initialConfig, onBack }: Props) {
   const [days, setDays] = useState<AdaptiveWorkbookDay[]>([]);
   const [selectedDay, setSelectedDay] = useState<AdaptiveWorkbookDay | null>(null);
-  const [generating, setGenerating] = useState(config.status === 'generating');
-  const [progress, setProgress] = useState({ completed: config.days_completed, total: config.total_days });
+  const [generating, setGenerating] = useState(initialConfig.status === 'generating');
+  const [preview, setPreview] = useState(initialConfig.status === 'preview');
+  const [progress, setProgress] = useState({ completed: initialConfig.days_completed, total: initialConfig.total_days });
   const [deploying, setDeploying] = useState(false);
   const [deploySlug, setDeploySlug] = useState('');
   const [deployTitle, setDeployTitle] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [regeneratingDayId, setRegeneratingDayId] = useState<string | null>(null);
+  const [adjustmentNotes, setAdjustmentNotes] = useState('');
+  const [retrying, setRetrying] = useState(false);
+  const [continuing, setContinuing] = useState(false);
+  const [regeneratingAll, setRegeneratingAll] = useState(false);
 
   const fetchDays = useCallback(async () => {
-    const res = await fetch(`/api/admin/wb-days?configId=${config.id}`);
+    const res = await fetch(`/api/admin/wb-days?configId=${initialConfig.id}`);
     if (res.ok) {
       const data = await res.json();
       setDays(data.days || []);
     }
-  }, [config.id]);
+  }, [initialConfig.id]);
 
-  const isCronMode = config.generation_mode === 'weekly' || config.generation_mode === 'daily';
+  const isCronMode = initialConfig.generation_mode === 'weekly' || initialConfig.generation_mode === 'daily';
 
   // Poll for generation progress (batch mode only)
   useEffect(() => {
@@ -33,12 +38,16 @@ export default function WorkbookReview({ config, onBack }: Props) {
 
     const poll = async () => {
       try {
-        const res = await fetch(`/api/admin/wb-generate-status?configId=${config.id}`);
+        const res = await fetch(`/api/admin/wb-generate-status?configId=${initialConfig.id}`);
         const data = await res.json();
         setProgress({ completed: data.days_completed, total: data.total_days });
 
         if (data.status === 'review') {
           setGenerating(false);
+          fetchDays();
+        } else if (data.status === 'preview') {
+          setGenerating(false);
+          setPreview(true);
           fetchDays();
         } else {
           fetchDays();
@@ -51,12 +60,20 @@ export default function WorkbookReview({ config, onBack }: Props) {
     const interval = setInterval(poll, 5000);
     poll();
     return () => clearInterval(interval);
-  }, [generating, isCronMode, config.id, fetchDays]);
+  }, [generating, isCronMode, initialConfig.id, fetchDays]);
 
   // Initial fetch (always load existing days)
   useEffect(() => {
     fetchDays();
   }, [fetchDays]);
+
+  // Auto-select Day 1 in preview mode
+  useEffect(() => {
+    if (preview && days.length > 0 && !selectedDay) {
+      const day1 = days.find((d) => d.day_number === 1);
+      if (day1) setSelectedDay(day1);
+    }
+  }, [preview, days, selectedDay]);
 
   const handleReview = async (dayId: string, status: 'approved' | 'rejected', notes?: string) => {
     try {
@@ -81,7 +98,7 @@ export default function WorkbookReview({ config, onBack }: Props) {
       const res = await fetch('/api/admin/wb-review', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ day_id: dayId }),
+        body: JSON.stringify({ day_id: dayId, adjustment_notes: adjustmentNotes || undefined }),
       });
       if (res.ok) {
         const data = await res.json();
@@ -98,11 +115,133 @@ export default function WorkbookReview({ config, onBack }: Props) {
     }
   };
 
+  // Retry Day 1 with adjustment notes (preview mode)
+  const handleRetryDay1 = async () => {
+    setRetrying(true);
+    setError(null);
+    try {
+      // Save adjustment_notes to config
+      if (adjustmentNotes) {
+        await fetch('/api/admin/wb-configs', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: initialConfig.id, adjustment_notes: adjustmentNotes }),
+        });
+      }
+
+      // Re-generate (POST clears days and generates Day 1)
+      const res = await fetch('/api/admin/wb-generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ config_id: initialConfig.id }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.status === 'preview') {
+          setPreview(true);
+          setGenerating(false);
+        } else {
+          setGenerating(true);
+          setPreview(false);
+        }
+        setProgress({ completed: data.days_completed, total: data.total_days });
+        setSelectedDay(null);
+        fetchDays();
+      } else {
+        const data = await res.json();
+        setError(data.error || 'Retry failed');
+      }
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setRetrying(false);
+    }
+  };
+
+  // Continue generating Day 2+ after preview approval
+  const handleContinue = async () => {
+    setContinuing(true);
+    setError(null);
+    try {
+      // Save adjustment_notes to config if set
+      if (adjustmentNotes) {
+        await fetch('/api/admin/wb-configs', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: initialConfig.id, adjustment_notes: adjustmentNotes }),
+        });
+      }
+
+      const res = await fetch('/api/admin/wb-generate', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ config_id: initialConfig.id }),
+      });
+
+      if (res.ok) {
+        setPreview(false);
+        setGenerating(true);
+        setProgress((prev) => ({ ...prev, completed: prev.completed }));
+      } else {
+        const data = await res.json();
+        setError(data.error || 'Continue failed');
+      }
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setContinuing(false);
+    }
+  };
+
   const handleApproveAll = async () => {
     for (const day of days) {
       if (day.review_status !== 'approved') {
         await handleReview(day.id, 'approved');
       }
+    }
+  };
+
+  const handleRegenerateAll = async () => {
+    if (!confirm('全日分を削除して最初から再生成します。よろしいですか？')) return;
+    setRegeneratingAll(true);
+    setError(null);
+    try {
+      // Save adjustment_notes if set
+      if (adjustmentNotes) {
+        await fetch('/api/admin/wb-configs', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: initialConfig.id, adjustment_notes: adjustmentNotes }),
+        });
+      }
+
+      const res = await fetch('/api/admin/wb-generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ config_id: initialConfig.id }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setDays([]);
+        setSelectedDay(null);
+        if (data.status === 'preview') {
+          setPreview(true);
+          setGenerating(false);
+        } else {
+          setGenerating(true);
+          setPreview(false);
+        }
+        setProgress({ completed: data.days_completed, total: data.total_days });
+        fetchDays();
+      } else {
+        const data = await res.json();
+        setError(data.error || 'Regeneration failed');
+      }
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setRegeneratingAll(false);
     }
   };
 
@@ -116,12 +255,12 @@ export default function WorkbookReview({ config, onBack }: Props) {
     setError(null);
 
     try {
-      const navName = config.config_json?.navigator?.name || null;
+      const navName = initialConfig.config_json?.navigator?.name || null;
       const res = await fetch('/api/admin/wb-deploy', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          config_id: config.id,
+          config_id: initialConfig.id,
           slug: deploySlug,
           title: deployTitle,
           navigator_name: navName,
@@ -159,10 +298,10 @@ export default function WorkbookReview({ config, onBack }: Props) {
 
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-xl font-bold text-gray-800">
-          Review: {config.display_name || config.config_json?.student?.display_name || 'Unknown'}
+          Review: {initialConfig.display_name || initialConfig.config_json?.student?.display_name || 'Unknown'}
         </h2>
         <div className="text-sm text-gray-500">
-          {approvedCount}/{days.length} approved
+          {preview ? 'Preview Day 1' : `${approvedCount}/${days.length} approved`}
         </div>
       </div>
 
@@ -173,6 +312,52 @@ export default function WorkbookReview({ config, onBack }: Props) {
         </div>
       )}
 
+      {/* Preview Mode: Day 1 review + adjustment */}
+      {preview && !generating && (
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-5 mb-6">
+          <div className="flex items-center gap-3 mb-3">
+            <span className="text-2xl">👁</span>
+            <div>
+              <h3 className="font-semibold text-blue-800">Day 1 プレビュー</h3>
+              <p className="text-sm text-blue-600">
+                Day 1 の内容を確認してください。OKなら「残りを生成」、調整が必要なら修正メモを入力して「Day 1 再生成」。
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              調整メモ（任意、500文字以内）
+            </label>
+            <textarea
+              value={adjustmentNotes}
+              onChange={(e) => setAdjustmentNotes(e.target.value.slice(0, 500))}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+              rows={3}
+              placeholder="例: 「単語をもっと簡単に」「会話のセリフを短くして」「tipsにもっと具体例を入れて」"
+            />
+            <div className="text-xs text-gray-400 text-right">{adjustmentNotes.length}/500</div>
+          </div>
+
+          <div className="flex items-center gap-3 mt-4">
+            <button
+              onClick={handleContinue}
+              disabled={continuing}
+              className="px-5 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 text-sm font-medium"
+            >
+              {continuing ? '開始中...' : '✓ OKなら残りを生成 (Day 2-30)'}
+            </button>
+            <button
+              onClick={handleRetryDay1}
+              disabled={retrying}
+              className="px-5 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 disabled:opacity-50 text-sm font-medium"
+            >
+              {retrying ? '再生成中...' : '↻ Day 1 再生成'}
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Generation Progress */}
       {generating && (
         <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-5 mb-6">
@@ -180,8 +365,8 @@ export default function WorkbookReview({ config, onBack }: Props) {
             {!isCronMode && <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-orange-500" />}
             <span className="font-medium text-yellow-800">
               {isCronMode
-                ? `${config.generation_mode === 'weekly' ? 'Weekly' : 'Daily'} mode — ${progress.completed}/${progress.total} days generated`
-                : `Generating Day ${progress.completed}/${progress.total}...`}
+                ? `${initialConfig.generation_mode === 'weekly' ? 'Weekly' : 'Daily'} mode — ${progress.completed}/${progress.total} days generated`
+                : `Generating Day ${progress.completed + 1}/${progress.total}...`}
             </span>
           </div>
           <div className="bg-yellow-100 rounded-full h-3">
@@ -192,7 +377,7 @@ export default function WorkbookReview({ config, onBack }: Props) {
           </div>
           {isCronMode && (
             <p className="text-xs text-yellow-700 mt-2">
-              {config.generation_mode === 'weekly'
+              {initialConfig.generation_mode === 'weekly'
                 ? 'Cron generates 7 days per run. Refresh to see latest progress.'
                 : 'Cron generates 1 day per run. Refresh to see latest progress.'}
             </p>
@@ -230,14 +415,38 @@ export default function WorkbookReview({ config, onBack }: Props) {
         })}
       </div>
 
+      {/* Adjustment notes input (also visible in review mode) */}
+      {!generating && !preview && days.length > 0 && (
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            調整メモ（再生成時に適用）
+          </label>
+          <textarea
+            value={adjustmentNotes}
+            onChange={(e) => setAdjustmentNotes(e.target.value.slice(0, 500))}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            rows={2}
+            placeholder="例: 「単語をもっと簡単に」「会話のセリフを短くして」"
+          />
+          <div className="text-xs text-gray-400 text-right">{adjustmentNotes.length}/500</div>
+        </div>
+      )}
+
       {/* Bulk actions */}
-      {!generating && days.length > 0 && (
+      {!generating && !preview && days.length > 0 && (
         <div className="flex items-center gap-3 mb-6">
           <button
             onClick={handleApproveAll}
             className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 text-sm font-medium"
           >
             Approve All
+          </button>
+          <button
+            onClick={handleRegenerateAll}
+            disabled={regeneratingAll}
+            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 disabled:opacity-50 text-sm font-medium"
+          >
+            {regeneratingAll ? 'Resetting...' : 'Regenerate All (全日再生成)'}
           </button>
         </div>
       )}
@@ -250,11 +459,12 @@ export default function WorkbookReview({ config, onBack }: Props) {
           onReject={() => handleReview(selectedDay.id, 'rejected')}
           onRegenerate={() => handleRegenerate(selectedDay.id)}
           regenerating={regeneratingDayId === selectedDay.id}
+          isPreviewMode={preview}
         />
       )}
 
       {/* Deploy Section */}
-      {!generating && allApproved && (
+      {!generating && !preview && allApproved && (
         <div className="bg-green-50 border border-green-200 rounded-xl p-5 mt-6">
           <h3 className="font-semibold text-green-800 mb-3">Ready to Deploy</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -291,13 +501,14 @@ export default function WorkbookReview({ config, onBack }: Props) {
 }
 
 function DayPreview({
-  day, onApprove, onReject, onRegenerate, regenerating,
+  day, onApprove, onReject, onRegenerate, regenerating, isPreviewMode,
 }: {
   day: AdaptiveWorkbookDay;
   onApprove: () => void;
   onReject: () => void;
   onRegenerate: () => void;
   regenerating: boolean;
+  isPreviewMode?: boolean;
 }) {
   const content = day.content_json as AdaptiveDayContent;
   if (!content) return null;
@@ -314,22 +525,24 @@ function DayPreview({
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-bold text-gray-800">Day {day.day_number}: {content.main.title}</h3>
         <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusBadge}`}>
-          {day.review_status}
+          {isPreviewMode ? 'preview' : day.review_status}
         </span>
       </div>
 
-      {/* Actions */}
-      <div className="flex items-center gap-2 mb-6">
-        <button onClick={onApprove} className="px-3 py-1 bg-green-500 text-white rounded-lg text-sm hover:bg-green-600">Approve</button>
-        <button onClick={onReject} className="px-3 py-1 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600">Reject</button>
-        <button
-          onClick={onRegenerate}
-          disabled={regenerating}
-          className="px-3 py-1 bg-gray-800 text-white rounded-lg text-sm hover:bg-gray-700 disabled:opacity-50"
-        >
-          {regenerating ? 'Regenerating...' : 'Regenerate'}
-        </button>
-      </div>
+      {/* Actions (hidden in preview mode — actions are in the preview panel above) */}
+      {!isPreviewMode && (
+        <div className="flex items-center gap-2 mb-6">
+          <button onClick={onApprove} className="px-3 py-1 bg-green-500 text-white rounded-lg text-sm hover:bg-green-600">Approve</button>
+          <button onClick={onReject} className="px-3 py-1 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600">Reject</button>
+          <button
+            onClick={onRegenerate}
+            disabled={regenerating}
+            className="px-3 py-1 bg-gray-800 text-white rounded-lg text-sm hover:bg-gray-700 disabled:opacity-50"
+          >
+            {regenerating ? 'Regenerating...' : 'Regenerate'}
+          </button>
+        </div>
+      )}
 
       {/* Content Sections */}
       <div className="space-y-4 text-sm">

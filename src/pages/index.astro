@@ -31,7 +31,7 @@ const promoActive = isPromoActive();
   <!-- Section 1: Hero — Showcase Slider -->
   <section class="min-h-[80vh] flex items-center justify-center px-4 py-16">
     <div class="max-w-5xl mx-auto text-center">
-      <h1 class="text-5xl md:text-7xl font-bold mb-6">
+      <h1 class="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold mb-6">
         <span class="text-orange-500">
           {t(lang, 'home.hero.title1')}
         </span>
@@ -39,7 +39,7 @@ const promoActive = isPromoActive();
         <span class="text-gray-800">{t(lang, 'home.hero.title2')}</span>
       </h1>
 
-      <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">
+      <p class="text-lg sm:text-xl lg:text-2xl text-gray-600 mb-10 max-w-2xl mx-auto">
         {t(lang, 'home.hero.subtitle')}
       </p>
 
@@ -51,7 +51,7 @@ const promoActive = isPromoActive();
           <!-- Slide 0: Level Check -->
           <a href="/level-check" class="hero-slide absolute inset-0 flex items-stretch opacity-100 transition-all duration-700 ease-in-out" data-slide="0">
             <div class="flex-1 flex flex-col sm:flex-row items-center gap-6 sm:gap-10 bg-gradient-to-br from-orange-500 to-amber-500 text-white rounded-3xl px-8 py-8 sm:py-10 shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
-              <div class="text-7xl sm:text-8xl shrink-0 drop-shadow-md">🎯</div>
+              <div class="text-5xl sm:text-7xl md:text-8xl shrink-0 drop-shadow-md">🎯</div>
               <div class="text-left flex-1 min-w-0">
                 <h2 class="text-2xl sm:text-3xl font-bold mb-2">{t(lang, 'home.learn.levelCheck.title')}</h2>
                 <p class="text-white/85 text-base sm:text-lg mb-4 leading-relaxed">{t(lang, 'home.learn.levelCheck.desc')}</p>
@@ -75,7 +75,7 @@ const promoActive = isPromoActive();
           <!-- Slide 1: AI Workbook -->
           <a href="/workbook" class="hero-slide absolute inset-0 flex items-stretch opacity-0 transition-all duration-700 ease-in-out pointer-events-none" data-slide="1">
             <div class="flex-1 flex flex-col sm:flex-row items-center gap-6 sm:gap-10 bg-gradient-to-br from-teal-500 to-emerald-500 text-white rounded-3xl px-8 py-8 sm:py-10 shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
-              <div class="text-7xl sm:text-8xl shrink-0 drop-shadow-md">📖</div>
+              <div class="text-5xl sm:text-7xl md:text-8xl shrink-0 drop-shadow-md">📖</div>
               <div class="text-left flex-1 min-w-0">
                 <div class="flex items-center gap-2 mb-2">
                   <h2 class="text-2xl sm:text-3xl font-bold">{t(lang, 'home.learn.workbook.title')}</h2>
@@ -102,7 +102,7 @@ const promoActive = isPromoActive();
           <!-- Slide 2: Voice Lounge -->
           <a href="/voice-lounge" class="hero-slide absolute inset-0 flex items-stretch opacity-0 transition-all duration-700 ease-in-out pointer-events-none" data-slide="2">
             <div class="flex-1 flex flex-col sm:flex-row items-center gap-6 sm:gap-10 bg-gradient-to-br from-violet-500 to-purple-600 text-white rounded-3xl px-8 py-8 sm:py-10 shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
-              <div class="text-7xl sm:text-8xl shrink-0 drop-shadow-md">🎤</div>
+              <div class="text-5xl sm:text-7xl md:text-8xl shrink-0 drop-shadow-md">🎤</div>
               <div class="text-left flex-1 min-w-0">
                 <div class="flex items-center gap-2 mb-2">
                   <h2 class="text-2xl sm:text-3xl font-bold">{t(lang, 'home.practice.voiceLounge.title')}</h2>
@@ -117,7 +117,7 @@ const promoActive = isPromoActive();
           <!-- Slide 3: Community -->
           <a href="/community" class="hero-slide absolute inset-0 flex items-stretch opacity-0 transition-all duration-700 ease-in-out pointer-events-none" data-slide="3">
             <div class="flex-1 flex flex-col sm:flex-row items-center gap-6 sm:gap-10 bg-gradient-to-br from-sky-500 to-blue-600 text-white rounded-3xl px-8 py-8 sm:py-10 shadow-lg hover:shadow-xl transition-shadow cursor-pointer">
-              <div class="text-7xl sm:text-8xl shrink-0 drop-shadow-md">🌏</div>
+              <div class="text-5xl sm:text-7xl md:text-8xl shrink-0 drop-shadow-md">🌏</div>
               <div class="text-left flex-1 min-w-0">
                 <h2 class="text-2xl sm:text-3xl font-bold mb-2">{t(lang, 'home.practice.community.title')}</h2>
                 <p class="text-white/85 text-base sm:text-lg mb-4 leading-relaxed">{t(lang, 'home.practice.community.desc')}</p>
@@ -193,13 +193,13 @@ const promoActive = isPromoActive();
     <div class="absolute -top-10 -left-10 w-48 h-48 bg-teal-200 rounded-full opacity-20 pointer-events-none"></div>
     <div class="absolute -bottom-10 -right-10 w-64 h-64 bg-teal-100 rounded-full opacity-25 pointer-events-none"></div>
     <div class="max-w-6xl mx-auto relative z-10">
-      <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">
+      <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-8 md:mb-12 text-gray-800">
         <span class="border-b-4 border-teal-400 pb-2">{t(lang, 'home.learn.title')}</span>
       </h2>
 
-      <div class="grid md:grid-cols-2 gap-8">
+      <div class="grid md:grid-cols-2 gap-4 md:gap-8 lg:gap-10">
         <!-- Level Check -->
-        <a href="/level-check" class="block bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-teal-300 transition-all cursor-pointer">
+        <a href="/level-check" class="block bg-white border border-gray-200 rounded-2xl p-5 md:p-8 shadow-sm hover:shadow-md hover:border-teal-300 transition-all cursor-pointer">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-14 h-14 bg-teal-50 border border-teal-200 rounded-full flex items-center justify-center text-2xl">🎯</div>
             <div>
@@ -222,7 +222,7 @@ const promoActive = isPromoActive();
         </a>
 
         <!-- AI Workbook -->
-        <a href="/workbook" class="block bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-teal-300 transition-all cursor-pointer">
+        <a href="/workbook" class="block bg-white border border-gray-200 rounded-2xl p-5 md:p-8 shadow-sm hover:shadow-md hover:border-teal-300 transition-all cursor-pointer">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-14 h-14 bg-teal-50 border border-teal-200 rounded-full flex items-center justify-center text-2xl">📖</div>
             <div>
@@ -255,13 +255,13 @@ const promoActive = isPromoActive();
   <!-- Section 3: Practice — Community & Voice -->
   <section class="py-20 px-4 bg-white">
     <div class="max-w-6xl mx-auto">
-      <h2 class="text-3xl font-bold text-center mb-12 text-gray-800">
+      <h2 class="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-8 md:mb-12 text-gray-800">
         <span class="border-b-4 border-teal-400 pb-2">{t(lang, 'home.practice.title')}</span>
       </h2>
 
-      <div class="grid md:grid-cols-2 gap-8">
+      <div class="grid md:grid-cols-2 gap-4 md:gap-8 lg:gap-10">
         <!-- Community -->
-        <a href="/community" class="block bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-teal-300 transition-all cursor-pointer">
+        <a href="/community" class="block bg-white border border-gray-200 rounded-2xl p-5 md:p-8 shadow-sm hover:shadow-md hover:border-teal-300 transition-all cursor-pointer">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-14 h-14 bg-teal-50 border border-teal-200 rounded-full flex items-center justify-center text-2xl">🌏</div>
             <div>
@@ -275,7 +275,7 @@ const promoActive = isPromoActive();
         </a>
 
         <!-- Voice Lounge -->
-        <a href="/voice-lounge" class="block bg-white border border-gray-200 rounded-2xl p-8 shadow-sm hover:shadow-md hover:border-teal-300 transition-all cursor-pointer">
+        <a href="/voice-lounge" class="block bg-white border border-gray-200 rounded-2xl p-5 md:p-8 shadow-sm hover:shadow-md hover:border-teal-300 transition-all cursor-pointer">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-14 h-14 bg-teal-50 border border-teal-200 rounded-full flex items-center justify-center text-2xl">🎤</div>
             <div>

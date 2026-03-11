@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { isVoiceLoungeAllowed } from '../../../../lib/features';
+import { getUserTier } from '../../../../lib/tier';
 
 export const GET: APIRoute = async ({ params, request, locals }) => {
   if (!isVoiceLoungeAllowed(locals.user?.id, locals)) {
@@ -12,14 +13,8 @@ export const GET: APIRoute = async ({ params, request, locals }) => {
 
   // Check premium status
   const supabase = locals.supabase;
-  const { data: subs } = await supabase
-    .from('subscriptions')
-    .select('status')
-    .eq('user_id', user.id)
-    .in('status', ['active', 'trialing'])
-    .limit(1);
-
-  if (!subs?.length) {
+  const tier = await getUserTier(supabase, user.id);
+  if (tier === 'free') {
     return new Response(JSON.stringify({ error: 'Premium subscription required' }), { status: 403 });
   }
 

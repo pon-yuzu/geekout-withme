@@ -14,7 +14,7 @@ export async function getAvailableSlots(
   weekStart: string,
   weeks = 2,
   durationMin = 60,
-  bufferMin = 10
+  bufferMin = 0
 ): Promise<AvailableSlot[]> {
   const { data, error } = await serviceSupabase
     .rpc('get_available_slots', {

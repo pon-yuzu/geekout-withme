@@ -32,6 +32,9 @@ export default function UsageBar() {
     const cookieLang = document.cookie.match(/lang=(en|ja)/)?.[1];
     if (cookieLang) setLang(cookieLang as 'en' | 'ja');
 
+    const hasSession = document.cookie.match(/sb-.*-auth-token/);
+    if (!hasSession) return;
+
     fetch('/api/usage')
       .then((r) => r.ok ? r.json() : null)
       .then((d) => d && setData(d))

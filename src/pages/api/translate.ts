@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { tryIncrementUsage, quotaExceededResponse } from '../../lib/quota';
 import { isVoiceLoungeAllowed } from '../../lib/features';
+import { getUserTier } from '../../lib/tier';
 
 const MAX_TEXT_LENGTH = 500;
 const JA_REGEX = /[\u3040-\u309F\u30A0-\u30FF\u4E00-\u9FFF]/;
@@ -16,14 +17,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   // Premium check
   const supabase = locals.supabase!;
-  const { data: sub } = await supabase
-    .from('subscriptions')
-    .select('status')
-    .eq('user_id', user.id)
-    .in('status', ['active', 'trialing'])
-    .maybeSingle();
-
-  if (!sub) {
+  const tier = await getUserTier(supabase, user.id);
+  if (tier === 'free') {
     return new Response(JSON.stringify({ error: 'Premium required' }), { status: 403 });
   }
 

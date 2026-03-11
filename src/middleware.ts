@@ -31,12 +31,15 @@ export const onRequest = defineMiddleware(async ({ request, locals, redirect }, 
   const responseHeaders = new Headers();
   const supabase = createSupabaseServerClient(request, responseHeaders);
 
-  // Use getUser() for server-side JWT re-validation via Supabase Auth.
-  // Unlike getSession(), this makes a round-trip to verify the token
-  // has not been tampered with or revoked.
-  const { data: { user } } = await supabase.auth.getUser();
+  // Use getSession() for fast JWT-based validation (no DB round-trip).
+  // getSession() decodes the JWT locally and auto-refreshes expired tokens,
+  // which is essential for keeping users logged in. API endpoints that
+  // mutate data go through Supabase RLS which re-validates server-side.
+  // Note: getUser() was tried but breaks on CF Workers (no token refresh,
+  // network latency causes timeouts, users appear logged-out).
+  const { data: { session } } = await supabase.auth.getSession();
 
-  locals.user = user ?? null;
+  locals.user = session?.user ?? null;
   locals.supabase = supabase;
 
   // If logged-in user has no lang cookie, restore from user_metadata

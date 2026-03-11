@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#1A1A2E"/>
+  <rect width="32" height="32" rx="6" fill="#FAF3EB"/>
   <text x="16" y="23" text-anchor="middle" font-family="sans-serif" font-weight="900" font-size="18">
-    <tspan fill="#FF6B2B">U</tspan><tspan fill="#2DD4C4">i</tspan>
+    <tspan fill="#FF6B2B">U</tspan><tspan fill="#00B8A9">i</tspan>
   </text>
 </svg>

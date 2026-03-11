@@ -83,18 +83,18 @@ if (user && isOwner) {
       )}
 
       <!-- Day Grid -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6 gap-3">
+      <div class="grid grid-cols-7 gap-1.5 sm:gap-3">
         {days.map(day => (
           <a
             href={`/workbook/${id}/${day.day_number}`}
-            class={`relative flex flex-col items-center p-4 bg-white border rounded-xl hover:shadow-md transition-all text-center group ${completedDays.includes(day.day_number) ? 'border-teal-300 hover:border-teal-400' : 'border-gray-200 hover:border-orange-300'}`}
+            class={`relative flex flex-col items-center p-1.5 sm:p-3 md:p-4 bg-white border rounded-lg sm:rounded-xl hover:shadow-md transition-all text-center group ${completedDays.includes(day.day_number) ? 'border-teal-300 hover:border-teal-400' : 'border-gray-200 hover:border-orange-300'}`}
           >
             {completedDays.includes(day.day_number) && (
-              <div class="absolute top-1 right-1 w-5 h-5 bg-teal-400 text-white rounded-full flex items-center justify-center text-xs font-bold">{'\u2713'}</div>
+              <div class="absolute -top-1 -right-1 sm:top-1 sm:right-1 w-4 h-4 sm:w-5 sm:h-5 bg-teal-400 text-white rounded-full flex items-center justify-center text-[8px] sm:text-xs font-bold">{'\u2713'}</div>
             )}
-            <span class="text-2xl mb-2">{day.item_emoji || '\uD83D\uDCD6'}</span>
-            <span class="text-xs font-bold text-orange-500 group-hover:text-orange-600">{t(lang, 'workbook.day.dayLabel') === 'Day' ? `Day ${day.day_number}` : `${day.day_number}${t(lang, 'workbook.day.dayLabel')}`}</span>
-            <span class="text-xs text-gray-500 mt-1 line-clamp-2">{day.item_en}</span>
+            <span class="text-base sm:text-2xl mb-0.5 sm:mb-2">{day.item_emoji || '\uD83D\uDCD6'}</span>
+            <span class="text-[10px] sm:text-xs font-bold text-orange-500 group-hover:text-orange-600">{t(lang, 'workbook.day.dayLabel') === 'Day' ? `Day ${day.day_number}` : `${day.day_number}${t(lang, 'workbook.day.dayLabel')}`}</span>
+            <span class="hidden sm:block text-xs text-gray-500 mt-1 line-clamp-2">{day.item_en}</span>
           </a>
         ))}
       </div>

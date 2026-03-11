@@ -1,0 +1,1695 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<script>(function(){var k="uchiwai_course_access_australia-english-30days";try{if(localStorage.getItem(k)==="true")return;}catch(e){}window.location.replace("https://buy.stripe.com/fZu3cu4MheU6fDxfJMd7q00");})();</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏄 Day 11: Gold Coast</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #e8b4cb 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            color: #5a3e36;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #7a5a50;
+            font-size: 1rem;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .section-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #e8a4b8, #d4919f);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .section-title {
+            display: inline-block;
+            font-size: 1.2rem;
+            color: #5a3e36;
+            font-weight: bold;
+        }
+        
+        .section-header {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f5e6e0;
+        }
+        
+        .reading-box {
+            background: #fdf8f5;
+            border-left: 4px solid #e8a4b8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+        
+        .reading-box h3 {
+            color: #5a3e36;
+            margin-bottom: 12px;
+        }
+        
+        .reading-box p {
+            color: #4a4a4a;
+            margin-bottom: 10px;
+        }
+        
+        .vocab-section {
+            margin-top: 20px;
+            border-top: 2px solid #f5e6e0;
+            padding-top: 16px;
+        }
+        
+        .vocab-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            color: #5a3e36;
+            font-weight: bold;
+        }
+        
+        .vocab-header span {
+            margin-right: 8px;
+        }
+        
+        .vocab-legend {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .vocab-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .legend-word {
+            width: 12px;
+            height: 12px;
+            background: #fdf8f5;
+            border: 1px solid #e8d4cf;
+            border-radius: 3px;
+        }
+        
+        .legend-chunk {
+            width: 12px;
+            height: 12px;
+            background: #f3e8ff;
+            border: 1px solid #d4b8ff;
+            border-radius: 3px;
+        }
+        
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+        
+        .vocab-item {
+            display: flex;
+            align-items: center;
+            background: #fdf8f5;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+        
+        .vocab-item:hover {
+            background: #fff0ed;
+        }
+        
+        .vocab-item.checked {
+            background: #fff3e0;
+            border-color: #ffb74d;
+        }
+        
+        .vocab-item.chunk {
+            background: #f3e8ff;
+            grid-column: span 2;
+        }
+        
+        .vocab-item.chunk:hover {
+            background: #ebe0ff;
+        }
+        
+        .vocab-item.chunk.checked {
+            background: #ffe0f5;
+            border-color: #e040fb;
+        }
+        
+        .vocab-item.chunk .vocab-icon {
+            color: #9c27b0;
+            margin-right: 6px;
+            font-size: 0.8rem;
+        }
+        
+        .vocab-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+        
+        .vocab-item.checked .vocab-checkbox {
+            background: #ff9800;
+            border-color: #ff9800;
+            color: white;
+        }
+        
+        .vocab-item.chunk.checked .vocab-checkbox {
+            background: #9c27b0;
+            border-color: #9c27b0;
+        }
+        
+        .vocab-item.checked .vocab-checkbox::after {
+            content: "✓";
+            font-size: 14px;
+        }
+        
+        .vocab-text {
+            flex: 1;
+        }
+        
+        .vocab-text .english {
+            font-weight: bold;
+            color: #c97a8a;
+        }
+        
+        .vocab-item.chunk .vocab-text .english {
+            color: #7b1fa2;
+        }
+        
+        .vocab-text .japanese {
+            color: #666;
+            font-size: 0.85rem;
+        }
+        
+        .quiz-question {
+            background: #fff9f7;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+        
+        .quiz-question p {
+            font-weight: bold;
+            color: #5a3e36;
+            margin-bottom: 12px;
+        }
+        
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .quiz-option {
+            background: white;
+            border: 2px solid #e8d4cf;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .quiz-option:hover {
+            border-color: #e8a4b8;
+            background: #fdf5f7;
+        }
+        
+        .quiz-option.correct {
+            border-color: #7cb87c;
+            background: #f0f9f0;
+        }
+        
+        .quiz-option.wrong {
+            border-color: #e57373;
+            background: #ffebee;
+        }
+        
+        .review-box {
+            background: #fdf8f5;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+        
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        
+        .review-header .icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+        
+        .review-header .place {
+            font-weight: bold;
+            color: #5a3e36;
+        }
+        
+        .stars {
+            color: #f5a623;
+            margin-bottom: 12px;
+        }
+        
+        .tips-box {
+            background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+        
+        .tips-box h4 {
+            color: #4a7c4a;
+            margin-bottom: 12px;
+        }
+        
+        .conversation-box {
+            background: #f8f4ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+        
+        .conversation-header {
+            background: #e8dff5;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+            color: #5a4a6a;
+        }
+        
+        .dialogue {
+            margin-bottom: 12px;
+        }
+        
+        .dialogue-line {
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+        
+        .speaker-a {
+            background: #e8f4fc;
+            margin-right: 20%;
+        }
+        
+        .speaker-b {
+            background: #f5f5f5;
+            margin-left: 20%;
+        }
+        
+        .speaker-label {
+            font-weight: bold;
+            color: #5a7a9a;
+            font-size: 0.85rem;
+        }
+        
+        .speaker-b .speaker-label {
+            color: #7a7a7a;
+        }
+        
+        .key-sentences-box {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+            border: 2px solid #ffb74d;
+        }
+        
+        .key-sentences-box h4 {
+            color: #e65100;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+        }
+        
+        .key-sentence {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid #ff9800;
+        }
+        
+        .key-sentence .english {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #5a3e36;
+            margin-bottom: 4px;
+        }
+        
+        .key-sentence .japanese {
+            color: #7a7a7a;
+            font-size: 0.9rem;
+        }
+        
+        .key-sentence .source {
+            color: #ff9800;
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+        
+        .word-order-box {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+        
+        .word-order-question {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #e0c080;
+        }
+        
+        .word-order-question:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .word-order-question .prompt {
+            color: #5a3e36;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+        
+        .word-chips-container {
+            min-height: 50px;
+            margin-bottom: 12px;
+        }
+        
+        .word-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .word-chip {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+            user-select: none;
+        }
+        
+        .word-chip:hover {
+            border-color: #ff9800;
+            background: #fff3e0;
+            transform: scale(1.02);
+        }
+        
+        .word-chip.in-answer {
+            opacity: 0.3;
+            cursor: default;
+            transform: none;
+        }
+        
+        .answer-area {
+            min-height: 56px;
+            background: white;
+            border: 2px dashed #ffb74d;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .answer-area .placeholder {
+            color: #bbb;
+            font-style: italic;
+            font-size: 0.95rem;
+        }
+        
+        .answer-chip {
+            background: #ff9800;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            animation: popIn 0.2s ease-out;
+        }
+        
+        .answer-chip:hover {
+            background: #f57c00;
+        }
+        
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .check-btn {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 16px;
+            transition: transform 0.2s;
+            font-weight: bold;
+        }
+        
+        .check-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .result-message {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        
+        .result-message.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        .result-message.wrong {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .try-it-box {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 12px;
+        }
+        
+        .try-it-box textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 2px solid #90caf9;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            margin-top: 12px;
+        }
+        
+        .hint-box {
+            background: #bbdefb;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 0.9rem;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .btn-copy {
+            background: #e8a4b8;
+            color: white;
+        }
+        
+        .btn-audio {
+            background: #7cb87c;
+            color: white;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding: 20px 0;
+        }
+        
+        .nav-btn {
+            background: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #5a3e36;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        
+        .nav-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .home-btn {
+            display: block;
+            text-align: center;
+            background: linear-gradient(135deg, #e8a4b8, #d4919f);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        
+        .vocab-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5e6e0;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 16px;
+            color: #5a3e36;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        
+        .vocab-toggle:hover {
+            background: #eed6cf;
+        }
+        
+        .vocab-toggle .arrow {
+            margin-left: 8px;
+            transition: transform 0.3s;
+        }
+        
+        .vocab-toggle.open .arrow {
+            transform: rotate(180deg);
+        }
+        
+        .vocab-section.collapsed {
+            display: none;
+        }
+
+        .summary-section {
+            background: #f5f0ff;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .summary-section h3 {
+            color: #5a3e36;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+        .summary-desc {
+            color: #7a5a50;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+        }
+        .summary-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #7c3aed, #9333ea);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 24px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+        .summary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124,58,237,0.3);
+        }
+        .summary-output {
+            display: none;
+            background: white;
+            border: 2px solid #e0d4f5;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 0.85rem;
+            color: #5a3e36;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+        }
+        .summary-actions {
+            display: none;
+            gap: 8px;
+            justify-content: center;
+        }
+        .summary-actions.show {
+            display: flex;
+        }
+        .summary-action-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .summary-copy-btn {
+            background: #e8e0f5;
+            color: #7c3aed;
+        }
+        .summary-copy-btn:hover {
+            background: #d4c8eb;
+        }
+        .summary-chatgpt-btn {
+            background: #10a37f;
+            color: white;
+        }
+        .summary-chatgpt-btn:hover {
+            background: #0d8c6d;
+        }
+        .summary-claude-btn {
+            background: #d97706;
+            color: white;
+        }
+        .summary-claude-btn:hover {
+            background: #b45309;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏄 Day 11: Gold Coast</h1>
+            <p class="subtitle">30日間オーストラリア英語 — 11日目</p>
+        </header>
+
+        <!-- Section 1: Reading -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">1</span>
+                <span class="section-title">Reading</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">サーファーの楽園ゴールドコースト</p>
+            
+            <div class="reading-box">
+                <h3>Gold Coast - The Surfer's Paradise</h3>
+                <p>The Gold Coast is about one hour south of Brisbane. It has long sandy beaches perfect for surfing. Surfers Paradise is the most famous beach area. The Gold Coast also has theme parks like Dreamworld and Movie World. Many tourists visit every year. If you want to learn surfing, this is the best place! There are many surf schools for beginners.</p>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn btn-copy" onclick="copyText(this)">📋 コピー</button>
+                <button class="btn btn-audio" onclick="openNaturalReader(this)">🔊 Natural Reader</button>
+            </div>
+            
+            <div class="vocab-toggle" onclick="toggleVocab(this)">
+                📚 単語・フレーズリストを見る <span class="arrow">▼</span>
+            </div>
+            
+            <div class="vocab-section collapsed">
+                <div class="vocab-header">
+                    <span>💡</span> わからなかったものにチェック ✓
+                </div>
+                <div class="vocab-legend">
+                    <div class="vocab-legend-item"><div class="legend-word"></div> 単語</div>
+                    <div class="vocab-legend-item"><div class="legend-chunk"></div> フレーズ</div>
+                </div>
+                <div class="vocab-grid">
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">one hour south of</span><br>
+                            <span class="japanese">〜から南に1時間</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">sandy</span><br>
+                            <span class="japanese">砂の</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">sandy beaches</span><br>
+                            <span class="japanese">砂浜</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">perfect for</span><br>
+                            <span class="japanese">〜に最適</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">surfing</span><br>
+                            <span class="japanese">サーフィン</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">most famous</span><br>
+                            <span class="japanese">最も有名な</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">beach area</span><br>
+                            <span class="japanese">ビーチエリア</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">theme park</span><br>
+                            <span class="japanese">テーマパーク</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">tourist</span><br>
+                            <span class="japanese">観光客</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">every year</span><br>
+                            <span class="japanese">毎年</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">want to learn</span><br>
+                            <span class="japanese">学びたい</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">the best place</span><br>
+                            <span class="japanese">最高の場所</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">surf school</span><br>
+                            <span class="japanese">サーフスクール</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">beginner</span><br>
+                            <span class="japanese">初心者</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Quiz 1 -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">2</span>
+                <span class="section-title">Quiz 1</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">Readingの内容チェック</p>
+            
+            <div class="quiz-question">
+                <p>Q: ゴールドコーストはブリスベンからどのくらいですか？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">30分</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">1時間</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">2時間</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Review -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">3</span>
+                <span class="section-title">Review</span>
+            </div>
+            
+            <div class="review-box">
+                <div class="review-header">
+                    <span class="icon">📍</span>
+                    <span class="place">Surfers Paradise Beach — Gold Coast</span>
+                </div>
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p>I tried surfing for the first time! I joined a surf lesson for beginners. The instructor was so patient and kind. I stood up on the board after three tries! The waves were perfect for learning. After surfing, I had fish and chips by the beach. I'm tired but so happy. I want to come back next weekend!</p>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn btn-copy" onclick="copyText(this)">📋 コピー</button>
+                <button class="btn btn-audio" onclick="openNaturalReader(this)">🔊 Natural Reader</button>
+            </div>
+            
+            <div class="vocab-toggle" onclick="toggleVocab(this)">
+                📚 単語・フレーズリストを見る <span class="arrow">▼</span>
+            </div>
+            
+            <div class="vocab-section collapsed">
+                <div class="vocab-header">
+                    <span>💡</span> わからなかったものにチェック ✓
+                </div>
+                <div class="vocab-legend">
+                    <div class="vocab-legend-item"><div class="legend-word"></div> 単語</div>
+                    <div class="vocab-legend-item"><div class="legend-chunk"></div> フレーズ</div>
+                </div>
+                <div class="vocab-grid">
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">tried</span><br>
+                            <span class="japanese">試した（tryの過去形）</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">for the first time</span><br>
+                            <span class="japanese">初めて</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">joined</span><br>
+                            <span class="japanese">参加した</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">surf lesson</span><br>
+                            <span class="japanese">サーフィンレッスン</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">instructor</span><br>
+                            <span class="japanese">インストラクター</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">patient</span><br>
+                            <span class="japanese">忍耐強い</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">kind</span><br>
+                            <span class="japanese">親切な</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">stood up</span><br>
+                            <span class="japanese">立ち上がった</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">on the board</span><br>
+                            <span class="japanese">ボードの上に</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">after three tries</span><br>
+                            <span class="japanese">3回目で</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">wave</span><br>
+                            <span class="japanese">波</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">perfect for learning</span><br>
+                            <span class="japanese">学ぶのに最適</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">fish and chips</span><br>
+                            <span class="japanese">フィッシュアンドチップス</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">by the beach</span><br>
+                            <span class="japanese">ビーチのそばで</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">tired</span><br>
+                            <span class="japanese">疲れた</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">next weekend</span><br>
+                            <span class="japanese">来週末</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Quiz 2 -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">4</span>
+                <span class="section-title">Quiz 2</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">Reviewの内容チェック</p>
+            
+            <div class="quiz-question">
+                <p>Q: この人はボードの上に何回目で立てましたか？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">1回目</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">3回目</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">5回目</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Australia Tips -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">5</span>
+                <span class="section-title">🦘 Australia Tips</span>
+            </div>
+            
+            <div class="tips-box" style="background: linear-gradient(135deg, #e8f5e9, #f1f8e9); ">
+                <h4>🏄 ゴールドコーストの基本情報</h4>
+                <p>ブリスベンから：電車で約1時間<br>ビーチの長さ：約57km（世界最長級！）<br>水温：年間を通して泳げる温かさ<br>サーフレッスン：約$50-80（2時間）</p>
+            </div>
+            <div class="tips-box" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); margin-top: 12px;">
+                <h4>💡 サーフィン初心者へ</h4>
+                <p>レッスンではボードとウェットスーツが付いてくる！<br>朝イチは波が穏やかで初心者向き。<br>日焼け対策は必須。ラッシュガードがおすすめ。</p>
+            </div>
+        </div>
+
+        <!-- Section 6: Conversation -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">6</span>
+                <span class="section-title">Conversation</span>
+            </div>
+            
+            <div class="conversation-box">
+                <div class="conversation-header">
+                    🎭 サーフィンに誘われる場面
+                </div>
+                
+                <div class="dialogue">
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (You):</span><br>
+                        Do you want to go surfing this Saturday?
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        Sounds fun! But I've never surfed before.
+                    </div>
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (You):</span><br>
+                        No worries! There's a beginner lesson.
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        Really? How much is it?
+                    </div>
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (You):</span><br>
+                        About 70 dollars for two hours.
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        That's not bad. Do they provide boards?
+                    </div>
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (You):</span><br>
+                        Yes! Everything is included.
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        Great! What time should we meet?
+                    </div>
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (You):</span><br>
+                        Let's meet at 8am. The waves are better in the morning.
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        OK! I'm excited!
+                    </div>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn btn-copy" onclick="copyText(this)">📋 コピー</button>
+                <button class="btn btn-audio" onclick="openNaturalReader(this)">🔊 Natural Reader</button>
+            </div>
+            
+            <div class="vocab-toggle" onclick="toggleVocab(this)">
+                📚 単語・フレーズリストを見る <span class="arrow">▼</span>
+            </div>
+            
+            <div class="vocab-section collapsed">
+                <div class="vocab-header">
+                    <span>💡</span> わからなかったものにチェック ✓
+                </div>
+                <div class="vocab-legend">
+                    <div class="vocab-legend-item"><div class="legend-word"></div> 単語</div>
+                    <div class="vocab-legend-item"><div class="legend-chunk"></div> フレーズ</div>
+                </div>
+                <div class="vocab-grid">
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">Do you want to ~?</span><br>
+                            <span class="japanese">〜したい？</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">go surfing</span><br>
+                            <span class="japanese">サーフィンに行く</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">this Saturday</span><br>
+                            <span class="japanese">今週の土曜日</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">Sounds fun!</span><br>
+                            <span class="japanese">楽しそう！</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">I've never ~ before</span><br>
+                            <span class="japanese">〜したことがない</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">beginner lesson</span><br>
+                            <span class="japanese">初心者レッスン</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">How much is it?</span><br>
+                            <span class="japanese">いくらですか？</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">for two hours</span><br>
+                            <span class="japanese">2時間</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">That's not bad.</span><br>
+                            <span class="japanese">悪くないね。</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">provide</span><br>
+                            <span class="japanese">提供する</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">included</span><br>
+                            <span class="japanese">含まれている</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">What time should we meet?</span><br>
+                            <span class="japanese">何時に会う？</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">Let's meet at ~</span><br>
+                            <span class="japanese">〜に会おう</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">I'm excited!</span><br>
+                            <span class="japanese">ワクワクする！</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 7: Quiz 3 -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">7</span>
+                <span class="section-title">Quiz 3</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">Conversationの内容チェック</p>
+            
+            <div class="quiz-question">
+                <p>Q: サーフィンレッスンはいくらですか？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">約50ドル</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">約70ドル</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">約100ドル</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 8: Key Sentences -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">8</span>
+                <span class="section-title">🔑 Key Sentences</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">今日のそのまま使える表現3つ</p>
+            
+            <div class="key-sentences-box">
+                <h4>🌟 覚えておきたいフレーズ</h4>
+                <div class="key-sentence">
+                    <div class="english">Do you want to go surfing?</div>
+                    <div class="japanese">サーフィン行かない？</div>
+                    <div class="source">📍 Conversation</div>
+                </div>
+                <div class="key-sentence">
+                    <div class="english">I've never surfed before.</div>
+                    <div class="japanese">サーフィンしたことない。</div>
+                    <div class="source">📍 Conversation</div>
+                </div>
+                <div class="key-sentence">
+                    <div class="english">What time should we meet?</div>
+                    <div class="japanese">何時に会う？</div>
+                    <div class="source">📍 Conversation</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 9: Word Order Quiz -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">9</span>
+                <span class="section-title">🔀 並べ替えクイズ</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">Key Sentencesを並べ替えて作ってみよう</p>
+            
+            <div class="word-order-box">
+                <div class="word-order-question" data-answer="Do you,want,to,go surfing?">
+                    <p class="prompt">Q1: 「サーフィン行かない？」</p>
+                    <div class="word-chips-container">
+                        <div class="word-chips">
+                            <span class="word-chip" onclick="moveToAnswer(this)">go surfing?</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">to</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">want</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">Do you</span>
+                        </div>
+                    </div>
+                    <div class="answer-area" onclick="handleAnswerAreaClick(event)">
+                        <span class="placeholder">👆 上の単語をタップして並べよう</span>
+                    </div>
+                </div>
+
+                <div class="word-order-question" data-answer="I've,never,surfed,before.">
+                    <p class="prompt">Q2: 「サーフィンしたことない。」</p>
+                    <div class="word-chips-container">
+                        <div class="word-chips">
+                            <span class="word-chip" onclick="moveToAnswer(this)">before.</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">surfed</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">never</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">I've</span>
+                        </div>
+                    </div>
+                    <div class="answer-area" onclick="handleAnswerAreaClick(event)">
+                        <span class="placeholder">👆 上の単語をタップして並べよう</span>
+                    </div>
+                </div>
+
+                <div class="word-order-question" data-answer="What time,should,we,meet?">
+                    <p class="prompt">Q3: 「何時に会う？」</p>
+                    <div class="word-chips-container">
+                        <div class="word-chips">
+                            <span class="word-chip" onclick="moveToAnswer(this)">meet?</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">should</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">What time</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">we</span>
+                        </div>
+                    </div>
+                    <div class="answer-area" onclick="handleAnswerAreaClick(event)">
+                        <span class="placeholder">👆 上の単語をタップして並べよう</span>
+                    </div>
+                </div>
+                
+                <button class="check-btn" onclick="checkAllAnswers()">✓ 答えをチェック</button>
+                
+                <div id="result-area"></div>
+            </div>
+        </div>
+
+        <!-- Section 10: Try It! -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">10</span>
+                <span class="section-title">✏️ Try It!</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">今日のことを3行で書いてみよう</p>
+            
+            <div class="try-it-box">
+                <p>💡 今日の会話や文をマネしてOK！わからない英語は日本語のままで大丈夫。</p>
+                
+                <textarea placeholder="ここに書いてみよう...
+
+1. 
+2. 
+3. "></textarea>
+                
+                <div class="btn-group">
+                    <button class="btn btn-copy">📋 コピー</button>
+                    <button class="btn" style="background: #9c27b0; color: white;" onclick="openChatGPT(this)">🤖 ChatGPTで添削</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Summary Section -->
+        <div class="section summary-section">
+            <h3>📊 学習サマリー</h3>
+            <p class="summary-desc">今日の回答をまとめてAIに質問しよう</p>
+            <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
+            <pre id="summary-output" class="summary-output"></pre>
+            <div id="summary-actions" class="summary-actions">
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
+                <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-buttons">
+            <a href="day10.html" class="nav-btn">← Day 10</a>
+            <a href="day12.html" class="nav-btn">Day 12 →</a>
+        </div>
+        
+        <a href="/australia-english/" class="home-btn">🏠 ホームに戻る</a>
+    </div>
+
+    <script>
+        function toggleVocab(element) {
+            element.classList.toggle('open');
+            const vocabSection = element.nextElementSibling;
+            vocabSection.classList.toggle('collapsed');
+        }
+        
+        function toggleCheck(element) {
+            element.classList.toggle('checked');
+        }
+        
+        function checkQuiz(element, isCorrect) {
+            const parent = element.parentElement;
+            parent.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+            });
+            
+            if (isCorrect) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('wrong');
+            }
+        }
+        
+        function moveToAnswer(chip) {
+            if (chip.classList.contains('in-answer')) return;
+            
+            const question = chip.closest('.word-order-question');
+            const answerArea = question.querySelector('.answer-area');
+            const placeholder = answerArea.querySelector('.placeholder');
+            
+            if (placeholder) {
+                placeholder.style.display = 'none';
+            }
+            
+            const answerChip = document.createElement('span');
+            answerChip.className = 'answer-chip';
+            answerChip.textContent = chip.textContent;
+            answerChip.dataset.originalChip = Array.from(chip.parentElement.children).indexOf(chip);
+            answerChip.onclick = function() {
+                removeFromAnswer(this, chip);
+            };
+            
+            answerArea.appendChild(answerChip);
+            chip.classList.add('in-answer');
+        }
+        
+        function removeFromAnswer(answerChip, originalChip) {
+            const question = answerChip.closest('.word-order-question');
+            const answerArea = question.querySelector('.answer-area');
+            
+            answerChip.remove();
+            originalChip.classList.remove('in-answer');
+            
+            const remainingChips = answerArea.querySelectorAll('.answer-chip');
+            if (remainingChips.length === 0) {
+                const placeholder = answerArea.querySelector('.placeholder');
+                if (placeholder) {
+                    placeholder.style.display = 'inline';
+                }
+            }
+        }
+        
+        function handleAnswerAreaClick(event) {
+            if (event.target.classList.contains('answer-chip')) {
+                const question = event.target.closest('.word-order-question');
+                const chips = question.querySelectorAll('.word-chip');
+                const index = parseInt(event.target.dataset.originalChip);
+                removeFromAnswer(event.target, chips[index]);
+            }
+        }
+        
+        function checkAllAnswers() {
+            const questions = document.querySelectorAll('.word-order-question');
+            let allCorrect = true;
+            let results = [];
+            
+            questions.forEach((question, index) => {
+                const answerArea = question.querySelector('.answer-area');
+                const answerChips = answerArea.querySelectorAll('.answer-chip');
+                const userAnswer = Array.from(answerChips).map(chip => chip.textContent).join(',');
+                const correctAnswer = question.dataset.answer;
+                
+                const isCorrect = userAnswer === correctAnswer;
+                if (!isCorrect) allCorrect = false;
+                
+                results.push({
+                    num: index + 1,
+                    correct: isCorrect,
+                    userAnswer: userAnswer || '(未回答)',
+                    correctAnswer: correctAnswer.replace(/,/g, ' ')
+                });
+            });
+            
+            const resultArea = document.getElementById('result-area');
+            let html = '<div style="margin-top: 16px;">';
+            
+            results.forEach(r => {
+                if (r.correct) {
+                    html += `<div class="result-message correct">Q${r.num}: ⭕ 正解！</div>`;
+                } else {
+                    html += `<div class="result-message wrong">Q${r.num}: ❌ 惜しい！<br>正解: ${r.correctAnswer}</div>`;
+                }
+            });
+            
+            if (allCorrect) {
+                html += '<div style="text-align: center; margin-top: 16px; font-size: 1.5rem;">🎉 パーフェクト！ 🎉</div>';
+            }
+            
+            html += '</div>';
+            resultArea.innerHTML = html;
+        }
+        
+        function copyText(btn) {
+            const section = btn.closest('.section');
+            const textBox = section.querySelector('.reading-box, .review-box, .conversation-box');
+            if (textBox) {
+                const text = textBox.innerText;
+                navigator.clipboard.writeText(text).then(() => {
+                    btn.textContent = '✓ コピーしました';
+                    setTimeout(() => { btn.textContent = '📋 コピー'; }, 2000);
+                });
+            }
+        }
+
+        function openNaturalReader(btn) {
+            var section = btn.closest('.section');
+            var textBox = section.querySelector('.reading-box, .review-box, .conversation-box');
+            if (textBox) {
+                var text = textBox.innerText;
+                navigator.clipboard.writeText(text).then(function() {
+                    btn.textContent = '\u2713 \u30b3\u30d4\u30fc\u6e08\u307f';
+                    setTimeout(function() { btn.textContent = '\ud83d\udd0a Natural Reader'; }, 2000);
+                    window.open('https://www.naturalreaders.com/online/', '_blank');
+                });
+            }
+        }
+
+        function openChatGPT(btn) {
+            var section = btn.closest('.section');
+            var textarea = section.querySelector('textarea');
+            if (textarea && textarea.value.trim()) {
+                var prompt = '\u4ee5\u4e0b\u306e\u82f1\u4f5c\u6587\u3092\u6dfb\u524a\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u9593\u9055\u3044\u304c\u3042\u308c\u3070\u4fee\u6b63\u3057\u3001\u3088\u308a\u81ea\u7136\u306a\u8868\u73fe\u304c\u3042\u308c\u3070\u63d0\u6848\u3057\u3066\u304f\u3060\u3055\u3044\u3002\n\n' + textarea.value;
+                window.open('https://chatgpt.com/?q=' + encodeURIComponent(prompt), '_blank');
+            } else {
+                alert('\u5148\u306b\u30c6\u30ad\u30b9\u30c8\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044');
+            }
+        }
+
+
+        function generateDaySummary() {
+            var title = document.title || 'Workbook';
+            var s = '【' + title + ' 学習サマリー】\n\n';
+
+            // Collect quiz answers
+            var quizzes = document.querySelectorAll('.quiz-question');
+            if (quizzes.length > 0) {
+                s += '■ クイズ回答:\n';
+                quizzes.forEach(function(q, i) {
+                    var selected = q.querySelector('.quiz-option.correct, .quiz-option.wrong');
+                    var answer = selected ? selected.textContent.trim() : '(未回答)';
+                    var isCorrect = selected && selected.classList.contains('correct');
+                    s += 'Q' + (i+1) + ': ' + answer + (isCorrect ? ' ⭕' : selected ? ' ❌' : '') + '\n';
+                });
+                s += '\n';
+            }
+
+            // Collect checked (unknown) vocab items
+            var checkedVocab = document.querySelectorAll('.vocab-item.checked');
+            if (checkedVocab.length > 0) {
+                s += '\u25a0 \u308f\u304b\u3089\u306a\u304b\u3063\u305f\u5358\u8a9e:\n';
+                checkedVocab.forEach(function(el) {
+                    var eng = el.querySelector('.english');
+                    var jpn = el.querySelector('.japanese');
+                    if (eng) {
+                        s += '- ' + eng.textContent + (jpn ? ' (' + jpn.textContent + ')' : '') + '\n';
+                    }
+                });
+                s += '\n';
+            }
+
+            // Collect word ordering answers
+            var wordOrders = document.querySelectorAll('.word-order-question');
+            if (wordOrders.length > 0) {
+                s += '■ 並べ替え回答:\n';
+                wordOrders.forEach(function(q, i) {
+                    var chips = q.querySelectorAll('.answer-chip');
+                    var answer = Array.from(chips).map(function(c) { return c.textContent; }).join(' ');
+                    s += 'Q' + (i+1) + ': ' + (answer || '(未回答)') + '\n';
+                });
+                s += '\n';
+            }
+
+            // Collect Try It text
+            var tryItBox = document.querySelector('.try-it-box textarea');
+            if (tryItBox) {
+                s += '■ Try It（自由記述）:\n' + (tryItBox.value.trim() || '(未記入)') + '\n\n';
+            }
+
+            s += '---\n';
+            s += '上の内容をもとに、以下を教えてください：\n';
+            s += '1. 間違えた問題の解説\n';
+            s += '2. Try Itの文法・表現の添削（修正箇所の説明付き）\n';
+            s += '3. より自然な言い回しの提案\n';
+            s += '4. 今日の学習内容に関連する追加フレーズ\n';
+            s += '5. 発展的な練習問題（1〜2問）';
+
+            var output = document.getElementById('summary-output');
+            var actions = document.getElementById('summary-actions');
+            output.textContent = s;
+            output.style.display = 'block';
+            actions.classList.add('show');
+        }
+
+        function copySummaryText() {
+            var text = document.getElementById('summary-output').textContent || '';
+            navigator.clipboard.writeText(text).then(function() {
+                var btn = event.target;
+                btn.textContent = '✓ コピー済み';
+                setTimeout(function() { btn.textContent = '📋 コピー'; }, 2000);
+            });
+        }
+
+    </script>
+<script>
+(function() {
+  var NAME_KEY = "uchiwai_course_name_australia-english-30days";
+  try {
+    var userName = localStorage.getItem(NAME_KEY);
+    if (!userName) return;
+    var labels = document.querySelectorAll(".speaker-a .speaker-label");
+    labels.forEach(function(el) {
+      el.textContent = "A (" + userName + "):";
+    });
+    var dialogueLines = document.querySelectorAll(".dialogue-line");
+    dialogueLines.forEach(function(el) {
+      el.childNodes.forEach(function(node) {
+        if (node.nodeType === 3 && node.textContent.indexOf("Nanako") !== -1) {
+          node.textContent = node.textContent.replace(/Nanako/g, userName);
+        }
+      });
+    });
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>

@@ -13,7 +13,7 @@ function getServiceClient(locals: any) {
   return createClient(supabaseUrl, serviceKey);
 }
 
-// POST: Start generation for a config
+// POST: Generate Day 1 only → status becomes 'preview'
 export const POST: APIRoute = async ({ request, locals }) => {
   const user = locals.user;
   if (!user?.email || !isAdmin(user.email, locals)) {
@@ -56,7 +56,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
     }), { headers: { 'Content-Type': 'application/json' } });
   }
 
-  // Set status to generating
+  // Set status to generating temporarily
   await supabase
     .from('student_configs')
     .update({ status: 'generating', days_completed: 0, updated_at: new Date().toISOString() })
@@ -70,9 +70,10 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
   // Generate Day 1 immediately
   const studentConfig = config.config_json as StudentConfig;
+  const adjustmentNotes = config.adjustment_notes || undefined;
   const systemPrompt = buildSystemPrompt(studentConfig.target_language || 'english');
   const contextPrompt = buildContextPrompt(studentConfig);
-  const userPrompt = buildUserPrompt(1, config.total_days, studentConfig);
+  const userPrompt = buildUserPrompt(1, config.total_days, studentConfig, adjustmentNotes);
 
   try {
     const response = await generateDay({
@@ -98,14 +99,14 @@ export const POST: APIRoute = async ({ request, locals }) => {
       generated_at: new Date().toISOString(),
     });
 
-    // Update progress
+    // Set status to 'preview' — pause here for admin review of Day 1
     await supabase
       .from('student_configs')
-      .update({ days_completed: 1, updated_at: new Date().toISOString() })
+      .update({ days_completed: 1, status: 'preview', updated_at: new Date().toISOString() })
       .eq('id', config_id);
 
     return new Response(JSON.stringify({
-      status: 'generating',
+      status: 'preview',
       days_completed: 1,
       total_days: config.total_days,
     }), { headers: { 'Content-Type': 'application/json' } });
@@ -119,4 +120,50 @@ export const POST: APIRoute = async ({ request, locals }) => {
     console.error('WB generation error:', err);
     return new Response(JSON.stringify({ error: import.meta.env.DEV ? `Generation failed: ${err.message}` : 'Generation failed' }), { status: 500 });
   }
+};
+
+// PUT: Continue generation (Day 2+) after preview approval
+export const PUT: APIRoute = async ({ request, locals }) => {
+  const user = locals.user;
+  if (!user?.email || !isAdmin(user.email, locals)) {
+    return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403 });
+  }
+
+  const supabase = getServiceClient(locals);
+  if (!supabase) {
+    return new Response(JSON.stringify({ error: 'Server configuration error' }), { status: 500 });
+  }
+
+  const body = await request.json();
+  const { config_id } = body;
+
+  if (!config_id) {
+    return new Response(JSON.stringify({ error: 'Missing config_id' }), { status: 400 });
+  }
+
+  const { data: config, error: configError } = await supabase
+    .from('student_configs')
+    .select('*')
+    .eq('id', config_id)
+    .single();
+
+  if (configError || !config) {
+    return new Response(JSON.stringify({ error: 'Config not found' }), { status: 404 });
+  }
+
+  if (config.status !== 'preview') {
+    return new Response(JSON.stringify({ error: `Cannot continue: status is '${config.status}', expected 'preview'` }), { status: 400 });
+  }
+
+  // Switch to generating — polling will pick up Day 2+
+  await supabase
+    .from('student_configs')
+    .update({ status: 'generating', updated_at: new Date().toISOString() })
+    .eq('id', config_id);
+
+  return new Response(JSON.stringify({
+    status: 'generating',
+    days_completed: config.days_completed,
+    total_days: config.total_days,
+  }), { headers: { 'Content-Type': 'application/json' } });
 };

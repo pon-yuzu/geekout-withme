@@ -74,6 +74,56 @@ export const POST: APIRoute = async ({ request, locals }) => {
   });
 };
 
+export const PATCH: APIRoute = async ({ request, locals }) => {
+  const user = locals.user;
+  if (!user?.email || !isAdmin(user.email, locals)) {
+    return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403 });
+  }
+
+  let body: any;
+  try {
+    body = await request.json();
+  } catch {
+    return new Response(JSON.stringify({ error: 'Invalid JSON' }), { status: 400 });
+  }
+
+  const { id, ...updates } = body;
+  if (!id) {
+    return new Response(JSON.stringify({ error: 'id required' }), { status: 400 });
+  }
+
+  const allowed = ['slot_date', 'start_time', 'end_time', 'is_active'];
+  const filtered: Record<string, unknown> = {};
+  for (const key of allowed) {
+    if (key in updates) filtered[key] = updates[key];
+  }
+
+  if (Object.keys(filtered).length === 0) {
+    return new Response(JSON.stringify({ error: 'No valid fields to update' }), { status: 400 });
+  }
+
+  const serviceClient = getServiceClient(locals);
+  if (!serviceClient) {
+    return new Response(JSON.stringify({ error: 'Server configuration error' }), { status: 500 });
+  }
+
+  const { data, error } = await serviceClient
+    .from('booking_oneoff_slots')
+    .update(filtered)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Admin oneoff slots PATCH error:', error);
+    return new Response(JSON.stringify({ error: import.meta.env.DEV ? error.message : 'An error occurred' }), { status: 500 });
+  }
+
+  return new Response(JSON.stringify({ slot: data }), {
+    headers: { 'Content-Type': 'application/json' },
+  });
+};
+
 export const DELETE: APIRoute = async ({ request, locals }) => {
   const user = locals.user;
   if (!user?.email || !isAdmin(user.email, locals)) {

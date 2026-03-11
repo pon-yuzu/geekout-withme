@@ -202,7 +202,8 @@ export default function HearingForm({ existingConfig, onBack, onSaved, onGenerat
         throw new Error(genData.error || 'Generation failed');
       }
 
-      onGenerate({ ...saveData.config, status: 'generating', days_completed: 1 });
+      const genData = await genRes.json();
+      onGenerate({ ...saveData.config, status: genData.status || 'preview', days_completed: genData.days_completed || 1 });
     } catch (err: any) {
       setError(err.message);
     } finally {

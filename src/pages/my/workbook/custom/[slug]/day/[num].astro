@@ -149,7 +149,7 @@ const adminQs = admin && targetUserId !== user.id ? `?user_id=${targetUserId}` :
             <div class="wb-action-row">
               <button class="wb-action-btn" onclick="copyText('main-text')">📋 コピー</button>
               <button class="wb-action-btn wb-tts-btn" onclick="speakText('main-text', this)">🔊 読み上げ</button>
-              <a class="wb-action-btn" href="https://www.naturalreaders.com/online/" target="_blank" rel="noopener">🔊 Natural Reader</a>
+              <button class="wb-action-btn" onclick="openNaturalReader('main-text', this)">🔊 Natural Reader</button>
               <select class="wb-speed-select" onchange="currentSpeed=parseFloat(this.value)">
                 <option value="0.7">0.7x</option>
                 <option value="0.85" selected>0.85x</option>
@@ -162,14 +162,19 @@ const adminQs = admin && targetUserId !== user.id ? `?user_id=${targetUserId}` :
           <!-- Main Vocab -->
           {contentJson.main_vocab?.length > 0 && (
             <div class="bg-blue-50 rounded-2xl p-5">
-              <h3 class="text-sm font-semibold text-blue-700 uppercase mb-3">Vocabulary</h3>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {contentJson.main_vocab.map((v: any) => (
-                  <div class="bg-white rounded-lg px-3 py-2 text-sm">
-                    <span class="font-medium text-gray-800">{v.word}</span>
-                    <span class="text-gray-500 ml-2">{v.meaning}</span>
-                  </div>
-                ))}
+              <button class="wb-vocab-toggle" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('wb-vocab-hidden')">
+                📚 単語・フレーズリストを見る <span class="wb-vocab-arrow">▼</span>
+              </button>
+              <div class="wb-vocab-hidden">
+                <p class="text-xs text-blue-500 mb-2 mt-3">タップでわからない単語をチェック</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {contentJson.main_vocab.map((v: any) => (
+                    <div class="wb-vocab-item bg-white rounded-lg px-3 py-2 text-sm cursor-pointer" onclick="this.classList.toggle('wb-vocab-checked')" data-word={v.word} data-meaning={v.meaning}>
+                      <span class="font-medium text-gray-800">{v.word}</span>
+                      <span class="text-gray-500 ml-2">{v.meaning}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
@@ -191,7 +196,7 @@ const adminQs = admin && targetUserId !== user.id ? `?user_id=${targetUserId}` :
               <div class="wb-action-row">
                 <button class="wb-action-btn" onclick="copyText('review-text')">📋 コピー</button>
                 <button class="wb-action-btn wb-tts-btn" onclick="speakText('review-text', this)">🔊 読み上げ</button>
-                <a class="wb-action-btn" href="https://www.naturalreaders.com/online/" target="_blank" rel="noopener">🔊 Natural Reader</a>
+                <button class="wb-action-btn" onclick="openNaturalReader('review-text', this)">🔊 Natural Reader</button>
               </div>
             </div>
           )}
@@ -199,14 +204,19 @@ const adminQs = admin && targetUserId !== user.id ? `?user_id=${targetUserId}` :
           <!-- Review Vocab -->
           {contentJson.review_vocab?.length > 0 && (
             <div class="bg-blue-50 rounded-2xl p-5">
-              <h3 class="text-sm font-semibold text-blue-700 uppercase mb-3">Review Vocabulary</h3>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {contentJson.review_vocab.map((v: any) => (
-                  <div class="bg-white rounded-lg px-3 py-2 text-sm">
-                    <span class="font-medium text-gray-800">{v.word}</span>
-                    <span class="text-gray-500 ml-2">{v.meaning}</span>
-                  </div>
-                ))}
+              <button class="wb-vocab-toggle" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('wb-vocab-hidden')">
+                📚 単語・フレーズリストを見る <span class="wb-vocab-arrow">▼</span>
+              </button>
+              <div class="wb-vocab-hidden">
+                <p class="text-xs text-blue-500 mb-2 mt-3">タップでわからない単語をチェック</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {contentJson.review_vocab.map((v: any) => (
+                    <div class="wb-vocab-item bg-white rounded-lg px-3 py-2 text-sm cursor-pointer" onclick="this.classList.toggle('wb-vocab-checked')" data-word={v.word} data-meaning={v.meaning}>
+                      <span class="font-medium text-gray-800">{v.word}</span>
+                      <span class="text-gray-500 ml-2">{v.meaning}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
@@ -245,7 +255,7 @@ const adminQs = admin && targetUserId !== user.id ? `?user_id=${targetUserId}` :
               <div class="wb-action-row mt-4">
                 <button class="wb-action-btn" onclick="copyText('convo-tts')">📋 コピー</button>
                 <button class="wb-action-btn wb-tts-btn" onclick="speakText('convo-tts', this)">🔊 読み上げ</button>
-                <a class="wb-action-btn" href="https://www.naturalreaders.com/online/" target="_blank" rel="noopener">🔊 Natural Reader</a>
+                <button class="wb-action-btn" onclick="openNaturalReader('convo-tts', this)">🔊 Natural Reader</button>
               </div>
             </div>
           )}
@@ -253,14 +263,19 @@ const adminQs = admin && targetUserId !== user.id ? `?user_id=${targetUserId}` :
           <!-- Conversation Vocab -->
           {contentJson.conversation_vocab?.length > 0 && (
             <div class="bg-blue-50 rounded-2xl p-5">
-              <h3 class="text-sm font-semibold text-blue-700 uppercase mb-3">Conversation Vocabulary</h3>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                {contentJson.conversation_vocab.map((v: any) => (
-                  <div class="bg-white rounded-lg px-3 py-2 text-sm">
-                    <span class="font-medium text-gray-800">{v.word}</span>
-                    <span class="text-gray-500 ml-2">{v.meaning}</span>
-                  </div>
-                ))}
+              <button class="wb-vocab-toggle" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('wb-vocab-hidden')">
+                📚 単語・フレーズリストを見る <span class="wb-vocab-arrow">▼</span>
+              </button>
+              <div class="wb-vocab-hidden">
+                <p class="text-xs text-blue-500 mb-2 mt-3">タップでわからない単語をチェック</p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {contentJson.conversation_vocab.map((v: any) => (
+                    <div class="wb-vocab-item bg-white rounded-lg px-3 py-2 text-sm cursor-pointer" onclick="this.classList.toggle('wb-vocab-checked')" data-word={v.word} data-meaning={v.meaning}>
+                      <span class="font-medium text-gray-800">{v.word}</span>
+                      <span class="text-gray-500 ml-2">{v.meaning}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           )}
@@ -452,17 +467,60 @@ const adminQs = admin && targetUserId !== user.id ? `?user_id=${targetUserId}` :
 
   window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
 
+  function openNaturalReader(elementId: string, btn: HTMLButtonElement) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    const text = el.textContent || '';
+    navigator.clipboard.writeText(text).then(() => {
+      const orig = btn.textContent;
+      btn.textContent = '✓ コピー済み';
+      setTimeout(() => { btn.textContent = orig; }, 2000);
+      window.open('https://www.naturalreaders.com/online/', '_blank');
+    });
+  }
+
   function generateSummary() {
     const title = document.title || 'Workbook';
-    const tryIt = (document.getElementById('tryit-text') as HTMLTextAreaElement)?.value || '(未記入)';
-
     let s = `【${title} 学習サマリー】\n\n`;
+
+    // Collect quiz answers from React Quiz components
+    const quizBlocks = document.querySelectorAll('.bg-orange-50.rounded-lg');
+    if (quizBlocks.length > 0) {
+      s += `■ クイズ回答:\n`;
+      quizBlocks.forEach((block, i) => {
+        const question = block.querySelector('.font-bold')?.textContent?.replace('Q: ', '') || '';
+        const correct = block.querySelector('.bg-green-50.border-green-500');
+        const wrong = block.querySelector('.bg-red-50.border-red-500');
+        const selected = correct || wrong;
+        const answer = selected?.textContent?.trim() || '(未回答)';
+        const mark = correct ? ' ⭕' : wrong ? ' ❌' : '';
+        s += `Q${i + 1}: ${question}\n  → ${answer}${mark}\n`;
+      });
+      s += '\n';
+    }
+
+    // Collect checked (unknown) vocab items
+    const checkedVocab = document.querySelectorAll('.wb-vocab-checked');
+    if (checkedVocab.length > 0) {
+      s += `■ わからなかった単語:\n`;
+      checkedVocab.forEach((el) => {
+        const word = (el as HTMLElement).dataset.word || '';
+        const meaning = (el as HTMLElement).dataset.meaning || '';
+        s += `- ${word} (${meaning})\n`;
+      });
+      s += '\n';
+    }
+
+    // Collect Try It text
+    const tryIt = (document.getElementById('tryit-text') as HTMLTextAreaElement)?.value || '(未記入)';
     s += `■ Try It（自由記述）:\n${tryIt}\n\n`;
+
     s += `---\n上の内容をもとに、以下を教えてください：\n`;
-    s += `1. Try Itの文法・表現の添削（修正箇所の説明付き）\n`;
-    s += `2. より自然な言い回しの提案\n`;
-    s += `3. 今日の学習内容に関連する追加フレーズ・表現\n`;
-    s += `4. 発展的な練習問題（1〜2問）`;
+    s += `1. 間違えた問題の解説\n`;
+    s += `2. Try Itの文法・表現の添削（修正箇所の説明付き）\n`;
+    s += `3. より自然な言い回しの提案\n`;
+    s += `4. 今日の学習内容に関連する追加フレーズ・表現\n`;
+    s += `5. 発展的な練習問題（1〜2問）`;
 
     const output = document.getElementById('summary-output')!;
     const actions = document.getElementById('summary-actions')!;
@@ -486,6 +544,7 @@ const adminQs = admin && targetUserId !== user.id ? `?user_id=${targetUserId}` :
   // Expose functions to inline onclick handlers
   (window as any).copyText = copyText;
   (window as any).speakText = speakText;
+  (window as any).openNaturalReader = openNaturalReader;
   (window as any).generateSummary = generateSummary;
   (window as any).copySummary = copySummary;
   (window as any).currentSpeed = currentSpeed;
@@ -554,5 +613,59 @@ const adminQs = admin && targetUserId !== user.id ? `?user_id=${targetUserId}` :
     color: #6b7280;
     background: white;
     cursor: pointer;
+  }
+  .wb-vocab-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.625rem 1rem;
+    background: #dbeafe;
+    border: none;
+    border-radius: 0.75rem;
+    color: #1d4ed8;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .wb-vocab-toggle:hover {
+    background: #bfdbfe;
+  }
+  .wb-vocab-arrow {
+    transition: transform 0.3s;
+    font-size: 0.75rem;
+  }
+  .wb-vocab-toggle.open .wb-vocab-arrow {
+    transform: rotate(180deg);
+  }
+  .wb-vocab-hidden {
+    display: none;
+  }
+  .wb-vocab-toggle.open + .wb-vocab-hidden,
+  .wb-vocab-hidden:not(.wb-vocab-hidden) {
+    display: block;
+  }
+  .wb-vocab-item {
+    transition: all 0.15s;
+    border: 2px solid transparent;
+    position: relative;
+  }
+  .wb-vocab-item:hover {
+    border-color: #93c5fd;
+  }
+  .wb-vocab-checked {
+    background: #fef3c7 !important;
+    border-color: #f59e0b !important;
+  }
+  .wb-vocab-checked::after {
+    content: '?';
+    position: absolute;
+    top: 2px;
+    right: 6px;
+    font-size: 0.7rem;
+    color: #f59e0b;
+    font-weight: bold;
   }
 </style>

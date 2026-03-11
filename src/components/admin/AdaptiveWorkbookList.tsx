@@ -10,6 +10,7 @@ const STATUS_COLORS: Record<ConfigStatus, string> = {
   draft: 'bg-gray-100 text-gray-700',
   approved: 'bg-blue-100 text-blue-700',
   generating: 'bg-yellow-100 text-yellow-700',
+  preview: 'bg-cyan-100 text-cyan-700',
   review: 'bg-purple-100 text-purple-700',
   active: 'bg-green-100 text-green-700',
 };
@@ -18,6 +19,7 @@ const STATUS_LABELS: Record<ConfigStatus, string> = {
   draft: 'Draft',
   approved: 'Approved',
   generating: 'Generating...',
+  preview: 'Preview Day 1',
   review: 'Review',
   active: 'Active',
 };

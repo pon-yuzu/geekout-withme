@@ -3,6 +3,7 @@ import type { ChatState, ChatSession, SlotValues } from '../../../lib/workbook/t
 import { claudeChat } from '../../../lib/claude';
 import { getChatSystemPrompt } from '../../../lib/workbook/prompts/chat-system';
 import { TOPICS, LEVELS, JLPT_LEVELS } from '../../../lib/workbook/slots';
+import { getUserTier } from '../../../lib/tier';
 
 interface ChatRequest {
   message: string;
@@ -118,10 +119,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
   const user = locals.user;
   if (!user) return new Response('Unauthorized', { status: 401 });
 
-  const { data: subs } = await locals.supabase!
-    .from('subscriptions').select('status')
-    .eq('user_id', user.id).in('status', ['active', 'trialing']).limit(1);
-  if (!subs?.length) return new Response('Premium required', { status: 403 });
+  const tier = await getUserTier(locals.supabase!, user.id);
+  if (tier === 'free') return new Response('Premium required', { status: 403 });
 
   const apiKey = import.meta.env.CF_AI_TOKEN ?? locals.runtime?.env?.CF_AI_TOKEN;
   if (!apiKey) return new Response('AI not configured', { status: 500 });

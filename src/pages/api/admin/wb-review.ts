@@ -74,7 +74,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
 
   const body = await request.json();
-  const { day_id } = body;
+  const { day_id, adjustment_notes } = body;
 
   if (!day_id) {
     return new Response(JSON.stringify({ error: 'Missing day_id' }), { status: 400 });
@@ -97,9 +97,12 @@ export const POST: APIRoute = async ({ request, locals }) => {
   }
   const studentConfig = config.config_json as StudentConfig;
 
+  // Use adjustment_notes from request body, or fall back to config-level notes
+  const notes = adjustment_notes || config.adjustment_notes || undefined;
+
   const systemPrompt = buildSystemPrompt(studentConfig.target_language || 'english');
   const contextPrompt = buildContextPrompt(studentConfig);
-  const userPrompt = buildUserPrompt(dayData.day_number, config.total_days, studentConfig);
+  const userPrompt = buildUserPrompt(dayData.day_number, config.total_days, studentConfig, notes);
 
   try {
     const response = await generateDay({

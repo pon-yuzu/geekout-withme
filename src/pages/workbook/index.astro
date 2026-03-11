@@ -6,6 +6,8 @@ import type { WorkbookProgress } from '../../lib/workbook/types';
 import { t } from '../../i18n/index';
 import type { Lang } from '../../i18n/index';
 import { isPromoActive } from '../../lib/promo';
+import PaidCourseCard from '../../components/workbook/PaidCourseCard';
+import { PAID_COURSES } from '../../lib/workbook/paid-courses';
 
 const user = Astro.locals.user;
 const lang = Astro.locals.lang as Lang;
@@ -161,7 +163,7 @@ const samples = wbLang === 'japanese' ? sampleJapanese : sampleEnglish;
               )}
             </div>
           ) : (
-            <div class="grid md:grid-cols-2 gap-6">
+            <div class="grid sm:grid-cols-2 gap-4 md:gap-6">
               {filteredWorkbooks.map(wb => (
                 <WorkbookCard client:load workbook={wb} showAuthor={tab === 'public'} userCompletedDays={progressMap[wb.id] || 0} />
               ))}
@@ -174,7 +176,7 @@ const samples = wbLang === 'japanese' ? sampleJapanese : sampleEnglish;
           {filteredMy.length > 0 && (
             <div class="mb-8">
               <h2 class="text-lg font-bold text-gray-800 mb-4">{t(lang, 'workbook.myWorkbooks')}</h2>
-              <div class="grid md:grid-cols-2 gap-6">
+              <div class="grid sm:grid-cols-2 gap-4 md:gap-6">
                 {filteredMy.map(wb => (
                   <WorkbookCard client:load workbook={wb} showAuthor={false} userCompletedDays={progressMap[wb.id] || 0} />
                 ))}
@@ -202,7 +204,7 @@ const samples = wbLang === 'japanese' ? sampleJapanese : sampleEnglish;
           {samples.length > 0 && (
             <div class="mb-10">
               <p class="text-gray-500 mb-4 text-sm">{t(lang, 'workbook.samples.desc')}</p>
-              <div class="grid md:grid-cols-2 gap-6">
+              <div class="grid sm:grid-cols-2 gap-4 md:gap-6">
                 {samples.map(wb => (
                   <WorkbookCard client:load workbook={wb} showAuthor={false} userCompletedDays={progressMap[wb.id] || 0} />
                 ))}
@@ -211,6 +213,21 @@ const samples = wbLang === 'japanese' ? sampleJapanese : sampleEnglish;
           )}
         </>
       )}
+      {/* Paid Courses Section */}
+      <div class="mt-10">
+        <div class="flex items-center gap-3 mb-4">
+          <h2 class="text-lg font-bold text-gray-900">購入できるコース</h2>
+          <span class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full font-medium">
+            買い切り ¥500
+          </span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {PAID_COURSES.map((course) => (
+            <PaidCourseCard client:load course={course} />
+          ))}
+        </div>
+      </div>
+
       {/* Custom Workbooks Section (Personal students) */}
       {customWorkbooks.length > 0 && (
         <div class="mt-10 pt-8 border-t border-gray-200">

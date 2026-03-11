@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Day 4: 現在進行形 | 春休みスペシャル</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#fafafa;--card:#fff;--border:#e5e7eb;--text:#1f2937;--text-muted:#6b7280;--orange:#f97316;--orange-light:#fff7ed;--orange-mid:#ffedd5;--teal:#14b8a6;--teal-light:#f0fdfa;--success:#22c55e;--success-light:#f0fdf4;--error:#ef4444;--error-light:#fef2f2}*{margin:0;padding:0;box-sizing:border-box}body{font-family:"Noto Sans JP",sans-serif;background:var(--bg);min-height:100vh;color:var(--text);line-height:1.7;font-size:15px}.container{max-width:680px;margin:0 auto;padding:1rem}.header{text-align:center;padding:2rem 0 1.5rem;margin-bottom:1.5rem}.progress-badge{display:inline-block;font-size:.75rem;color:var(--orange);background:var(--orange-light);padding:.25rem .75rem;border-radius:1rem;margin-bottom:.75rem;font-weight:500}.day-title{font-size:1.5rem;font-weight:700;color:var(--text);margin-bottom:.25rem}.day-subtitle{color:var(--text-muted);font-size:.875rem}.nav{display:flex;justify-content:space-between;margin-bottom:1.5rem}.nav-link{color:var(--text-muted);text-decoration:none;font-size:.8125rem;padding:.5rem .875rem;background:var(--card);border:1px solid var(--border);border-radius:.5rem;transition:all .2s}.nav-link:hover{border-color:var(--orange);color:var(--orange)}.nav-link.disabled{opacity:.4;pointer-events:none}.section{background:var(--card);border:1px solid var(--border);border-radius:1rem;padding:1.25rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.04)}.section-header{display:flex;align-items:center;gap:.625rem;margin-bottom:1rem}.section-number{width:1.75rem;height:1.75rem;background:var(--orange);color:#fff;border-radius:.5rem;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.875rem}.section-title{font-size:1rem;font-weight:600;color:var(--text)}.section-desc{color:var(--text-muted);font-size:.8125rem;margin-bottom:1rem}.question{padding:.875rem 0;border-bottom:1px solid var(--border)}.question:last-of-type{border-bottom:none;padding-bottom:0}.question-num{font-size:.6875rem;color:var(--teal);font-weight:600;margin-bottom:.375rem;text-transform:uppercase;letter-spacing:.025em}.question-text{font-size:.9375rem;margin-bottom:.625rem;line-height:1.8}.question-text .blank{display:inline-block;min-width:60px;border-bottom:2px solid var(--orange);margin:0 .125rem}.options{font-size:.875rem;color:var(--text-muted);margin-bottom:.625rem}.answer-row{display:flex;align-items:center;gap:.5rem}.answer-toggle{padding:.375rem .75rem;background:var(--orange-light);border:1px solid var(--orange);border-radius:.375rem;color:var(--orange);font-size:.75rem;font-weight:500;cursor:pointer}.answer-toggle:hover{background:var(--orange-mid)}.answer-content{display:none;margin-top:.625rem;padding:.75rem;background:var(--success-light);border-left:3px solid var(--success);border-radius:0 .5rem .5rem 0}.answer-content.show{display:block}.answer-main{font-weight:600;color:var(--success);margin-bottom:.25rem;font-size:.9375rem}.answer-detail{font-size:.8125rem;color:var(--text-muted)}.answer-check{display:flex;align-items:center;gap:.5rem;margin-top:.625rem;padding-top:.625rem;border-top:1px solid var(--border)}.check-btn{display:flex;align-items:center;gap:.25rem;padding:.375rem .75rem;border-radius:.375rem;font-size:.75rem;font-weight:500;cursor:pointer;border:1px solid}.check-btn.correct{background:var(--success-light);border-color:var(--success);color:var(--success)}.check-btn.correct.selected{background:var(--success);color:#fff}.check-btn.wrong{background:var(--error-light);border-color:var(--error);color:var(--error)}.check-btn.wrong.selected{background:var(--error);color:#fff}.reading-content{font-size:.9375rem;line-height:2;margin-bottom:1rem}.reading-content p{margin-bottom:.875rem}.reading-tools{display:flex;gap:.5rem;flex-wrap:wrap}.tool-btn{display:flex;align-items:center;gap:.3125rem;padding:.4375rem .75rem;background:var(--card);border:1px solid var(--border);border-radius:.5rem;color:var(--text-muted);font-size:.75rem;cursor:pointer;text-decoration:none}.tool-btn:hover{border-color:var(--teal);color:var(--teal)}.word-order-question{margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border)}.word-order-question:last-of-type{border-bottom:none;margin-bottom:0;padding-bottom:0}.word-order-prompt{font-size:.9375rem;margin-bottom:.75rem}.word-chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.75rem}.word-chip{background:var(--card);border:1px solid var(--border);padding:.5rem .875rem;border-radius:2rem;cursor:pointer;font-size:.875rem;user-select:none}.word-chip:hover{border-color:var(--orange);background:var(--orange-light)}.word-chip.in-answer{opacity:.3;cursor:default}.word-answer-area{min-height:52px;background:var(--orange-light);border:2px dashed var(--orange);border-radius:.75rem;padding:.625rem;display:flex;flex-wrap:wrap;gap:.5rem;align-items:center}.word-answer-area .placeholder{color:var(--text-muted);font-size:.8125rem}.answer-chip{background:var(--orange);color:#fff;padding:.5rem .875rem;border-radius:2rem;cursor:pointer;font-size:.875rem;font-weight:500;animation:chipIn .15s ease-out}.answer-chip:hover{background:#ea580c}@keyframes chipIn{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}.word-order-result{margin-top:.625rem;padding:.625rem .875rem;border-radius:.5rem;font-size:.8125rem;display:none}.word-order-result.correct{background:var(--success-light);color:var(--success)}.word-order-result.incorrect{background:var(--error-light);color:var(--error)}.word-order-result.show{display:block}.check-order-btn{margin-top:1rem;padding:.75rem 1.5rem;background:var(--orange);border:none;border-radius:.5rem;color:#fff;font-size:.875rem;font-weight:600;cursor:pointer}.check-order-btn:hover{background:#ea580c}.vocab-toggle{display:flex;align-items:center;gap:.5rem;padding:.75rem 1rem;background:var(--teal-light);border:1px solid var(--teal);border-radius:.5rem;color:var(--teal);font-size:.875rem;font-weight:500;cursor:pointer;width:100%}.vocab-toggle:hover{background:#ccfbf1}.vocab-toggle .arrow{margin-left:auto}.vocab-toggle.open .arrow{transform:rotate(180deg)}.vocab-list{display:none;background:var(--card);border:1px solid var(--border);border-top:none;border-radius:0 0 .5rem .5rem;padding:1rem}.vocab-list.show{display:block}.vocab-instruction{font-size:.75rem;color:var(--text-muted);margin-bottom:.5rem}.vocab-legend{display:flex;gap:1rem;margin-bottom:.75rem;font-size:.75rem;color:var(--text-muted)}.vocab-legend-item{display:flex;align-items:center;gap:.375rem}.legend-word{width:12px;height:12px;background:var(--orange-light);border:1px solid var(--orange);border-radius:3px}.legend-chunk{width:12px;height:12px;background:var(--teal-light);border:1px solid var(--teal);border-radius:3px}.vocab-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:.5rem}.vocab-item{display:flex;align-items:center;background:var(--orange-light);padding:.625rem .75rem;border-radius:.5rem;font-size:.8125rem;cursor:pointer;border:2px solid transparent}.vocab-item:hover{background:var(--orange-mid)}.vocab-item.checked{border-color:var(--orange)}.vocab-item.checked .vocab-check{background:var(--orange);border-color:var(--orange)}.vocab-item.checked .vocab-check::after{content:"✓";color:#fff;font-size:.625rem}.vocab-item.chunk{background:var(--teal-light);grid-column:span 2}.vocab-item.chunk:hover{background:#ccfbf1}.vocab-item.chunk.checked{border-color:var(--teal)}.vocab-item.chunk.checked .vocab-check{background:var(--teal);border-color:var(--teal)}.vocab-item.chunk .vocab-icon{color:var(--teal);margin-right:.375rem;font-size:.75rem}.vocab-check{width:1rem;height:1rem;border:2px solid var(--border);border-radius:.25rem;margin-right:.625rem;display:flex;align-items:center;justify-content:center;flex-shrink:0}.vocab-en{color:var(--orange);font-weight:600}.vocab-item.chunk .vocab-en{color:var(--teal)}.vocab-ja{color:var(--text-muted);margin-left:.5rem}.score-box{background:var(--bg);border:1px solid var(--border);border-radius:.5rem;padding:1rem;text-align:center;margin-bottom:1rem}.score-label{font-size:.75rem;color:var(--text-muted);margin-bottom:.25rem}.score-value{font-size:1.375rem;font-weight:700}.score-value .correct{color:var(--success)}.score-value .wrong{color:var(--error)}.summary-btn{display:block;width:100%;padding:.875rem;background:var(--orange);border:none;border-radius:.5rem;color:#fff;font-size:.9375rem;font-weight:600;cursor:pointer}.summary-btn:hover{background:#ea580c}.point-box{background:var(--orange-light);border:1px solid var(--orange);border-radius:.75rem;padding:1rem 1.25rem;margin-top:1.25rem}.point-box h3{font-size:.875rem;font-weight:600;margin-bottom:.625rem;color:var(--orange)}.point-box ul{list-style:none;font-size:.875rem}.point-box li{padding:.25rem 0;padding-left:1rem;position:relative}.point-box li::before{content:"•";position:absolute;left:0;color:var(--orange)}.footer{text-align:center;padding:1.5rem 0;color:var(--text-muted);font-size:.75rem;margin-top:1.5rem}.footer span{color:var(--orange)}.back-home{display:inline-block;margin-bottom:.75rem;color:var(--text-muted);text-decoration:none;font-size:.8125rem}.back-home:hover{color:var(--orange)}@media(max-width:480px){.vocab-grid{grid-template-columns:1fr}.vocab-item.chunk{grid-column:span 1}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="#" class="back-home">← Back to Home</a>
+    <header class="header">
+      <span class="progress-badge">Day 4 / 30</span>
+      <h1 class="day-title">現在進行形</h1>
+      <p class="day-subtitle">春休みスペシャル — 中1総復習</p>
+    </header>
+    <nav class="nav">
+      <a href="day03.html" class="nav-link ">← Day 3</a>
+      <a href="day05.html" class="nav-link ">Day 5 →</a>
+    </nav>
+
+    <section class="section">
+      <div class="section-header"><div class="section-number">1</div><h2 class="section-title">文法トレーニング</h2></div>
+      <p class="section-desc">ノートに答えを書いてから、解答を確認しよう（全15問）</p>
+      <div id="questionsContainer">
+      <div class="question" data-q="1">
+        <p class="question-num">Q1 — 穴埋め</p>
+        <p class="question-text">I <span class="blank"></span> <span class="blank"></span> a book now.</p>
+        
+        <div class="answer-row"><button class="answer-toggle" onclick="toggleAnswer(1)">解答を見る</button></div>
+        <div class="answer-content" id="answer-1">
+          <p class="answer-main">am reading</p>
+          <p class="answer-detail">I am reading a book now. — 私は今、本を読んでいます。</p>
+          <div class="answer-check">
+            <button class="check-btn correct" onclick="markAnswer(1,true)">⭕ 正解</button>
+            <button class="check-btn wrong" onclick="markAnswer(1,false)">❌ 不正解</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="question" data-q="2">
+        <p class="question-num">Q2 — 穴埋め</p>
+        <p class="question-text">She <span class="blank"></span> <span class="blank"></span> to music.</p>
+        
+        <div class="answer-row"><button class="answer-toggle" onclick="toggleAnswer(2)">解答を見る</button></div>
+        <div class="answer-content" id="answer-2">
+          <p class="answer-main">is listening</p>
+          <p class="answer-detail">She is listening to music. — 彼女は音楽を聞いています。</p>
+          <div class="answer-check">
+            <button class="check-btn correct" onclick="markAnswer(2,true)">⭕ 正解</button>
+            <button class="check-btn wrong" onclick="markAnswer(2,false)">❌ 不正解</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="question" data-q="3">
+        <p class="question-num">Q3 — 穴埋め</p>
+        <p class="question-text">They <span class="blank"></span> <span class="blank"></span> soccer in the park.</p>
+        
+        <div class="answer-row"><button class="answer-toggle" onclick="toggleAnswer(3)">解答を見る</button></div>
+        <div class="answer-content" id="answer-3">
+          <p class="answer-main">are playing</p>
+          <p class="answer-detail">They are playing soccer in the park. — 彼らは公園でサッカーをしています。</p>
+          <div class="answer-check">
+            <button class="check-btn correct" onclick="markAnswer(3,true)">⭕ 正解</button>
+            <button class="check-btn wrong" onclick="markAnswer(3,false)">❌ 不正解</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="question" data-q="4">
+        <p class="question-num">Q4 — 和訳</p>
+        <p class="question-text">He is studying English now.</p>
+        
+        <div class="answer-row"><button class="answer-toggle" onclick="toggleAnswer(4)">解答を見る</button></div>
+        <div class="answer-content" id="answer-4">
+          <p class="answer-main">彼は今、英語を勉強しています。</p>
+          <p class="answer-detail">is studying(勉強している) now(今)</p>
+          <div class="answer-check">
+            <button class="check-btn correct" onclick="markAnswer(4,true)">⭕ 正解</button>
+            <button class="check-btn wrong" onclick="markAnswer(4,false)">❌ 不正解</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="question" data-q="5">
+        <p class="question-num">Q5 — 和訳</p>
+        <p class="question-text">Are you watching TV?</p>
+        
+        <div class="answer-row"><button class="answer-toggle" onclick="toggleAnswer(5)">解答を見る</button></div>
+        <div class="answer-content" id="answer-5">
+          <p class="answer-main">あなたはテレビを見ていますか？</p>
+          <p class="answer-detail">Are you watching(あなたは見ていますか)</p>
+          <div class="answer-check">
+            <button class="check-btn correct" onclick="markAnswer(5,true)">⭕ 正解</button>
+            <button class="check-btn wrong" onclick="markAnswer(5,false)">❌ 不正解</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="question" data-q="6">
+        <p class="question-num">Q6 — 英訳</p>
+        <p class="question-text">私は今、料理をしています。</p>
+        
+        <div class="answer-row"><button class="answer-toggle" onclick="toggleAnswer(6)">解答を見る</button></div>
+        <div class="answer-content" id="answer-6">
+          <p class="answer-main">I am cooking now.</p>
+          <p class="answer-detail">am cooking(料理をしている) now(今)</p>
+          <div class="answer-check">
+            <button class="check-btn correct" onclick="markAnswer(6,true)">⭕ 正解</button>
+            <button class="check-btn wrong" onclick="markAnswer(6,false)">❌ 不正解</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="question" data-q="7">
+        <p class="question-num">Q7 — 英訳</p>
+        <p class="question-text">彼らは走っていません。</p>
+        
+        <div class="answer-row"><button class="answer-toggle" onclick="toggleAnswer(7)">解答を見る</button></div>
+        <div class="answer-content" id="answer-7">
+          <p class="answer-main">They are not running.</p>
+          <p class="answer-detail">are not running(走っていない)</p>
+          <div class="answer-check">
+            <button class="check-btn correct" onclick="markAnswer(7,true)">⭕ 正解</button>
+            <button class="check-btn wrong" onclick="markAnswer(7,false)">❌ 不正解</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="question" data-q="8">
+        <p class="question-num">Q8 — 4択</p>
+        <p class="question-text">Look! The cat （　　） on the sofa.</p>
+        <p class="options">ア. sleep　イ. sleeps　ウ. sleeping　エ. is sleeping</p>
+        <div class="answer-row"><button class="answer-toggle" onclick="toggleAnswer(8)">解答を見る</button></div>
+        <div class="answer-content" id="answer-8">
+          <p class="answer-main">エ. is sleeping</p>
+          <p class="answer-detail">Look!があるので進行形。今まさに寝ている。</p>
+          <div class="answer-check">
+            <button class="check-btn correct" onclick="markAnswer(8,true)">⭕ 正解</button>
+            <button class="check-btn wrong" onclick="markAnswer(8,false)">❌ 不正解</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="question" data-q="9">
+        <p class="question-num">Q9 — 4択</p>
+        <p class="question-text">（　　） she writing a letter now?</p>
+        <p class="options">ア. Do　イ. Does　ウ. Is　エ. Are</p>
+        <div class="answer-row"><button class="answer-toggle" onclick="toggleAnswer(9)">解答を見る</button></div>
+        <div class="answer-content" id="answer-9">
+          <p class="answer-main">ウ. Is</p>
+          <p class="answer-detail">進行形の疑問文。主語sheなのでIs。</p>
+          <div class="answer-check">
+            <button class="check-btn correct" onclick="markAnswer(9,true)">⭕ 正解</button>
+            <button class="check-btn wrong" onclick="markAnswer(9,false)">❌ 不正解</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="question" data-q="10">
+        <p class="question-num">Q10 — 4択</p>
+        <p class="question-text">My father is （　　） dinner in the kitchen.</p>
+        <p class="options">ア. make　イ. makes　ウ. making　エ. made</p>
+        <div class="answer-row"><button class="answer-toggle" onclick="toggleAnswer(10)">解答を見る</button></div>
+        <div class="answer-content" id="answer-10">
+          <p class="answer-main">ウ. making</p>
+          <p class="answer-detail">is + ~ing の形。make → making</p>
+          <div class="answer-check">
+            <button class="check-btn correct" onclick="markAnswer(10,true)">⭕ 正解</button>
+            <button class="check-btn wrong" onclick="markAnswer(10,false)">❌ 不正解</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="question" data-q="11">
+        <p class="question-num">Q11 — 並べかえ</p>
+        <p class="question-text">[ is / he / what / doing / ? ]</p>
+        
+        <div class="answer-row"><button class="answer-toggle" onclick="toggleAnswer(11)">解答を見る</button></div>
+        <div class="answer-content" id="answer-11">
+          <p class="answer-main">What is he doing?</p>
+          <p class="answer-detail">彼は何をしていますか？</p>
+          <div class="answer-check">
+            <button class="check-btn correct" onclick="markAnswer(11,true)">⭕ 正解</button>
+            <button class="check-btn wrong" onclick="markAnswer(11,false)">❌ 不正解</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="question" data-q="12">
+        <p class="question-num">Q12 — 並べかえ</p>
+        <p class="question-text">[ taking / a shower / is / my sister / . ]</p>
+        
+        <div class="answer-row"><button class="answer-toggle" onclick="toggleAnswer(12)">解答を見る</button></div>
+        <div class="answer-content" id="answer-12">
+          <p class="answer-main">My sister is taking a shower.</p>
+          <p class="answer-detail">私の姉はシャワーを浴びています。</p>
+          <div class="answer-check">
+            <button class="check-btn correct" onclick="markAnswer(12,true)">⭕ 正解</button>
+            <button class="check-btn wrong" onclick="markAnswer(12,false)">❌ 不正解</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="question" data-q="13">
+        <p class="question-num">Q13 — 書きかえ</p>
+        <p class="question-text">I read books.（進行形に）<br>→ I <span class="blank"></span> <span class="blank"></span> books.</p>
+        
+        <div class="answer-row"><button class="answer-toggle" onclick="toggleAnswer(13)">解答を見る</button></div>
+        <div class="answer-content" id="answer-13">
+          <p class="answer-main">am reading</p>
+          <p class="answer-detail">I am reading books.</p>
+          <div class="answer-check">
+            <button class="check-btn correct" onclick="markAnswer(13,true)">⭕ 正解</button>
+            <button class="check-btn wrong" onclick="markAnswer(13,false)">❌ 不正解</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="question" data-q="14">
+        <p class="question-num">Q14 — 書きかえ</p>
+        <p class="question-text">He is playing tennis.（否定文に）<br>→ He <span class="blank"></span> <span class="blank"></span> tennis.</p>
+        
+        <div class="answer-row"><button class="answer-toggle" onclick="toggleAnswer(14)">解答を見る</button></div>
+        <div class="answer-content" id="answer-14">
+          <p class="answer-main">is not playing</p>
+          <p class="answer-detail">He is not playing tennis.</p>
+          <div class="answer-check">
+            <button class="check-btn correct" onclick="markAnswer(14,true)">⭕ 正解</button>
+            <button class="check-btn wrong" onclick="markAnswer(14,false)">❌ 不正解</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="question" data-q="15">
+        <p class="question-num">Q15 — 書きかえ</p>
+        <p class="question-text">She is singing a song.（疑問文に）<br>→ <span class="blank"></span> she <span class="blank"></span> a song?</p>
+        
+        <div class="answer-row"><button class="answer-toggle" onclick="toggleAnswer(15)">解答を見る</button></div>
+        <div class="answer-content" id="answer-15">
+          <p class="answer-main">Is / singing</p>
+          <p class="answer-detail">Is she singing a song?</p>
+          <div class="answer-check">
+            <button class="check-btn correct" onclick="markAnswer(15,true)">⭕ 正解</button>
+            <button class="check-btn wrong" onclick="markAnswer(15,false)">❌ 不正解</button>
+          </div>
+        </div>
+      </div></div>
+      <div class="point-box"><h3>💡 今日のポイント</h3><ul><li><strong>現在進行形</strong>: be動詞 + ~ing</li>
+<li><strong>意味</strong>: 「今〜している」</li>
+<li><strong>否定文</strong>: be動詞 + not + ~ing</li>
+<li><strong>疑問文</strong>: Be動詞 + 主語 + ~ing?</li>
+<li><strong>ing の作り方</strong>: run→running, make→making, study→studying</li></ul></div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div class="section-number">2</div><h2 class="section-title">Mini Reading</h2></div>
+      <div class="reading-content" id="readingText"><p><strong>Judo Practice</strong></p>
+<p>Look at the gym! Many students are practicing judo.</p>
+<p>Kenji is throwing his partner. Yuki is watching carefully. The teacher is walking around and helping students.</p>
+<p>Everyone is working hard. They are not talking. They are focusing on their practice.</p></div>
+      <div class="reading-tools">
+        <button class="tool-btn" onclick="toggleSpeech()"><span id="speechIcon">🔊</span><span id="speechText">読み上げ</span></button>
+        <button class="tool-btn" onclick="copyReading()">📋 コピー</button>
+        <a href="https://www.naturalreaders.com/online/" target="_blank" class="tool-btn">🌐 Natural Reader</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div class="section-number">3</div><h2 class="section-title">並べ替えクイズ</h2></div>
+      <p class="section-desc">単語をタップして正しい順番に並べよう</p>
+      <div id="wordOrderContainer">
+      <div class="word-order-question" data-answer="Many students,are,practicing judo.">
+        <p class="word-order-prompt">Q1: 「たくさんの生徒が柔道を練習しています。」</p>
+        <div class="word-chips"><span class="word-chip" onclick="moveToAnswer(this)">are</span><span class="word-chip" onclick="moveToAnswer(this)">practicing judo.</span><span class="word-chip" onclick="moveToAnswer(this)">Many students</span></div>
+        <div class="word-answer-area"><span class="placeholder">👆 タップして並べよう</span></div>
+        <div class="word-order-result"></div>
+      </div>
+
+      <div class="word-order-question" data-answer="Kenji,is throwing,his partner.">
+        <p class="word-order-prompt">Q2: 「ケンジはパートナーを投げています。」</p>
+        <div class="word-chips"><span class="word-chip" onclick="moveToAnswer(this)">his partner.</span><span class="word-chip" onclick="moveToAnswer(this)">Kenji</span><span class="word-chip" onclick="moveToAnswer(this)">is throwing</span></div>
+        <div class="word-answer-area"><span class="placeholder">👆 タップして並べよう</span></div>
+        <div class="word-order-result"></div>
+      </div>
+
+      <div class="word-order-question" data-answer="They,are not,talking.">
+        <p class="word-order-prompt">Q3: 「彼らは話していません。」</p>
+        <div class="word-chips"><span class="word-chip" onclick="moveToAnswer(this)">are not</span><span class="word-chip" onclick="moveToAnswer(this)">talking.</span><span class="word-chip" onclick="moveToAnswer(this)">They</span></div>
+        <div class="word-answer-area"><span class="placeholder">👆 タップして並べよう</span></div>
+        <div class="word-order-result"></div>
+      </div></div>
+      <button class="check-order-btn" onclick="checkWordOrder()">答えをチェック</button>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div class="section-number">4</div><h2 class="section-title">単語・フレーズ</h2></div>
+      <button class="vocab-toggle" onclick="toggleVocabList()">📚 View Vocabulary List<span class="arrow">▼</span></button>
+      <div class="vocab-list" id="vocabList">
+        <p class="vocab-instruction">💡 知らなかったものにチェック</p>
+        <div class="vocab-legend"><div class="vocab-legend-item"><div class="legend-word"></div> 単語</div><div class="vocab-legend-item"><div class="legend-chunk"></div> フレーズ</div></div>
+        <div class="vocab-grid"><div class="vocab-item" onclick="toggleVocab(this)"><div class="vocab-check"></div><span class="vocab-en">gym</span><span class="vocab-ja">体育館</span></div>
+<div class="vocab-item" onclick="toggleVocab(this)"><div class="vocab-check"></div><span class="vocab-en">throw</span><span class="vocab-ja">投げる</span></div>
+<div class="vocab-item" onclick="toggleVocab(this)"><div class="vocab-check"></div><span class="vocab-en">partner</span><span class="vocab-ja">パートナー</span></div>
+<div class="vocab-item" onclick="toggleVocab(this)"><div class="vocab-check"></div><span class="vocab-en">carefully</span><span class="vocab-ja">注意深く</span></div>
+<div class="vocab-item chunk" onclick="toggleVocab(this)"><div class="vocab-check"></div><span class="vocab-icon">🔗</span><span class="vocab-en">look at ~</span><span class="vocab-ja">〜を見る</span></div>
+<div class="vocab-item chunk" onclick="toggleVocab(this)"><div class="vocab-check"></div><span class="vocab-icon">🔗</span><span class="vocab-en">work hard</span><span class="vocab-ja">一生懸命働く</span></div>
+<div class="vocab-item" onclick="toggleVocab(this)"><div class="vocab-check"></div><span class="vocab-en">focus</span><span class="vocab-ja">集中する</span></div>
+<div class="vocab-item" onclick="toggleVocab(this)"><div class="vocab-check"></div><span class="vocab-en">around</span><span class="vocab-ja">周りを</span></div></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-header"><div class="section-number">5</div><h2 class="section-title">サマリー作成</h2></div>
+      <div class="score-box"><p class="score-label">今日のスコア</p><p class="score-value"><span class="correct" id="correctCount">0</span> 正解 / <span class="wrong" id="wrongCount">0</span> 不正解</p></div>
+      <button class="summary-btn" onclick="openSummary()">🤖 ChatGPTでサマリーを作る</button>
+    </section>
+
+    <footer class="footer"><p>春休みスペシャル 30日ワーク</p><p><span>Uchiwai</span> — Geek Out With Me</p></footer>
+  </div>
+
+  <script>
+    var DATA = {"dayNum":4,"title":"現在進行形","pointsSummary":"・現在進行形: be動詞 + ~ing\\n・否定文: be動詞 + not + ~ing\\n・疑問文: Be動詞 + 主語 + ~ing?","phrases":"look at, work hard"};
+    var answers={},unknownVocab=[],wordOrderResults={},speechSynth=window.speechSynthesis,isSpeaking=false;
+    function toggleAnswer(n){document.getElementById("answer-"+n).classList.toggle("show")}
+    function markAnswer(n,c){var q=document.querySelector('[data-q="'+n+'"]');q.querySelector(".check-btn.correct").classList.remove("selected");q.querySelector(".check-btn.wrong").classList.remove("selected");q.querySelector(c?".check-btn.correct":".check-btn.wrong").classList.add("selected");answers[n]=c;updateScore()}
+    function updateScore(){var c=0,w=0;for(var q in answers){if(answers[q])c++;else w++}document.getElementById("correctCount").textContent=c;document.getElementById("wrongCount").textContent=w}
+    function toggleSpeech(){if(isSpeaking){speechSynth.cancel();isSpeaking=false;updateSpeechButton(false)}else{var u=new SpeechSynthesisUtterance(document.getElementById("readingText").innerText);u.lang="en-US";u.rate=0.9;u.onend=function(){isSpeaking=false;updateSpeechButton(false)};speechSynth.speak(u);isSpeaking=true;updateSpeechButton(true)}}
+    function updateSpeechButton(p){document.getElementById("speechIcon").textContent=p?"⏹️":"🔊";document.getElementById("speechText").textContent=p?"停止":"読み上げ"}
+    function copyReading(){navigator.clipboard.writeText(document.getElementById("readingText").innerText).then(function(){alert("コピーしました！")})}
+    function moveToAnswer(chip){if(chip.classList.contains("in-answer"))return;var question=chip.closest(".word-order-question");var answerArea=question.querySelector(".word-answer-area");var placeholder=answerArea.querySelector(".placeholder");if(placeholder)placeholder.style.display="none";var answerChip=document.createElement("span");answerChip.className="answer-chip";answerChip.textContent=chip.textContent;answerChip.onclick=function(){removeFromAnswer(answerChip,chip)};answerArea.appendChild(answerChip);chip.classList.add("in-answer")}
+    function removeFromAnswer(answerChip,originalChip){var question=answerChip.closest(".word-order-question");var answerArea=question.querySelector(".word-answer-area");answerChip.remove();originalChip.classList.remove("in-answer");if(answerArea.querySelectorAll(".answer-chip").length===0){var placeholder=answerArea.querySelector(".placeholder");if(placeholder)placeholder.style.display="inline"}}
+    function checkWordOrder(){document.querySelectorAll(".word-order-question").forEach(function(q,i){var chips=q.querySelector(".word-answer-area").querySelectorAll(".answer-chip");var userAnswer=Array.from(chips).map(function(c){return c.textContent}).join(",");var isCorrect=userAnswer===q.dataset.answer;var result=q.querySelector(".word-order-result");result.classList.remove("correct","incorrect");result.classList.add("show",isCorrect?"correct":"incorrect");result.innerHTML=isCorrect?"🎉 正解！":"正解: "+q.dataset.answer.replace(/,/g," ");wordOrderResults[i+1]=isCorrect})}
+    function toggleVocabList(){document.getElementById("vocabList").classList.toggle("show");document.querySelector(".vocab-toggle").classList.toggle("open")}
+    function toggleVocab(el){el.classList.toggle("checked");var w=el.querySelector(".vocab-en").textContent,m=el.querySelector(".vocab-ja").textContent;if(el.classList.contains("checked"))unknownVocab.push({word:w,meaning:m});else unknownVocab=unknownVocab.filter(function(v){return v.word!==w})}
+    function openSummary(){var c=0,w=[];for(var i=1;i<=15;i++){if(answers[i]===true)c++;else if(answers[i]===false)w.push("Q"+i)}var wrongText=w.length>0?"間違えた問題: "+w.join(", "):"全問正解！";var woCorrect=Object.values(wordOrderResults).filter(function(v){return v}).length;var vocabText=unknownVocab.length>0?"知らなかった単語:\\n"+unknownVocab.map(function(v){return "・"+v.word+"（"+v.meaning+"）"}).join("\\n"):"";var prompt="中学1年生の英語学習サマリーを作って。\\n\\n【Day "+DATA.dayNum+": "+DATA.title+"】\\n文法: "+c+"/15問正解\\n"+wrongText+"\\n並べ替え: "+woCorrect+"/3問正解\\n\\n【ポイント】\\n"+DATA.pointsSummary+"\\n\\n【フレーズ】"+DATA.phrases+"\\n\\n"+vocabText+"\\n\\n励ましを込めて簡潔に書いて。";window.open("https://chat.openai.com/?q="+encodeURIComponent(prompt),"_blank")}
+  </script>
+</body>
+</html>

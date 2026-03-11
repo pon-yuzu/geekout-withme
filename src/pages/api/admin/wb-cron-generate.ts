@@ -62,7 +62,7 @@ export const GET: APIRoute = async ({ url, locals }) => {
 
     for (let dayNum = config.days_completed + 1; dayNum <= endDay; dayNum++) {
       try {
-        const userPrompt = buildUserPrompt(dayNum, config.total_days, studentConfig);
+        const userPrompt = buildUserPrompt(dayNum, config.total_days, studentConfig, config.adjustment_notes || undefined);
         const response = await generateDay({ systemPrompt, contextPrompt, userPrompt, apiKey });
         const content = extractJSON<AdaptiveDayContent>(response);
         const errors = validateDayContent(content);

@@ -1,0 +1,42 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import CourseUnlock from '../../../components/workbook/CourseUnlock';
+import { PAID_COURSES } from '../../../lib/workbook/paid-courses';
+
+const user = Astro.locals.user;
+const { id } = Astro.params;
+
+const course = PAID_COURSES.find(c => c.id === id);
+
+if (!course) {
+  return Astro.redirect('/workbook');
+}
+
+// Redirect to static course page if baseUrl is set
+if (course.baseUrl) {
+  return Astro.redirect(course.baseUrl);
+}
+---
+
+<Layout title={course.title} user={user}>
+  <section class="py-8 px-4">
+    <div class="max-w-4xl mx-auto">
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">{course.emoji} {course.title}</h1>
+        <p class="text-gray-500">{course.subtitle} — {course.level}</p>
+        <p class="text-sm text-gray-400 mt-2">{course.description}</p>
+      </div>
+
+      <!-- CourseUnlock (React client component) -->
+      <CourseUnlock client:load course={course} />
+
+      <!-- Back link -->
+      <div class="text-center mt-8">
+        <a href="/workbook" class="text-orange-500 hover:text-orange-600 font-medium">
+          ← ワークブック一覧に戻る
+        </a>
+      </div>
+    </div>
+  </section>
+</Layout>

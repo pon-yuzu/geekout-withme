@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>30日間オーストラリア英語 〜ワーホリ準備編〜</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #e8b4cb 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #5a3e36;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #7a5a50;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .intro {
+            background: #fdf8f5;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: left;
+            font-size: 0.95rem;
+            color: #5a4a40;
+        }
+
+        /* Unlock bar */
+        .unlock-bar {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .unlock-bar.locked {
+            border: 2px solid #e8a4b8;
+        }
+        .unlock-bar.unlocked {
+            border: 2px solid #4caf50;
+            background: #f0faf0;
+        }
+        .unlock-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #5a3e36;
+            margin-bottom: 8px;
+        }
+        .unlock-desc {
+            color: #7a5a50;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+        .unlock-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+        .buy-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #e8a4b8, #d4919f);
+            color: white;
+            padding: 12px 32px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        .buy-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(232,164,184,0.4);
+        }
+        .pw-toggle {
+            background: none;
+            border: none;
+            color: #e8a4b8;
+            cursor: pointer;
+            font-size: 0.85rem;
+            text-decoration: underline;
+        }
+        .pw-form {
+            display: none;
+            margin-top: 12px;
+        }
+        .pw-form.show {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+        }
+        .pw-input {
+            padding: 8px 14px;
+            border: 2px solid #e8d4cf;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            width: 180px;
+        }
+        .pw-input:focus {
+            outline: none;
+            border-color: #e8a4b8;
+        }
+        .pw-submit {
+            padding: 8px 16px;
+            background: #e8a4b8;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        .pw-submit:hover {
+            background: #d4919f;
+        }
+        .pw-error {
+            color: #e53935;
+            font-size: 0.85rem;
+            margin-top: 8px;
+            display: none;
+        }
+        .unlocked-msg {
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .week-section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .week-section h2 {
+            color: #5a3e36;
+            font-size: 1.3rem;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f5e6e0;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        .day-card {
+            display: flex;
+            align-items: center;
+            background: #fdf8f5;
+            padding: 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #5a3e36;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .day-card.free:hover {
+            background: #fff0ed;
+            border-color: #e8a4b8;
+            transform: translateY(-2px);
+        }
+
+        .day-card.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .day-card.unlocked:hover {
+            background: #fff0ed;
+            border-color: #e8a4b8;
+            transform: translateY(-2px);
+        }
+
+        .day-emoji {
+            font-size: 1.5rem;
+            margin-right: 12px;
+        }
+
+        .day-number {
+            font-weight: bold;
+            color: #e8a4b8;
+            margin-right: 8px;
+            min-width: 50px;
+        }
+
+        .day-title {
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        .day-badge {
+            font-size: 0.65rem;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 6px;
+            margin-left: 8px;
+            white-space: nowrap;
+        }
+        .badge-free {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+        .badge-lock {
+            background: #f5f5f5;
+            color: #999;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .back-link a {
+            color: #e8a4b8;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #7a5a50;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>30日間オーストラリア英語</h1>
+            <p class="subtitle">〜ワーホリ準備編〜</p>
+            <div class="intro">
+                <p>🎯 <strong>対象レベル：</strong>英検5級合格レベル</p>
+                <p>📅 <strong>学習期間：</strong>1日15〜20分 × 30日間</p>
+                <p>🌏 <strong>目標：</strong>オーストラリアで使える実践的な英語力を身につける</p>
+            </div>
+        </header>
+
+        <!-- Unlock bar -->
+        <div id="unlock-bar" class="unlock-bar locked">
+            <div id="locked-content">
+                <p class="unlock-title">全30日分をアンロック</p>
+                <p class="unlock-desc">無料サンプル3日分 (Day 1, 8, 22) を公開中。全30日分は ¥500 で購入できます。</p>
+                <div class="unlock-actions">
+                    <a href="https://buy.stripe.com/fZu3cu4MheU6fDxfJMd7q00" class="buy-btn">¥500 で購入する</a>
+                    <button class="pw-toggle" onclick="togglePwForm()">パスワードをお持ちの方はこちら</button>
+                    <div id="pw-form" class="pw-form">
+                        <input type="text" id="pw-input" class="pw-input" placeholder="パスワード">
+                        <button class="pw-submit" onclick="submitPassword()">解除</button>
+                    </div>
+                    <p id="pw-error" class="pw-error">パスワードが違います</p>
+                </div>
+            </div>
+            <div id="unlocked-content" style="display:none;">
+                <p class="unlocked-msg">&#10003; 全30日アクセス可能</p>
+                <div id="name-section" style="margin-top:16px;padding-top:16px;border-top:1px solid #e0e0e0;">
+                    <p style="font-size:0.9rem;color:#5a3e36;margin-bottom:8px;">📝 会話セクションに表示するお名前</p>
+                    <div style="display:flex;justify-content:center;gap:8px;align-items:center;">
+                        <input type="text" id="name-input" class="pw-input" placeholder="例: Yuka" style="width:160px;">
+                        <button class="pw-submit" onclick="saveName()">保存</button>
+                    </div>
+                    <p id="name-saved" style="color:#4caf50;font-size:0.85rem;margin-top:8px;display:none;">✓ 保存しました！</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="week-section">
+            <h2>Week 1: オーストラリア基礎知識</h2>
+            <div class="days-grid">
+                <a href="day1.html" class="day-card free" data-day="1">
+                    <span class="day-emoji">🌏</span>
+                    <span class="day-number">Day 1</span>
+                    <span class="day-title">Australia is a Big Country</span>
+                    <span class="day-badge badge-free">FREE</span>
+                </a>
+                <a href="day2.html" class="day-card locked" data-day="2">
+                    <span class="day-emoji">🌞</span>
+                    <span class="day-number">Day 2</span>
+                    <span class="day-title">The Seasons are Opposite</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day3.html" class="day-card locked" data-day="3">
+                    <span class="day-emoji">🕐</span>
+                    <span class="day-number">Day 3</span>
+                    <span class="day-title">Time Zones in Australia</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day4.html" class="day-card locked" data-day="4">
+                    <span class="day-emoji">🦘</span>
+                    <span class="day-number">Day 4</span>
+                    <span class="day-title">Unique Animals</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day5.html" class="day-card locked" data-day="5">
+                    <span class="day-emoji">🕷️</span>
+                    <span class="day-number">Day 5</span>
+                    <span class="day-title">Dangerous Animals</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day6.html" class="day-card locked" data-day="6">
+                    <span class="day-emoji">🎨</span>
+                    <span class="day-number">Day 6</span>
+                    <span class="day-title">First Australians</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day7.html" class="day-card locked" data-day="7">
+                    <span class="day-emoji">🗣️</span>
+                    <span class="day-number">Day 7</span>
+                    <span class="day-title">Australian English</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+            </div>
+        </div>
+        <div class="week-section">
+            <h2>Week 2: 主要都市ガイド</h2>
+            <div class="days-grid">
+                <a href="day8.html" class="day-card free" data-day="8">
+                    <span class="day-emoji">🏙️</span>
+                    <span class="day-number">Day 8</span>
+                    <span class="day-title">Sydney</span>
+                    <span class="day-badge badge-free">FREE</span>
+                </a>
+                <a href="day9.html" class="day-card locked" data-day="9">
+                    <span class="day-emoji">☕</span>
+                    <span class="day-number">Day 9</span>
+                    <span class="day-title">Melbourne</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day10.html" class="day-card locked" data-day="10">
+                    <span class="day-emoji">🌴</span>
+                    <span class="day-number">Day 10</span>
+                    <span class="day-title">Brisbane</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day11.html" class="day-card locked" data-day="11">
+                    <span class="day-emoji">🏄</span>
+                    <span class="day-number">Day 11</span>
+                    <span class="day-title">Gold Coast</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day12.html" class="day-card locked" data-day="12">
+                    <span class="day-emoji">🐠</span>
+                    <span class="day-number">Day 12</span>
+                    <span class="day-title">Cairns</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day13.html" class="day-card locked" data-day="13">
+                    <span class="day-emoji">🌅</span>
+                    <span class="day-number">Day 13</span>
+                    <span class="day-title">Perth</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day14.html" class="day-card locked" data-day="14">
+                    <span class="day-emoji">🤔</span>
+                    <span class="day-number">Day 14</span>
+                    <span class="day-title">Which City is Right for You?</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+            </div>
+        </div>
+        <div class="week-section">
+            <h2>Week 3: 食文化</h2>
+            <div class="days-grid">
+                <a href="day15.html" class="day-card locked" data-day="15">
+                    <span class="day-emoji">☕</span>
+                    <span class="day-number">Day 15</span>
+                    <span class="day-title">Cafe Culture</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day16.html" class="day-card locked" data-day="16">
+                    <span class="day-emoji">🥑</span>
+                    <span class="day-number">Day 16</span>
+                    <span class="day-title">Brunch is a Lifestyle</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day17.html" class="day-card locked" data-day="17">
+                    <span class="day-emoji">🍜</span>
+                    <span class="day-number">Day 17</span>
+                    <span class="day-title">Multicultural Food</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day18.html" class="day-card locked" data-day="18">
+                    <span class="day-emoji">🍣</span>
+                    <span class="day-number">Day 18</span>
+                    <span class="day-title">Asian Food in Australia</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day19.html" class="day-card locked" data-day="19">
+                    <span class="day-emoji">🍖</span>
+                    <span class="day-number">Day 19</span>
+                    <span class="day-title">Aussie BBQ</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day20.html" class="day-card locked" data-day="20">
+                    <span class="day-emoji">🥧</span>
+                    <span class="day-number">Day 20</span>
+                    <span class="day-title">Meat Pies and Fish & Chips</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day21.html" class="day-card locked" data-day="21">
+                    <span class="day-emoji">🫙</span>
+                    <span class="day-number">Day 21</span>
+                    <span class="day-title">Vegemite</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+            </div>
+        </div>
+        <div class="week-section">
+            <h2>Week 4: ワーホリ実践準備</h2>
+            <div class="days-grid">
+                <a href="day22.html" class="day-card free" data-day="22">
+                    <span class="day-emoji">📋</span>
+                    <span class="day-number">Day 22</span>
+                    <span class="day-title">Working Holiday Visa</span>
+                    <span class="day-badge badge-free">FREE</span>
+                </a>
+                <a href="day23.html" class="day-card locked" data-day="23">
+                    <span class="day-emoji">🏦</span>
+                    <span class="day-number">Day 23</span>
+                    <span class="day-title">Opening a Bank Account</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day24.html" class="day-card locked" data-day="24">
+                    <span class="day-emoji">📄</span>
+                    <span class="day-number">Day 24</span>
+                    <span class="day-title">Getting a TFN</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day25.html" class="day-card locked" data-day="25">
+                    <span class="day-emoji">💼</span>
+                    <span class="day-number">Day 25</span>
+                    <span class="day-title">Finding a Job</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day26.html" class="day-card locked" data-day="26">
+                    <span class="day-emoji">👨‍🍳</span>
+                    <span class="day-number">Day 26</span>
+                    <span class="day-title">Working in a Kitchen</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day27.html" class="day-card locked" data-day="27">
+                    <span class="day-emoji">🏠</span>
+                    <span class="day-number">Day 27</span>
+                    <span class="day-title">Share House Living</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day28.html" class="day-card locked" data-day="28">
+                    <span class="day-emoji">🚌</span>
+                    <span class="day-number">Day 28</span>
+                    <span class="day-title">Public Transport</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+            </div>
+        </div>
+        <div class="week-section">
+            <h2>Week 5: まとめ</h2>
+            <div class="days-grid">
+                <a href="day29.html" class="day-card locked" data-day="29">
+                    <span class="day-emoji">📝</span>
+                    <span class="day-number">Day 29</span>
+                    <span class="day-title">My Australia Plan</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+                <a href="day30.html" class="day-card locked" data-day="30">
+                    <span class="day-emoji">🎉</span>
+                    <span class="day-number">Day 30</span>
+                    <span class="day-title">30 Days Review</span>
+                    <span class="day-badge badge-lock">🔒</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="back-link">
+            <a href="/workbook">&larr; ワークブック一覧に戻る</a>
+        </div>
+
+        <footer>
+            <p>Made with ❤️ for your Australian adventure!</p>
+        </footer>
+    </div>
+
+    <script>
+        var STORAGE_KEY = 'uchiwai_course_access_australia-english-30days';
+        var PASSWORD = 'KANGAROO2026';
+        var FREE_DAYS = [1, 8, 22];
+
+        function isUnlocked() {
+            try { return localStorage.getItem(STORAGE_KEY) === 'true'; } catch(e) { return false; }
+        }
+
+        function unlock() {
+            try { localStorage.setItem(STORAGE_KEY, 'true'); } catch(e) {}
+        }
+
+        function togglePwForm() {
+            document.getElementById('pw-form').classList.toggle('show');
+            document.getElementById('pw-error').style.display = 'none';
+        }
+
+        function submitPassword() {
+            var val = document.getElementById('pw-input').value.trim().toUpperCase();
+            if (val === PASSWORD) {
+                unlock();
+                applyUnlockState();
+            } else {
+                document.getElementById('pw-error').style.display = 'block';
+            }
+        }
+
+        document.getElementById('pw-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') submitPassword();
+        });
+
+        function applyUnlockState() {
+            var unlocked = isUnlocked();
+            var bar = document.getElementById('unlock-bar');
+            var lockedContent = document.getElementById('locked-content');
+            var unlockedContent = document.getElementById('unlocked-content');
+
+            if (unlocked) {
+                bar.classList.remove('locked');
+                bar.classList.add('unlocked');
+                lockedContent.style.display = 'none';
+                unlockedContent.style.display = 'block';
+            }
+
+            var cards = document.querySelectorAll('.day-card');
+            cards.forEach(function(card) {
+                var day = parseInt(card.getAttribute('data-day'));
+                var isFree = FREE_DAYS.indexOf(day) !== -1;
+                if (unlocked || isFree) {
+                    card.classList.remove('locked');
+                    card.classList.add(isFree && !unlocked ? 'free' : 'unlocked');
+                    card.style.opacity = '';
+                    card.style.pointerEvents = '';
+                    card.style.cursor = '';
+                    // Remove lock badge, show FREE badge if applicable
+                    var badge = card.querySelector('.day-badge');
+                    if (badge) {
+                        if (isFree && !unlocked) {
+                            badge.className = 'day-badge badge-free';
+                            badge.textContent = 'FREE';
+                        } else if (unlocked) {
+                            badge.style.display = 'none';
+                        }
+                    }
+                }
+            });
+        }
+
+        var NAME_KEY = 'uchiwai_course_name_australia-english-30days';
+
+        function saveName() {
+            var name = document.getElementById('name-input').value.trim();
+            if (name) {
+                try { localStorage.setItem(NAME_KEY, name); } catch(e) {}
+                document.getElementById('name-saved').style.display = 'block';
+                setTimeout(function() { document.getElementById('name-saved').style.display = 'none'; }, 2000);
+            }
+        }
+
+        document.getElementById('name-input').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') saveName();
+        });
+
+        // Load saved name
+        try {
+            var savedName = localStorage.getItem(NAME_KEY);
+            if (savedName) document.getElementById('name-input').value = savedName;
+        } catch(e) {}
+
+        applyUnlockState();
+    </script>
+</body>
+</html>

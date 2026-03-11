@@ -115,7 +115,7 @@ export const PUT: APIRoute = async ({ request, locals }) => {
   if (!supabase) return serverError('Server configuration error');
 
   const body = await request.json();
-  const { id, config_json, status, generation_mode } = body;
+  const { id, config_json, status, generation_mode, adjustment_notes } = body;
 
   if (!id) {
     return json({ error: 'Missing config id' }, 400);
@@ -125,6 +125,7 @@ export const PUT: APIRoute = async ({ request, locals }) => {
   if (config_json) updates.config_json = config_json;
   if (status) updates.status = status;
   if (generation_mode) updates.generation_mode = generation_mode;
+  if (adjustment_notes !== undefined) updates.adjustment_notes = adjustment_notes || null;
 
   const { data, error } = await supabase
     .from('student_configs')

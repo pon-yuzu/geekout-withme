@@ -56,7 +56,7 @@ export interface StudentConfigRow {
   display_name?: string;
 }
 
-export type ConfigStatus = 'draft' | 'approved' | 'generating' | 'review' | 'active';
+export type ConfigStatus = 'draft' | 'approved' | 'generating' | 'preview' | 'review' | 'active';
 
 // DB row for adaptive_workbook_days table
 export interface AdaptiveWorkbookDay {

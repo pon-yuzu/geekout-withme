@@ -6,15 +6,14 @@ import { createWorkbook } from '../../../lib/workbook/db';
 import { buildTopicItemsPrompt } from '../../../lib/workbook/prompts/topic-items';
 import { getTopicConfig, getLevelConfig, getJlptLevelConfig } from '../../../lib/workbook/slots';
 import { tryIncrementUsage, quotaExceededResponse } from '../../../lib/quota';
+import { getUserTier } from '../../../lib/tier';
 
 export const POST: APIRoute = async ({ request, locals }) => {
   const user = locals.user;
   if (!user) return new Response('Unauthorized', { status: 401 });
 
-  const { data: subs } = await locals.supabase!
-    .from('subscriptions').select('status')
-    .eq('user_id', user.id).in('status', ['active', 'trialing']).limit(1);
-  if (!subs?.length) return new Response('Premium required', { status: 403 });
+  const tier = await getUserTier(locals.supabase!, user.id);
+  if (tier === 'free') return new Response('Premium required', { status: 403 });
 
   // Daily quota check
   const quotaResult = await tryIncrementUsage(locals, 'workbook');

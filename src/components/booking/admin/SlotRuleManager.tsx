@@ -46,6 +46,13 @@ export default function SlotRuleManager() {
   const [newStart, setNewStart] = useState('05:00');
   const [newEnd, setNewEnd] = useState('08:00');
 
+  // ── Recurring edit state ──
+  const [editingSlotId, setEditingSlotId] = useState<string | null>(null);
+  const [editDow, setEditDow] = useState(0);
+  const [editStart, setEditStart] = useState('');
+  const [editEnd, setEditEnd] = useState('');
+  const [editSaving, setEditSaving] = useState(false);
+
   // ── One-off state ──
   const [oneoffs, setOneoffs] = useState<OneoffSlot[]>([]);
   const [oneoffLoading, setOneoffLoading] = useState(true);
@@ -54,6 +61,13 @@ export default function SlotRuleManager() {
   const [ooDate, setOoDate] = useState('');
   const [ooStart, setOoStart] = useState('05:00');
   const [ooEnd, setOoEnd] = useState('08:00');
+
+  // ── One-off edit state ──
+  const [editingOneoffId, setEditingOneoffId] = useState<string | null>(null);
+  const [editOoDate, setEditOoDate] = useState('');
+  const [editOoStart, setEditOoStart] = useState('');
+  const [editOoEnd, setEditOoEnd] = useState('');
+  const [editOoSaving, setEditOoSaving] = useState(false);
 
   useEffect(() => {
     fetchSlots();
@@ -118,6 +132,47 @@ export default function SlotRuleManager() {
     setSlots((prev) => prev.filter((s) => s.id !== id));
   };
 
+  const startEditSlot = (slot: BookingSlot) => {
+    setEditingSlotId(slot.id);
+    setEditDow(slot.day_of_week);
+    setEditStart(slot.start_time.slice(0, 5));
+    setEditEnd(slot.end_time.slice(0, 5));
+  };
+
+  const cancelEditSlot = () => {
+    setEditingSlotId(null);
+  };
+
+  const handleEditSlotSave = async (id: string) => {
+    setEditSaving(true);
+    try {
+      const res = await fetch('/api/booking/admin-slots', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id,
+          day_of_week: editDow,
+          start_time: editStart,
+          end_time: editEnd,
+        }),
+      });
+      if (res.ok) {
+        setSlots((prev) =>
+          prev.map((s) =>
+            s.id === id
+              ? { ...s, day_of_week: editDow, start_time: editStart, end_time: editEnd }
+              : s
+          )
+        );
+        setEditingSlotId(null);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setEditSaving(false);
+    }
+  };
+
   // ── One-off handlers ──
   const fetchOneoffs = async () => {
     try {
@@ -164,6 +219,47 @@ export default function SlotRuleManager() {
       body: JSON.stringify({ id }),
     });
     setOneoffs((prev) => prev.filter((s) => s.id !== id));
+  };
+
+  const startEditOneoff = (slot: OneoffSlot) => {
+    setEditingOneoffId(slot.id);
+    setEditOoDate(slot.slot_date);
+    setEditOoStart(slot.start_time.slice(0, 5));
+    setEditOoEnd(slot.end_time.slice(0, 5));
+  };
+
+  const cancelEditOneoff = () => {
+    setEditingOneoffId(null);
+  };
+
+  const handleEditOneoffSave = async (id: string) => {
+    setEditOoSaving(true);
+    try {
+      const res = await fetch('/api/booking/admin-oneoff-slots', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id,
+          slot_date: editOoDate,
+          start_time: editOoStart,
+          end_time: editOoEnd,
+        }),
+      });
+      if (res.ok) {
+        setOneoffs((prev) =>
+          prev.map((s) =>
+            s.id === id
+              ? { ...s, slot_date: editOoDate, start_time: editOoStart, end_time: editOoEnd }
+              : s
+          )
+        );
+        setEditingOneoffId(null);
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setEditOoSaving(false);
+    }
   };
 
   // ── Loading ──
@@ -294,41 +390,102 @@ export default function SlotRuleManager() {
                   </tr>
                 </thead>
                 <tbody>
-                  {slots.map((slot) => (
-                    <tr key={slot.id} className={`border-b border-gray-50 ${!slot.is_active ? 'opacity-40' : ''}`}>
-                      <td className="py-2.5 pr-3 font-medium">
-                        {DAY_NAMES_EN[slot.day_of_week]} ({DAY_NAMES_JA[slot.day_of_week]})
-                      </td>
-                      <td className="py-2.5 pr-3">
-                        {slot.start_time.slice(0, 5)} – {slot.end_time.slice(0, 5)}
-                      </td>
-                      <td className="py-2.5 pr-3 text-orange-600" suppressHydrationWarning>
-                        {utcTimeToLocalByDow(slot.start_time, slot.day_of_week)} – {utcTimeToLocalByDow(slot.end_time, slot.day_of_week)}
-                      </td>
-                      <td className="py-2.5 pr-3">
-                        <button
-                          onClick={() => handleToggle(slot)}
-                          className={`w-10 h-5 rounded-full transition-colors relative ${
-                            slot.is_active ? 'bg-green-400' : 'bg-gray-300'
-                          }`}
-                        >
-                          <span
-                            className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${
-                              slot.is_active ? 'left-5' : 'left-0.5'
+                  {slots.map((slot) =>
+                    editingSlotId === slot.id ? (
+                      <tr key={slot.id} className="border-b border-orange-100 bg-orange-50/50">
+                        <td className="py-2 pr-3">
+                          <select
+                            value={editDow}
+                            onChange={(e) => setEditDow(Number(e.target.value))}
+                            className="px-1.5 py-1 border border-gray-200 rounded text-sm"
+                          >
+                            {DAY_NAMES_EN.map((name, i) => (
+                              <option key={i} value={i}>{name}</option>
+                            ))}
+                          </select>
+                        </td>
+                        <td className="py-2 pr-3">
+                          <div className="flex items-center gap-1">
+                            <input
+                              type="time"
+                              value={editStart}
+                              onChange={(e) => setEditStart(e.target.value)}
+                              className="px-1.5 py-1 border border-gray-200 rounded text-sm w-24"
+                            />
+                            <span>–</span>
+                            <input
+                              type="time"
+                              value={editEnd}
+                              onChange={(e) => setEditEnd(e.target.value)}
+                              className="px-1.5 py-1 border border-gray-200 rounded text-sm w-24"
+                            />
+                          </div>
+                        </td>
+                        <td className="py-2 pr-3 text-orange-600 text-xs" suppressHydrationWarning>
+                          {utcTimeToLocalByDow(editStart, editDow)} – {utcTimeToLocalByDow(editEnd, editDow)}
+                        </td>
+                        <td colSpan={2} className="py-2">
+                          <div className="flex gap-1.5">
+                            <button
+                              onClick={() => handleEditSlotSave(slot.id)}
+                              disabled={editSaving}
+                              className="px-3 py-1 bg-orange-500 text-white text-xs rounded-lg hover:bg-orange-600 disabled:opacity-50"
+                            >
+                              {editSaving ? '...' : 'Save'}
+                            </button>
+                            <button
+                              onClick={cancelEditSlot}
+                              className="px-3 py-1 text-gray-500 text-xs hover:text-gray-700"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ) : (
+                      <tr key={slot.id} className={`border-b border-gray-50 ${!slot.is_active ? 'opacity-40' : ''}`}>
+                        <td className="py-2.5 pr-3 font-medium">
+                          {DAY_NAMES_EN[slot.day_of_week]} ({DAY_NAMES_JA[slot.day_of_week]})
+                        </td>
+                        <td className="py-2.5 pr-3">
+                          {slot.start_time.slice(0, 5)} – {slot.end_time.slice(0, 5)}
+                        </td>
+                        <td className="py-2.5 pr-3 text-orange-600" suppressHydrationWarning>
+                          {utcTimeToLocalByDow(slot.start_time, slot.day_of_week)} – {utcTimeToLocalByDow(slot.end_time, slot.day_of_week)}
+                        </td>
+                        <td className="py-2.5 pr-3">
+                          <button
+                            onClick={() => handleToggle(slot)}
+                            className={`w-10 h-5 rounded-full transition-colors relative ${
+                              slot.is_active ? 'bg-green-400' : 'bg-gray-300'
                             }`}
-                          />
-                        </button>
-                      </td>
-                      <td className="py-2.5">
-                        <button
-                          onClick={() => handleDelete(slot.id)}
-                          className="text-red-400 hover:text-red-600 text-xs"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                          >
+                            <span
+                              className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${
+                                slot.is_active ? 'left-5' : 'left-0.5'
+                              }`}
+                            />
+                          </button>
+                        </td>
+                        <td className="py-2.5">
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => startEditSlot(slot)}
+                              className="text-blue-500 hover:text-blue-700 text-xs"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleDelete(slot.id)}
+                              className="text-red-400 hover:text-red-600 text-xs"
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                  )}
                 </tbody>
               </table>
             </div>
@@ -434,6 +591,60 @@ export default function SlotRuleManager() {
                   {oneoffs.map((slot) => {
                     const refDate = new Date(slot.slot_date + 'T00:00:00Z');
                     const isPast = new Date(slot.slot_date + 'T23:59:59') < new Date();
+
+                    if (editingOneoffId === slot.id) {
+                      const editRefDate = editOoDate ? new Date(editOoDate + 'T00:00:00Z') : refDate;
+                      return (
+                        <tr key={slot.id} className="border-b border-orange-100 bg-orange-50/50">
+                          <td className="py-2 pr-3">
+                            <input
+                              type="date"
+                              value={editOoDate}
+                              onChange={(e) => setEditOoDate(e.target.value)}
+                              className="px-1.5 py-1 border border-gray-200 rounded text-sm"
+                            />
+                          </td>
+                          <td className="py-2 pr-3">
+                            <div className="flex items-center gap-1">
+                              <input
+                                type="time"
+                                value={editOoStart}
+                                onChange={(e) => setEditOoStart(e.target.value)}
+                                className="px-1.5 py-1 border border-gray-200 rounded text-sm w-24"
+                              />
+                              <span>–</span>
+                              <input
+                                type="time"
+                                value={editOoEnd}
+                                onChange={(e) => setEditOoEnd(e.target.value)}
+                                className="px-1.5 py-1 border border-gray-200 rounded text-sm w-24"
+                              />
+                            </div>
+                          </td>
+                          <td className="py-2 pr-3 text-orange-600 text-xs" suppressHydrationWarning>
+                            {utcTimeToLocal(editOoStart, editRefDate)} – {utcTimeToLocal(editOoEnd, editRefDate)}
+                          </td>
+                          <td className="py-2">
+                            <div className="flex gap-1.5">
+                              <button
+                                onClick={() => handleEditOneoffSave(slot.id)}
+                                disabled={editOoSaving}
+                                className="px-3 py-1 bg-orange-500 text-white text-xs rounded-lg hover:bg-orange-600 disabled:opacity-50"
+                              >
+                                {editOoSaving ? '...' : 'Save'}
+                              </button>
+                              <button
+                                onClick={cancelEditOneoff}
+                                className="px-3 py-1 text-gray-500 text-xs hover:text-gray-700"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    }
+
                     return (
                       <tr key={slot.id} className={`border-b border-gray-50 ${isPast || !slot.is_active ? 'opacity-40' : ''}`}>
                         <td className="py-2.5 pr-3 font-medium" suppressHydrationWarning>
@@ -446,12 +657,20 @@ export default function SlotRuleManager() {
                           {utcTimeToLocal(slot.start_time, refDate)} – {utcTimeToLocal(slot.end_time, refDate)}
                         </td>
                         <td className="py-2.5">
-                          <button
-                            onClick={() => handleOneoffDelete(slot.id)}
-                            className="text-red-400 hover:text-red-600 text-xs"
-                          >
-                            Delete
-                          </button>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => startEditOneoff(slot)}
+                              className="text-blue-500 hover:text-blue-700 text-xs"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleOneoffDelete(slot.id)}
+                              className="text-red-400 hover:text-red-600 text-xs"
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );

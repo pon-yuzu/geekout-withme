@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 200">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Dela+Gothic+One&amp;family=Outfit:wght@600&amp;display=swap');
+    </style>
+  </defs>
+  <!-- Wordmark -->
+  <text x="300" y="120" text-anchor="middle" font-family="'Dela Gothic One', sans-serif" font-size="96" letter-spacing="-1">
+    <tspan fill="#FF6B2B">U</tspan><tspan fill="#1A1A2E">chiwa</tspan><tspan fill="#00B8A9">i</tspan>
+  </text>
+  <!-- Tagline -->
+  <text x="300" y="165" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="600" font-size="20" letter-spacing="5" text-transform="uppercase" fill="#FF6B2B">FAN YOUR FIRE</text>
+</svg>
