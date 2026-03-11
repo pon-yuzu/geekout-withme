@@ -1,6 +1,20 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Workbook, WorkbookDay, DayContent, TopicItem, WorkbookProgress } from './types';
 
+export const WORKBOOK_TTL_DAYS = 30;
+
+export function getExpiresAt(createdAt: string): Date {
+  const d = new Date(createdAt);
+  d.setDate(d.getDate() + WORKBOOK_TTL_DAYS);
+  return d;
+}
+
+export function getDaysRemaining(createdAt: string): number {
+  const expires = getExpiresAt(createdAt);
+  const now = new Date();
+  return Math.ceil((expires.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
+}
+
 export async function createWorkbook(
   supabase: SupabaseClient,
   data: {
@@ -103,10 +117,13 @@ export async function getUserWorkbooks(
   supabase: SupabaseClient,
   userId: string
 ): Promise<Workbook[]> {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - WORKBOOK_TTL_DAYS);
   const { data, error } = await supabase
     .from('workbooks')
     .select('*')
     .eq('user_id', userId)
+    .gte('created_at', cutoff.toISOString())
     .order('created_at', { ascending: false });
   if (error) return [];
   return (data ?? []) as Workbook[];
@@ -115,11 +132,14 @@ export async function getUserWorkbooks(
 export async function getPublicWorkbooks(
   supabase: SupabaseClient
 ): Promise<Workbook[]> {
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - WORKBOOK_TTL_DAYS);
   const { data, error } = await supabase
     .from('workbooks')
     .select('*')
     .eq('is_public', true)
     .eq('status', 'completed')
+    .gte('created_at', cutoff.toISOString())
     .order('created_at', { ascending: false });
   if (error) return [];
   return (data ?? []) as Workbook[];

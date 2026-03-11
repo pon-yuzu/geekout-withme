@@ -1,6 +1,6 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
-import { getWorkbook, getAllDays, getWorkbookProgress, getUserAllProgress, calculateStreak } from '../../../lib/workbook/db';
+import { getWorkbook, getAllDays, getWorkbookProgress, getUserAllProgress, calculateStreak, WORKBOOK_TTL_DAYS } from '../../../lib/workbook/db';
 import { getTheme } from '../../../lib/workbook/themes';
 import { t } from '../../../i18n/index';
 import type { Lang } from '../../../i18n/index';
@@ -43,6 +43,11 @@ if (user && isOwner) {
   const allProgress = await getUserAllProgress(supabase, user.id);
   streak = calculateStreak(allProgress);
 }
+
+const expiresAt = new Date(workbook.created_at);
+expiresAt.setDate(expiresAt.getDate() + WORKBOOK_TTL_DAYS);
+const daysRemaining = Math.ceil((expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+const isUrgent = daysRemaining <= 7 && daysRemaining > 0;
 ---
 
 <Layout title={workbook.title} user={user}>
@@ -56,6 +61,12 @@ if (user && isOwner) {
           <span class="inline-block mt-2 px-3 py-1 bg-amber-100 text-amber-700 rounded-full text-sm font-medium">
             {t(lang, 'workbook.samples.badge')}
           </span>
+        )}
+        {isOwner && daysRemaining > 0 && (
+          <p class={`mt-2 text-sm ${isUrgent ? 'text-red-500 font-medium' : 'text-gray-400'}`}>
+            {t(lang, 'workbook.card.expiresOn').replace('{date}', expiresAt.toLocaleDateString(lang === 'ja' ? 'ja-JP' : 'en-US'))}
+            {isUrgent && ` (${t(lang, 'workbook.card.expiresIn').replace('{days}', String(daysRemaining))})`}
+          </p>
         )}
       </div>
 

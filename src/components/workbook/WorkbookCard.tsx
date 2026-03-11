@@ -1,6 +1,8 @@
 import type { Workbook } from '../../lib/workbook/types';
 import { useTranslation } from '../../i18n/index';
 
+const WORKBOOK_TTL_DAYS = 30;
+
 interface Props {
   workbook: Workbook;
   showAuthor?: boolean;
@@ -12,6 +14,11 @@ export function WorkbookCard({ workbook, showAuthor, userCompletedDays }: Props)
   const isGenerating = workbook.status === 'generating';
   const isFailed = workbook.status === 'failed';
   const totalDays = workbook.is_public ? 30 : 7;
+
+  const expiresAt = new Date(workbook.created_at);
+  expiresAt.setDate(expiresAt.getDate() + WORKBOOK_TTL_DAYS);
+  const daysRemaining = Math.ceil((expiresAt.getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+  const isUrgent = daysRemaining <= 7 && daysRemaining > 0;
   const progress = Math.round((workbook.days_completed / totalDays) * 100);
   const hasStudyProgress = typeof userCompletedDays === 'number' && userCompletedDays > 0;
   const studyProgress = hasStudyProgress ? Math.round((userCompletedDays / totalDays) * 100) : 0;
@@ -81,8 +88,17 @@ export function WorkbookCard({ workbook, showAuthor, userCompletedDays }: Props)
         </div>
       )}
 
-      <div className="text-xs text-gray-400" suppressHydrationWarning>
-        {new Date(workbook.created_at).toLocaleDateString(lang === 'ja' ? 'ja-JP' : 'en-US')}
+      <div className="flex items-center justify-between text-xs" suppressHydrationWarning>
+        <span className="text-gray-400">
+          {new Date(workbook.created_at).toLocaleDateString(lang === 'ja' ? 'ja-JP' : 'en-US')}
+        </span>
+        <span className={isUrgent ? 'text-red-500 font-medium' : 'text-gray-400'}>
+          {daysRemaining <= 0
+            ? t('workbook.card.expired')
+            : daysRemaining === 0
+              ? t('workbook.card.expiresToday')
+              : t('workbook.card.expiresIn').replace('{days}', String(daysRemaining))}
+        </span>
       </div>
     </a>
   );
