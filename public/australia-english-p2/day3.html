@@ -1,0 +1,1687 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<script>(function(){var k="uchiwai_course_access_australia-english-p2";try{if(localStorage.getItem(k)==="true")return;}catch(e){}window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");})()</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🕐 Day 3: Time Zones in Australia</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #e8b4cb 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #5a3e36;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #7a5a50;
+            font-size: 1rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #e8a4b8, #d4919f);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .section-title {
+            display: inline-block;
+            font-size: 1.2rem;
+            color: #5a3e36;
+            font-weight: bold;
+        }
+
+        .section-header {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f5e6e0;
+        }
+
+        .reading-box {
+            background: #fdf8f5;
+            border-left: 4px solid #e8a4b8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+
+        .reading-box h3 {
+            color: #5a3e36;
+            margin-bottom: 12px;
+        }
+
+        .reading-box p {
+            color: #4a4a4a;
+            margin-bottom: 10px;
+        }
+
+        .vocab-section {
+            margin-top: 20px;
+            border-top: 2px solid #f5e6e0;
+            padding-top: 16px;
+        }
+
+        .vocab-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            color: #5a3e36;
+            font-weight: bold;
+        }
+
+        .vocab-header span {
+            margin-right: 8px;
+        }
+
+        .vocab-legend {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .vocab-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .legend-word {
+            width: 12px;
+            height: 12px;
+            background: #fdf8f5;
+            border: 1px solid #e8d4cf;
+            border-radius: 3px;
+        }
+
+        .legend-chunk {
+            width: 12px;
+            height: 12px;
+            background: #f3e8ff;
+            border: 1px solid #d4b8ff;
+            border-radius: 3px;
+        }
+
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+
+        .vocab-item {
+            display: flex;
+            align-items: center;
+            background: #fdf8f5;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .vocab-item:hover {
+            background: #fff0ed;
+        }
+
+        .vocab-item.checked {
+            background: #fff3e0;
+            border-color: #ffb74d;
+        }
+
+        .vocab-item.chunk {
+            background: #f3e8ff;
+            grid-column: span 2;
+        }
+
+        .vocab-item.chunk:hover {
+            background: #ebe0ff;
+        }
+
+        .vocab-item.chunk.checked {
+            background: #ffe0f5;
+            border-color: #e040fb;
+        }
+
+        .vocab-item.chunk .vocab-icon {
+            color: #9c27b0;
+            margin-right: 6px;
+            font-size: 0.8rem;
+        }
+
+        .vocab-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .vocab-item.checked .vocab-checkbox {
+            background: #ff9800;
+            border-color: #ff9800;
+            color: white;
+        }
+
+        .vocab-item.chunk.checked .vocab-checkbox {
+            background: #9c27b0;
+            border-color: #9c27b0;
+        }
+
+        .vocab-item.checked .vocab-checkbox::after {
+            content: "✓";
+            font-size: 14px;
+        }
+
+        .vocab-text {
+            flex: 1;
+        }
+
+        .vocab-text .english {
+            font-weight: bold;
+            color: #c97a8a;
+        }
+
+        .vocab-item.chunk .vocab-text .english {
+            color: #7b1fa2;
+        }
+
+        .vocab-text .japanese {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .quiz-question {
+            background: #fff9f7;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .quiz-question p {
+            font-weight: bold;
+            color: #5a3e36;
+            margin-bottom: 12px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 2px solid #e8d4cf;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            border-color: #e8a4b8;
+            background: #fdf5f7;
+        }
+
+        .quiz-option.correct {
+            border-color: #7cb87c;
+            background: #f0f9f0;
+        }
+
+        .quiz-option.wrong {
+            border-color: #e57373;
+            background: #ffebee;
+        }
+
+        .review-box {
+            background: #fdf8f5;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .review-header .icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        .review-header .place {
+            font-weight: bold;
+            color: #5a3e36;
+        }
+
+        .stars {
+            color: #f5a623;
+            margin-bottom: 12px;
+        }
+
+        .tips-box {
+            background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .tips-box h4 {
+            color: #4a7c4a;
+            margin-bottom: 12px;
+        }
+
+        .conversation-box {
+            background: #f8f4ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .conversation-header {
+            background: #e8dff5;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+            color: #5a4a6a;
+        }
+
+        .dialogue {
+            margin-bottom: 12px;
+        }
+
+        .dialogue-line {
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .speaker-a {
+            background: #e8f4fc;
+            margin-right: 20%;
+        }
+
+        .speaker-b {
+            background: #f5f5f5;
+            margin-left: 20%;
+        }
+
+        .speaker-label {
+            font-weight: bold;
+            color: #5a7a9a;
+            font-size: 0.85rem;
+        }
+
+        .speaker-b .speaker-label {
+            color: #7a7a7a;
+        }
+
+        .key-sentences-box {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+            border: 2px solid #ffb74d;
+        }
+
+        .key-sentences-box h4 {
+            color: #e65100;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+        }
+
+        .key-sentence {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid #ff9800;
+        }
+
+        .key-sentence .english {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #5a3e36;
+            margin-bottom: 4px;
+        }
+
+        .key-sentence .japanese {
+            color: #7a7a7a;
+            font-size: 0.9rem;
+        }
+
+        .key-sentence .source {
+            color: #ff9800;
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+
+        .word-order-box {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .word-order-question {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #e0c080;
+        }
+
+        .word-order-question:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .word-order-question .prompt {
+            color: #5a3e36;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        .word-chips-container {
+            min-height: 50px;
+            margin-bottom: 12px;
+        }
+
+        .word-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .word-chip {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+            user-select: none;
+        }
+
+        .word-chip:hover {
+            border-color: #ff9800;
+            background: #fff3e0;
+            transform: scale(1.02);
+        }
+
+        .word-chip.in-answer {
+            opacity: 0.3;
+            cursor: default;
+            transform: none;
+        }
+
+        .answer-area {
+            min-height: 56px;
+            background: white;
+            border: 2px dashed #ffb74d;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .answer-area .placeholder {
+            color: #bbb;
+            font-style: italic;
+            font-size: 0.95rem;
+        }
+
+        .answer-chip {
+            background: #ff9800;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            animation: popIn 0.2s ease-out;
+        }
+
+        .answer-chip:hover {
+            background: #f57c00;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .check-btn {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 16px;
+            transition: transform 0.2s;
+            font-weight: bold;
+        }
+
+        .check-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .result-message {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .result-message.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .result-message.wrong {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .try-it-box {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .try-it-box textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 2px solid #90caf9;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            margin-top: 12px;
+        }
+
+        .hint-box {
+            background: #bbdefb;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 0.9rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-copy {
+            background: #e8a4b8;
+            color: white;
+        }
+
+        .btn-audio {
+            background: #7cb87c;
+            color: white;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding: 20px 0;
+        }
+
+        .nav-btn {
+            background: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #5a3e36;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .home-btn {
+            display: block;
+            text-align: center;
+            background: linear-gradient(135deg, #e8a4b8, #d4919f);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .vocab-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5e6e0;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 16px;
+            color: #5a3e36;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .vocab-toggle:hover {
+            background: #eed6cf;
+        }
+
+        .vocab-toggle .arrow {
+            margin-left: 8px;
+            transition: transform 0.3s;
+        }
+
+        .vocab-toggle.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        .vocab-section.collapsed {
+            display: none;
+        }
+
+        .summary-section {
+            background: #f5f0ff;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .summary-section h3 {
+            color: #5a3e36;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+        .summary-desc {
+            color: #7a5a50;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+        }
+        .summary-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #7c3aed, #9333ea);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 24px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+        .summary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124,58,237,0.3);
+        }
+        .summary-output {
+            display: none;
+            background: white;
+            border: 2px solid #e0d4f5;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 0.85rem;
+            color: #5a3e36;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+        }
+        .summary-actions {
+            display: none;
+            gap: 8px;
+            justify-content: center;
+        }
+        .summary-actions.show {
+            display: flex;
+        }
+        .summary-action-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .summary-copy-btn {
+            background: #e8e0f5;
+            color: #7c3aed;
+        }
+        .summary-copy-btn:hover {
+            background: #d4c8eb;
+        }
+        .summary-chatgpt-btn {
+            background: #10a37f;
+            color: white;
+        }
+        .summary-chatgpt-btn:hover {
+            background: #0d8c6d;
+        }
+        .summary-claude-btn {
+            background: #d97706;
+            color: white;
+        }
+        .summary-claude-btn:hover {
+            background: #b45309;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🕐 Day 3: Time Zones in Australia</h1>
+            <p class="subtitle">30日間オーストラリア英語 — 3日目</p>
+        </header>
+
+        <!-- Section 1: Reading -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">1</span>
+                <span class="section-title">Reading</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">時差、ビデオ通話</p>
+
+            <div class="reading-box">
+                <h3>Navigating Australia's Multiple Time Zones</h3>
+                <p>One aspect of Australian life that frequently bewilders newcomers is the fact that the country operates across three distinct time zones. Eastern Standard Time, which covers Queensland, New South Wales, Victoria, Tasmania, and the Australian Capital Territory, is one hour ahead of Central Standard Time used in South Australia and the Northern Territory. Western Standard Time, observed in Western Australia, is a further hour behind Central time. What makes this system even more complicated is that not all states participate in daylight saving time. Queensland and Western Australia, along with the Northern Territory, do not adjust their clocks, whereas the remaining states advance their clocks by one hour during the warmer months. Consequently, arranging a video call between Perth and Sydney during summer requires careful consideration, as the time difference expands from the standard two hours to three. For Japanese travellers, the time difference with Australia's east coast is relatively manageable — merely one to two hours ahead, depending on the season.</p>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-copy" onclick="copyText(this)">📋 コピー</button>
+                <button class="btn btn-audio" onclick="openNaturalReader(this)">🔊 Natural Reader</button>
+            </div>
+
+            <div class="vocab-toggle" onclick="toggleVocab(this)">
+                📚 単語・フレーズリストを見る <span class="arrow">▼</span>
+            </div>
+
+            <div class="vocab-section collapsed">
+                <div class="vocab-header">
+                    <span>💡</span> わからなかったものにチェック ✓
+                </div>
+                <div class="vocab-legend">
+                    <div class="vocab-legend-item"><div class="legend-word"></div> 単語</div>
+                    <div class="vocab-legend-item"><div class="legend-chunk"></div> フレーズ</div>
+                </div>
+                <div class="vocab-grid">
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">aspect</span><br>
+                            <span class="japanese">側面、要素</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">bewilders</span><br>
+                            <span class="japanese">困惑させる</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">operates</span><br>
+                            <span class="japanese">運用される</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">distinct</span><br>
+                            <span class="japanese">異なる、明確な</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">one hour ahead of</span><br>
+                            <span class="japanese">〜より1時間進んでいる</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">observed</span><br>
+                            <span class="japanese">採用されている</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">participate</span><br>
+                            <span class="japanese">参加する</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">daylight saving time</span><br>
+                            <span class="japanese">サマータイム</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">adjust</span><br>
+                            <span class="japanese">調整する</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">whereas</span><br>
+                            <span class="japanese">一方で</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">advance</span><br>
+                            <span class="japanese">進める</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">consequently</span><br>
+                            <span class="japanese">その結果</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">consideration</span><br>
+                            <span class="japanese">考慮、配慮</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">expands</span><br>
+                            <span class="japanese">拡大する</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">manageable</span><br>
+                            <span class="japanese">管理しやすい、対処しやすい</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Quiz 1 -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">2</span>
+                <span class="section-title">Quiz 1</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">Readingの内容チェック</p>
+
+            <div class="quiz-question">
+                <p>Q: オーストラリアにはいくつの時間帯がありますか？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">2つ</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">3つ</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">4つ</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Review -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">3</span>
+                <span class="section-title">Review</span>
+            </div>
+
+            <div class="review-box">
+                <div class="review-header">
+                    <span class="icon">📍</span>
+                    <span class="place">Sydney Opera House</span>
+                </div>
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p>Having arrived in Sydney after an overnight flight from Tokyo, I was struck by how minimal the jet lag was, owing to the mere two-hour time difference. Situated majestically on Bennelong Point, the Sydney Opera House is undeniably one of the most recognisable architectural masterpieces in the world. Designed by Danish architect Jorn Utzon, whose revolutionary vision was initially met with considerable controversy, the building was ultimately completed in 1973 after sixteen years of construction. What distinguishes this structure from other landmarks is the way its sail-shaped roof shells appear to transform depending on one's vantage point and the prevailing light conditions. Not only does it host over 1,500 performances annually, but it also serves as a UNESCO World Heritage Site, attracting approximately 8.2 million visitors each year. Were you to attend an evening performance, the illuminated sails against the darkened harbour would provide an unforgettable spectacle. I would strongly urge whoever visits Sydney to allocate sufficient time for both a guided tour and a performance.</p>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-copy" onclick="copyText(this)">📋 コピー</button>
+                <button class="btn btn-audio" onclick="openNaturalReader(this)">🔊 Natural Reader</button>
+            </div>
+
+            <div class="vocab-toggle" onclick="toggleVocab(this)">
+                📚 単語・フレーズリストを見る <span class="arrow">▼</span>
+            </div>
+
+            <div class="vocab-section collapsed">
+                <div class="vocab-header">
+                    <span>💡</span> わからなかったものにチェック ✓
+                </div>
+                <div class="vocab-legend">
+                    <div class="vocab-legend-item"><div class="legend-word"></div> 単語</div>
+                    <div class="vocab-legend-item"><div class="legend-chunk"></div> フレーズ</div>
+                </div>
+                <div class="vocab-grid">
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">Having arrived</span><br>
+                            <span class="japanese">到着してから（分詞構文）</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">owing to</span><br>
+                            <span class="japanese">〜のおかげで</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">majestically</span><br>
+                            <span class="japanese">堂々と</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">recognisable</span><br>
+                            <span class="japanese">認識できる、見覚えのある</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">masterpieces</span><br>
+                            <span class="japanese">傑作</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">revolutionary</span><br>
+                            <span class="japanese">革命的な</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">controversy</span><br>
+                            <span class="japanese">論争</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">ultimately</span><br>
+                            <span class="japanese">最終的に</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">distinguishes</span><br>
+                            <span class="japanese">区別する</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">vantage point</span><br>
+                            <span class="japanese">見晴らしの良い場所</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">prevailing</span><br>
+                            <span class="japanese">優勢な、一般的な</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">annually</span><br>
+                            <span class="japanese">毎年</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">illuminated</span><br>
+                            <span class="japanese">照らされた</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">spectacle</span><br>
+                            <span class="japanese">壮観、見もの</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">allocate</span><br>
+                            <span class="japanese">割り当てる</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Quiz 2 -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">4</span>
+                <span class="section-title">Quiz 2</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">Reviewの内容チェック</p>
+
+            <div class="quiz-question">
+                <p>Q: シドニー・オペラハウスの設計者は誰ですか？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">オーストラリア人建築家</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">デンマーク人建築家ヨーン・ウツソン</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">イギリス人建築家</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Australia Tips -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">5</span>
+                <span class="section-title">🦘 Australia Tips</span>
+            </div>
+
+            <div class="tips-box" style="background: linear-gradient(135deg, #e8f5e9, #f1f8e9); ">
+                <h4>オーストラリアの時間帯を覚えよう</h4>
+                <p>AEST（東部標準時）= 日本+1時間（夏は+2時間）、ACST（中部標準時）= 日本+0.5時間（夏は+1.5時間）、AWST（西部標準時）= 日本-1時間。ワーホリで家族にビデオ通話するなら、東海岸の場合はほぼ同じ時間感覚で連絡できます。QLD州はサマータイムがないので、夏でも日本+1時間のままです。</p>
+            </div>
+            <div class="tips-box" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); margin-top: 12px;">
+                <h4>ワーホリ中の日本との連絡</h4>
+                <p>日本との時差が小さいのはオーストラリアの大きなメリットです。欧米に比べ、家族や友人とリアルタイムで連絡を取りやすいです。LINEやZoomでの通話も、お互い無理のない時間帯に設定できます。特に東海岸なら、日本の夜9時がオーストラリアの夜10〜11時なので、仕事終わりの通話も可能です。</p>
+            </div>
+        </div>
+
+        <!-- Section 6: Conversation -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">6</span>
+                <span class="section-title">Conversation</span>
+            </div>
+
+            <div class="conversation-box">
+                <div class="conversation-header">
+                    🎭 ユウキが、ホストファミリーのマークに日本の家族とのビデオ通話について相談しています。
+                </div>
+
+                <div class="dialogue">
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (Koa):</span><br>
+                        Mark, I'd like to schedule a regular video call with my family in Japan. Could you advise me on the best time to do that?
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        Sure thing! The time difference between Melbourne and Japan is only about one to two hours, depending on whether we're on daylight saving or not.
+                    </div>
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (Koa):</span><br>
+                        That's far more convenient than I had anticipated. So if it's 9 PM in Tokyo, what time would it be here?
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        During summer, it'd be 11 PM here since we're two hours ahead. In winter, it's only one hour ahead, so it'd be 10 PM. Not too bad, hey?
+                    </div>
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (Koa):</span><br>
+                        Not at all! Were I studying in Europe, the time difference would make regular calls considerably more difficult.
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        That's true. My cousin lives in London, and coordinating calls is a nightmare because of the nine-hour gap.
+                    </div>
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (Koa):</span><br>
+                        By the way, I've heard that not all Australian states observe daylight saving time. Is that correct?
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        Yeah, Queensland doesn't participate in it, which can be confusing. If you were to call someone in Brisbane during summer, they'd actually be an hour behind us in Melbourne, even though they're in the same time zone during winter.
+                    </div>
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (Koa):</span><br>
+                        That does sound rather confusing! How do people manage when they need to coordinate meetings across different states?
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        Honestly, it's a bit of a hassle. Most people just use apps that automatically convert the time zones. You get used to it eventually.
+                    </div>
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (Koa):</span><br>
+                        I suppose that's the practical solution. I'll set up a weekly call with my parents — perhaps Sunday evenings would work best.
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        Sounds like a plan! The Wi-Fi here is pretty reliable, so you shouldn't have any dramas with the connection.
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-copy" onclick="copyText(this)">📋 コピー</button>
+                <button class="btn btn-audio" onclick="openNaturalReader(this)">🔊 Natural Reader</button>
+            </div>
+
+            <div class="vocab-toggle" onclick="toggleVocab(this)">
+                📚 単語・フレーズリストを見る <span class="arrow">▼</span>
+            </div>
+
+            <div class="vocab-section collapsed">
+                <div class="vocab-header">
+                    <span>💡</span> わからなかったものにチェック ✓
+                </div>
+                <div class="vocab-legend">
+                    <div class="vocab-legend-item"><div class="legend-word"></div> 単語</div>
+                    <div class="vocab-legend-item"><div class="legend-chunk"></div> フレーズ</div>
+                </div>
+                <div class="vocab-grid">
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">Sure thing!</span><br>
+                            <span class="japanese">もちろん！</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">depending on whether</span><br>
+                            <span class="japanese">〜かどうかによって</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">anticipated</span><br>
+                            <span class="japanese">予想した</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">convenient</span><br>
+                            <span class="japanese">便利な</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">Not too bad, hey?</span><br>
+                            <span class="japanese">悪くないでしょ？（豪英語）</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">coordinating</span><br>
+                            <span class="japanese">調整する</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">nightmare</span><br>
+                            <span class="japanese">悪夢、大変なこと</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">participate</span><br>
+                            <span class="japanese">参加する</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">a bit of a hassle</span><br>
+                            <span class="japanese">ちょっと面倒な</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">automatically</span><br>
+                            <span class="japanese">自動的に</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">convert the time zones</span><br>
+                            <span class="japanese">時間帯を変換する</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">Sounds like a plan!</span><br>
+                            <span class="japanese">いい計画だね！</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">reliable</span><br>
+                            <span class="japanese">信頼できる</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">shouldn't have any dramas</span><br>
+                            <span class="japanese">問題ないはず（豪スラング）</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 7: Quiz 3 -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">7</span>
+                <span class="section-title">Quiz 3</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">Conversationの内容チェック</p>
+
+            <div class="quiz-question">
+                <p>Q: 会話によると、クイーンズランド州の時間について正しいのはどれですか？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">常にメルボルンと同じ時間である</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">サマータイムを採用していないため、夏はメルボルンより1時間遅れる</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">日本との時差が最も大きい</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 8: Key Sentences -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">8</span>
+                <span class="section-title">🔑 Key Sentences</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">今日のそのまま使える表現3つ</p>
+
+            <div class="key-sentences-box">
+                <h4>🌟 覚えておきたいフレーズ</h4>
+                <div class="key-sentence">
+                    <div class="english">What makes this system even more complicated is that not all states participate in daylight saving time.</div>
+                    <div class="japanese">このシステムをさらに複雑にしているのは、すべての州がサマータイムに参加しているわけではないということです。</div>
+                    <div class="source">📍 reading</div>
+                </div>
+                <div class="key-sentence">
+                    <div class="english">Were you to attend an evening performance, the illuminated sails would provide an unforgettable spectacle.</div>
+                    <div class="japanese">もし夜の公演に出席すれば、照らされた帆は忘れられない壮観を提供するでしょう。</div>
+                    <div class="source">📍 review</div>
+                </div>
+                <div class="key-sentence">
+                    <div class="english">Were I studying in Europe, the time difference would make regular calls considerably more difficult.</div>
+                    <div class="japanese">もしヨーロッパで勉強していたら、時差のせいで定期的な通話はかなり難しくなるでしょう。</div>
+                    <div class="source">📍 conversation</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 9: Word Order Quiz -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">9</span>
+                <span class="section-title">🔀 並べ替えクイズ</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">Key Sentencesを並べ替えて作ってみよう</p>
+
+            <div class="word-order-box">
+                <div class="word-order-question" data-answer="What makes,this system,even more complicated,is that,not all states,participate">
+                    <p class="prompt">Q1: 「このシステムをさらに複雑にしているのは、すべての州が参加しているわけではないということです。」</p>
+                    <div class="word-chips-container">
+                        <div class="word-chips">
+                            <span class="word-chip" onclick="moveToAnswer(this)">this system</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">What makes</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">even more complicated</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">is that</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">not all states</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">participate</span>
+                        </div>
+                    </div>
+                    <div class="answer-area" onclick="handleAnswerAreaClick(event)">
+                        <span class="placeholder">👆 上の単語をタップして並べよう</span>
+                    </div>
+                </div>
+
+                <div class="word-order-question" data-answer="the time difference,between,Melbourne and Japan,is,only about,one to two hours">
+                    <p class="prompt">Q2: 「メルボルンと日本の時差はわずか1〜2時間です。」</p>
+                    <div class="word-chips-container">
+                        <div class="word-chips">
+                            <span class="word-chip" onclick="moveToAnswer(this)">the time difference</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">Melbourne and Japan</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">only about</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">between</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">is</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">one to two hours</span>
+                        </div>
+                    </div>
+                    <div class="answer-area" onclick="handleAnswerAreaClick(event)">
+                        <span class="placeholder">👆 上の単語をタップして並べよう</span>
+                    </div>
+                </div>
+
+                <div class="word-order-question" data-answer="Were I,studying in Europe,the time difference,would make,regular calls,considerably,more difficult">
+                    <p class="prompt">Q3: 「もしヨーロッパで勉強していたら、定期的な通話はかなり難しくなるでしょう。」</p>
+                    <div class="word-chips-container">
+                        <div class="word-chips">
+                            <span class="word-chip" onclick="moveToAnswer(this)">Were I</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">the time difference</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">studying in Europe</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">considerably</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">would make</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">regular calls</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">more difficult</span>
+                        </div>
+                    </div>
+                    <div class="answer-area" onclick="handleAnswerAreaClick(event)">
+                        <span class="placeholder">👆 上の単語をタップして並べよう</span>
+                    </div>
+                </div>
+
+                <button class="check-btn" onclick="checkAllAnswers()">✓ 答えをチェック</button>
+
+                <div id="result-area"></div>
+            </div>
+        </div>
+
+        <!-- Section 10: Try It! -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">10</span>
+                <span class="section-title">✏️ Try It!</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">今日のことを3行で書いてみよう</p>
+
+            <div class="try-it-box">
+                <p>💡 今日の会話や文をマネしてOK！わからない英語は日本語のままで大丈夫。</p>
+
+                <textarea placeholder="ここに書いてみよう...
+
+1.
+2.
+3. "></textarea>
+
+                <div class="btn-group">
+                    <button class="btn btn-copy" onclick="copyText(this)">📋 コピー</button>
+                    <button class="btn" style="background: #9c27b0; color: white;" onclick="openChatGPT(this)">🤖 ChatGPTで添削</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="section summary-section">
+            <h3>📊 学習サマリー</h3>
+            <p class="summary-desc">今日の回答をまとめてAIに質問しよう</p>
+            <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
+            <pre id="summary-output" class="summary-output"></pre>
+            <div id="summary-actions" class="summary-actions">
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
+                <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-buttons">
+            <a href="day2.html" class="nav-btn">← Day 2</a>
+            <a href="day4.html" class="nav-btn">Day 4 →</a>
+        </div>
+
+        <a href="/australia-english-p2/" class="home-btn">🏠 ホームに戻る</a>
+    </div>
+
+    <script>
+        function toggleVocab(element) {
+            element.classList.toggle('open');
+            const vocabSection = element.nextElementSibling;
+            vocabSection.classList.toggle('collapsed');
+        }
+
+        function toggleCheck(element) {
+            element.classList.toggle('checked');
+        }
+
+        function checkQuiz(element, isCorrect) {
+            const parent = element.parentElement;
+            parent.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+            });
+
+            if (isCorrect) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('wrong');
+            }
+        }
+
+        function moveToAnswer(chip) {
+            if (chip.classList.contains('in-answer')) return;
+
+            const question = chip.closest('.word-order-question');
+            const answerArea = question.querySelector('.answer-area');
+            const placeholder = answerArea.querySelector('.placeholder');
+
+            if (placeholder) {
+                placeholder.style.display = 'none';
+            }
+
+            const answerChip = document.createElement('span');
+            answerChip.className = 'answer-chip';
+            answerChip.textContent = chip.textContent;
+            answerChip.dataset.originalChip = Array.from(chip.parentElement.children).indexOf(chip);
+            answerChip.onclick = function() {
+                removeFromAnswer(this, chip);
+            };
+
+            answerArea.appendChild(answerChip);
+            chip.classList.add('in-answer');
+        }
+
+        function removeFromAnswer(answerChip, originalChip) {
+            const question = answerChip.closest('.word-order-question');
+            const answerArea = question.querySelector('.answer-area');
+
+            answerChip.remove();
+            originalChip.classList.remove('in-answer');
+
+            const remainingChips = answerArea.querySelectorAll('.answer-chip');
+            if (remainingChips.length === 0) {
+                const placeholder = answerArea.querySelector('.placeholder');
+                if (placeholder) {
+                    placeholder.style.display = 'inline';
+                }
+            }
+        }
+
+        function handleAnswerAreaClick(event) {
+            if (event.target.classList.contains('answer-chip')) {
+                const question = event.target.closest('.word-order-question');
+                const chips = question.querySelectorAll('.word-chip');
+                const index = parseInt(event.target.dataset.originalChip);
+                removeFromAnswer(event.target, chips[index]);
+            }
+        }
+
+        function checkAllAnswers() {
+            const questions = document.querySelectorAll('.word-order-question');
+            let allCorrect = true;
+            let results = [];
+
+            questions.forEach((question, index) => {
+                const answerArea = question.querySelector('.answer-area');
+                const answerChips = answerArea.querySelectorAll('.answer-chip');
+                const userAnswer = Array.from(answerChips).map(chip => chip.textContent).join(',');
+                const correctAnswer = question.dataset.answer;
+
+                const isCorrect = userAnswer === correctAnswer;
+                if (!isCorrect) allCorrect = false;
+
+                results.push({
+                    num: index + 1,
+                    correct: isCorrect,
+                    userAnswer: userAnswer || '(未回答)',
+                    correctAnswer: correctAnswer.replace(/,/g, ' ')
+                });
+            });
+
+            const resultArea = document.getElementById('result-area');
+            let html = '<div style="margin-top: 16px;">';
+
+            results.forEach(r => {
+                if (r.correct) {
+                    html += `<div class="result-message correct">Q${r.num}: ⭕ 正解！</div>`;
+                } else {
+                    html += `<div class="result-message wrong">Q${r.num}: ❌ 惜しい！<br>正解: ${r.correctAnswer}</div>`;
+                }
+            });
+
+            if (allCorrect) {
+                html += '<div style="text-align: center; margin-top: 16px; font-size: 1.5rem;">🎉 パーフェクト！ 🎉</div>';
+            }
+
+            html += '</div>';
+            resultArea.innerHTML = html;
+        }
+
+        function copyText(btn) {
+            const section = btn.closest('.section, .try-it-box');
+            const textBox = section.querySelector('.reading-box, .review-box, .conversation-box, textarea');
+            if (textBox) {
+                const text = textBox.tagName === 'TEXTAREA' ? textBox.value : textBox.innerText;
+                navigator.clipboard.writeText(text).then(() => {
+                    btn.textContent = '✓ コピーしました';
+                    setTimeout(() => { btn.textContent = '📋 コピー'; }, 2000);
+                });
+            }
+        }
+
+        function openNaturalReader(btn) {
+            var section = btn.closest('.section');
+            var textBox = section.querySelector('.reading-box, .review-box, .conversation-box');
+            if (textBox) {
+                var text = textBox.innerText;
+                navigator.clipboard.writeText(text).then(function() {
+                    btn.textContent = '\u2713 \u30b3\u30d4\u30fc\u6e08\u307f';
+                    setTimeout(function() { btn.textContent = '\ud83d\udd0a Natural Reader'; }, 2000);
+                    window.open('https://www.naturalreaders.com/online/', '_blank');
+                });
+            }
+        }
+
+        function openChatGPT(btn) {
+            var section = btn.closest('.section');
+            var textarea = section.querySelector('textarea');
+            if (textarea && textarea.value.trim()) {
+                var prompt = '\u4ee5\u4e0b\u306e\u82f1\u4f5c\u6587\u3092\u6dfb\u524a\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u9593\u9055\u3044\u304c\u3042\u308c\u3070\u4fee\u6b63\u3057\u3001\u3088\u308a\u81ea\u7136\u306a\u8868\u73fe\u304c\u3042\u308c\u3070\u63d0\u6848\u3057\u3066\u304f\u3060\u3055\u3044\u3002\n\n' + textarea.value;
+                window.open('https://chatgpt.com/?q=' + encodeURIComponent(prompt), '_blank');
+            } else {
+                alert('\u5148\u306b\u30c6\u30ad\u30b9\u30c8\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044');
+            }
+        }
+
+        function generateDaySummary() {
+            var title = document.title || 'Workbook';
+            var s = '\u3010' + title + ' \u5b66\u7fd2\u30b5\u30de\u30ea\u30fc\u3011\n\n';
+
+            var quizzes = document.querySelectorAll('.quiz-question');
+            if (quizzes.length > 0) {
+                s += '\u25a0 \u30af\u30a4\u30ba\u56de\u7b54:\n';
+                quizzes.forEach(function(q, i) {
+                    var selected = q.querySelector('.quiz-option.correct, .quiz-option.wrong');
+                    var answer = selected ? selected.textContent.trim() : '(\u672a\u56de\u7b54)';
+                    var isCorrect = selected && selected.classList.contains('correct');
+                    s += 'Q' + (i+1) + ': ' + answer + (isCorrect ? ' \u2b55' : selected ? ' \u274c' : '') + '\n';
+                });
+                s += '\n';
+            }
+
+            var checkedVocab = document.querySelectorAll('.vocab-item.checked');
+            if (checkedVocab.length > 0) {
+                s += '\u25a0 \u308f\u304b\u3089\u306a\u304b\u3063\u305f\u5358\u8a9e:\n';
+                checkedVocab.forEach(function(el) {
+                    var eng = el.querySelector('.english');
+                    var jpn = el.querySelector('.japanese');
+                    if (eng) {
+                        s += '- ' + eng.textContent + (jpn ? ' (' + jpn.textContent + ')' : '') + '\n';
+                    }
+                });
+                s += '\n';
+            }
+
+            var wordOrders = document.querySelectorAll('.word-order-question');
+            if (wordOrders.length > 0) {
+                s += '\u25a0 \u4e26\u3079\u66ff\u3048\u56de\u7b54:\n';
+                wordOrders.forEach(function(q, i) {
+                    var chips = q.querySelectorAll('.answer-chip');
+                    var answer = Array.from(chips).map(function(c) { return c.textContent; }).join(' ');
+                    s += 'Q' + (i+1) + ': ' + (answer || '(\u672a\u56de\u7b54)') + '\n';
+                });
+                s += '\n';
+            }
+
+            var tryItBox = document.querySelector('.try-it-box textarea');
+            if (tryItBox) {
+                s += '\u25a0 Try It\uff08\u81ea\u7531\u8a18\u8ff0\uff09:\n' + (tryItBox.value.trim() || '(\u672a\u8a18\u5165)') + '\n\n';
+            }
+
+            s += '---\n';
+            s += '\u4e0a\u306e\u5185\u5bb9\u3092\u3082\u3068\u306b\u3001\u4ee5\u4e0b\u3092\u6559\u3048\u3066\u304f\u3060\u3055\u3044\uff1a\n';
+            s += '1. \u9593\u9055\u3048\u305f\u554f\u984c\u306e\u89e3\u8aac\n';
+            s += '2. Try It\u306e\u6587\u6cd5\u30fb\u8868\u73fe\u306e\u6dfb\u524a\uff08\u4fee\u6b63\u7b87\u6240\u306e\u8aac\u660e\u4ed8\u304d\uff09\n';
+            s += '3. \u3088\u308a\u81ea\u7136\u306a\u8a00\u3044\u56de\u3057\u306e\u63d0\u6848\n';
+            s += '4. \u4eca\u65e5\u306e\u5b66\u7fd2\u5185\u5bb9\u306b\u95a2\u9023\u3059\u308b\u8ffd\u52a0\u30d5\u30ec\u30fc\u30ba\n';
+            s += '5. \u767a\u5c55\u7684\u306a\u7df4\u7fd2\u554f\u984c\uff081\u301c2\u554f\uff09';
+
+            var output = document.getElementById('summary-output');
+            var actions = document.getElementById('summary-actions');
+            output.textContent = s;
+            output.style.display = 'block';
+            actions.classList.add('show');
+        }
+
+        function copySummaryText() {
+            var text = document.getElementById('summary-output').textContent || '';
+            navigator.clipboard.writeText(text).then(function() {
+                var btn = event.target;
+                btn.textContent = '\u2713 \u30b3\u30d4\u30fc\u6e08\u307f';
+                setTimeout(function() { btn.textContent = '\ud83d\udccb \u30b3\u30d4\u30fc'; }, 2000);
+            });
+        }
+
+    </script>
+
+<script>
+(function() {
+  var NAME_KEY = "uchiwai_course_name_australia-english-p2";
+  try {
+    var userName = localStorage.getItem(NAME_KEY);
+    if (userName) {
+      var labels = document.querySelectorAll(".speaker-a .speaker-label");
+      labels.forEach(function(el) {
+        el.textContent = "A (" + userName + "):";
+      });
+      var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+      while (walker.nextNode()) {
+        var node = walker.currentNode;
+        if (node.textContent.indexOf("Koa") !== -1) {
+          node.textContent = node.textContent.replace(/Koa/g, userName);
+        }
+      }
+    }
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>

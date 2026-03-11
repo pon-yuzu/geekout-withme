@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<script>(function(){var k="uchiwai_course_access_australia-english-p2";try{if(localStorage.getItem(k)==="true")return;}catch(e){}window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");})()</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐠 Day 12: Cairns</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #e8b4cb 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #5a3e36;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #7a5a50;
+            font-size: 1rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #e8a4b8, #d4919f);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .section-title {
+            display: inline-block;
+            font-size: 1.2rem;
+            color: #5a3e36;
+            font-weight: bold;
+        }
+
+        .section-header {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f5e6e0;
+        }
+
+        .reading-box {
+            background: #fdf8f5;
+            border-left: 4px solid #e8a4b8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+
+        .reading-box h3 {
+            color: #5a3e36;
+            margin-bottom: 12px;
+        }
+
+        .reading-box p {
+            color: #4a4a4a;
+            margin-bottom: 10px;
+        }
+
+        .vocab-section {
+            margin-top: 20px;
+            border-top: 2px solid #f5e6e0;
+            padding-top: 16px;
+        }
+
+        .vocab-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            color: #5a3e36;
+            font-weight: bold;
+        }
+
+        .vocab-header span {
+            margin-right: 8px;
+        }
+
+        .vocab-legend {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .vocab-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .legend-word {
+            width: 12px;
+            height: 12px;
+            background: #fdf8f5;
+            border: 1px solid #e8d4cf;
+            border-radius: 3px;
+        }
+
+        .legend-chunk {
+            width: 12px;
+            height: 12px;
+            background: #f3e8ff;
+            border: 1px solid #d4b8ff;
+            border-radius: 3px;
+        }
+
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+
+        .vocab-item {
+            display: flex;
+            align-items: center;
+            background: #fdf8f5;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .vocab-item:hover {
+            background: #fff0ed;
+        }
+
+        .vocab-item.checked {
+            background: #fff3e0;
+            border-color: #ffb74d;
+        }
+
+        .vocab-item.chunk {
+            background: #f3e8ff;
+            grid-column: span 2;
+        }
+
+        .vocab-item.chunk:hover {
+            background: #ebe0ff;
+        }
+
+        .vocab-item.chunk.checked {
+            background: #ffe0f5;
+            border-color: #e040fb;
+        }
+
+        .vocab-item.chunk .vocab-icon {
+            color: #9c27b0;
+            margin-right: 6px;
+            font-size: 0.8rem;
+        }
+
+        .vocab-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .vocab-item.checked .vocab-checkbox {
+            background: #ff9800;
+            border-color: #ff9800;
+            color: white;
+        }
+
+        .vocab-item.chunk.checked .vocab-checkbox {
+            background: #9c27b0;
+            border-color: #9c27b0;
+        }
+
+        .vocab-item.checked .vocab-checkbox::after {
+            content: "✓";
+            font-size: 14px;
+        }
+
+        .vocab-text {
+            flex: 1;
+        }
+
+        .vocab-text .english {
+            font-weight: bold;
+            color: #c97a8a;
+        }
+
+        .vocab-item.chunk .vocab-text .english {
+            color: #7b1fa2;
+        }
+
+        .vocab-text .japanese {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .quiz-question {
+            background: #fff9f7;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .quiz-question p {
+            font-weight: bold;
+            color: #5a3e36;
+            margin-bottom: 12px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 2px solid #e8d4cf;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            border-color: #e8a4b8;
+            background: #fdf5f7;
+        }
+
+        .quiz-option.correct {
+            border-color: #7cb87c;
+            background: #f0f9f0;
+        }
+
+        .quiz-option.wrong {
+            border-color: #e57373;
+            background: #ffebee;
+        }
+
+        .review-box {
+            background: #fdf8f5;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .review-header .icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        .review-header .place {
+            font-weight: bold;
+            color: #5a3e36;
+        }
+
+        .stars {
+            color: #f5a623;
+            margin-bottom: 12px;
+        }
+
+        .tips-box {
+            background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .tips-box h4 {
+            color: #4a7c4a;
+            margin-bottom: 12px;
+        }
+
+        .conversation-box {
+            background: #f8f4ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .conversation-header {
+            background: #e8dff5;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+            color: #5a4a6a;
+        }
+
+        .dialogue {
+            margin-bottom: 12px;
+        }
+
+        .dialogue-line {
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .speaker-a {
+            background: #e8f4fc;
+            margin-right: 20%;
+        }
+
+        .speaker-b {
+            background: #f5f5f5;
+            margin-left: 20%;
+        }
+
+        .speaker-label {
+            font-weight: bold;
+            color: #5a7a9a;
+            font-size: 0.85rem;
+        }
+
+        .speaker-b .speaker-label {
+            color: #7a7a7a;
+        }
+
+        .key-sentences-box {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+            border: 2px solid #ffb74d;
+        }
+
+        .key-sentences-box h4 {
+            color: #e65100;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+        }
+
+        .key-sentence {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid #ff9800;
+        }
+
+        .key-sentence .english {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #5a3e36;
+            margin-bottom: 4px;
+        }
+
+        .key-sentence .japanese {
+            color: #7a7a7a;
+            font-size: 0.9rem;
+        }
+
+        .key-sentence .source {
+            color: #ff9800;
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+
+        .word-order-box {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .word-order-question {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #e0c080;
+        }
+
+        .word-order-question:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .word-order-question .prompt {
+            color: #5a3e36;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        .word-chips-container {
+            min-height: 50px;
+            margin-bottom: 12px;
+        }
+
+        .word-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .word-chip {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+            user-select: none;
+        }
+
+        .word-chip:hover {
+            border-color: #ff9800;
+            background: #fff3e0;
+            transform: scale(1.02);
+        }
+
+        .word-chip.in-answer {
+            opacity: 0.3;
+            cursor: default;
+            transform: none;
+        }
+
+        .answer-area {
+            min-height: 56px;
+            background: white;
+            border: 2px dashed #ffb74d;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .answer-area .placeholder {
+            color: #bbb;
+            font-style: italic;
+            font-size: 0.95rem;
+        }
+
+        .answer-chip {
+            background: #ff9800;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            animation: popIn 0.2s ease-out;
+        }
+
+        .answer-chip:hover {
+            background: #f57c00;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .check-btn {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 16px;
+            transition: transform 0.2s;
+            font-weight: bold;
+        }
+
+        .check-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .result-message {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .result-message.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .result-message.wrong {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .try-it-box {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .try-it-box textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 2px solid #90caf9;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            margin-top: 12px;
+        }
+
+        .hint-box {
+            background: #bbdefb;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 0.9rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-copy {
+            background: #e8a4b8;
+            color: white;
+        }
+
+        .btn-audio {
+            background: #7cb87c;
+            color: white;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding: 20px 0;
+        }
+
+        .nav-btn {
+            background: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #5a3e36;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .home-btn {
+            display: block;
+            text-align: center;
+            background: linear-gradient(135deg, #e8a4b8, #d4919f);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .vocab-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5e6e0;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 16px;
+            color: #5a3e36;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .vocab-toggle:hover {
+            background: #eed6cf;
+        }
+
+        .vocab-toggle .arrow {
+            margin-left: 8px;
+            transition: transform 0.3s;
+        }
+
+        .vocab-toggle.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        .vocab-section.collapsed {
+            display: none;
+        }
+
+        .summary-section {
+            background: #f5f0ff;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .summary-section h3 {
+            color: #5a3e36;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+        .summary-desc {
+            color: #7a5a50;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+        }
+        .summary-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #7c3aed, #9333ea);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 24px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+        .summary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124,58,237,0.3);
+        }
+        .summary-output {
+            display: none;
+            background: white;
+            border: 2px solid #e0d4f5;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 0.85rem;
+            color: #5a3e36;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+        }
+        .summary-actions {
+            display: none;
+            gap: 8px;
+            justify-content: center;
+        }
+        .summary-actions.show {
+            display: flex;
+        }
+        .summary-action-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .summary-copy-btn {
+            background: #e8e0f5;
+            color: #7c3aed;
+        }
+        .summary-copy-btn:hover {
+            background: #d4c8eb;
+        }
+        .summary-chatgpt-btn {
+            background: #10a37f;
+            color: white;
+        }
+        .summary-chatgpt-btn:hover {
+            background: #0d8c6d;
+        }
+        .summary-claude-btn {
+            background: #d97706;
+            color: white;
+        }
+        .summary-claude-btn:hover {
+            background: #b45309;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐠 Day 12: Cairns</h1>
+            <p class="subtitle">30日間オーストラリア英語 — 12日目</p>
+        </header>
+
+        <!-- Section 1: Reading -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">1</span>
+                <span class="section-title">Reading</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">グレートバリアリーフ</p>
+
+            <div class="reading-box">
+                <h3>Cairns: Gateway to the Great Barrier Reef</h3>
+                <p>Cairns, a tropical city nestled between the Coral Sea and the Daintree Rainforest in Far North Queensland, serves as the primary gateway to one of the natural world's most extraordinary wonders — the Great Barrier Reef. Extending over two thousand three hundred kilometres along the Queensland coast, the reef is the largest living structure on earth, visible even from space. It is composed of nearly three thousand individual reef systems and supports an astonishing diversity of marine life, including over fifteen hundred species of fish and four hundred types of coral. However, the reef faces significant threats. Were the current rate of ocean warming to continue unchecked, scientists warn that the majority of the reef's coral could perish within the coming decades. Bleaching events, caused when stressed corals expel the algae that give them their vibrant colours, have become alarmingly frequent. Had stronger environmental protections been implemented earlier, much of the damage that has already occurred might have been prevented. Nevertheless, conservation efforts are intensifying, and visitors who participate in responsible tourism are considered vital allies in the fight to preserve this irreplaceable ecosystem.</p>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-copy" onclick="copyText(this)">📋 コピー</button>
+                <button class="btn btn-audio" onclick="openNaturalReader(this)">🔊 Natural Reader</button>
+            </div>
+
+            <div class="vocab-toggle" onclick="toggleVocab(this)">
+                📚 単語・フレーズリストを見る <span class="arrow">▼</span>
+            </div>
+
+            <div class="vocab-section collapsed">
+                <div class="vocab-header">
+                    <span>💡</span> わからなかったものにチェック ✓
+                </div>
+                <div class="vocab-legend">
+                    <div class="vocab-legend-item"><div class="legend-word"></div> 単語</div>
+                    <div class="vocab-legend-item"><div class="legend-chunk"></div> フレーズ</div>
+                </div>
+                <div class="vocab-grid">
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">nestled</span><br>
+                            <span class="japanese">ひっそりと位置する</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">gateway</span><br>
+                            <span class="japanese">玄関口</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">extraordinary</span><br>
+                            <span class="japanese">並外れた</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">extending</span><br>
+                            <span class="japanese">広がっている</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">composed</span><br>
+                            <span class="japanese">構成されている</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">astonishing</span><br>
+                            <span class="japanese">驚くべき</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">marine life</span><br>
+                            <span class="japanese">海洋生物</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">species</span><br>
+                            <span class="japanese">種</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">significant</span><br>
+                            <span class="japanese">重大な</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">unchecked</span><br>
+                            <span class="japanese">抑制されない</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">perish</span><br>
+                            <span class="japanese">滅びる</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">bleaching</span><br>
+                            <span class="japanese">白化</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">expel</span><br>
+                            <span class="japanese">排出する</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">algae</span><br>
+                            <span class="japanese">藻類</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">alarmingly</span><br>
+                            <span class="japanese">警戒すべきほどに</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">conservation</span><br>
+                            <span class="japanese">保全</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">allies</span><br>
+                            <span class="japanese">味方</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">irreplaceable</span><br>
+                            <span class="japanese">かけがえのない</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Quiz 1 -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">2</span>
+                <span class="section-title">Quiz 1</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">Readingの内容チェック</p>
+
+            <div class="quiz-question">
+                <p>Q: サンゴの白化現象はなぜ起こりますか？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Corals are damaged by boats and divers touching them.</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">Stressed corals expel the algae that give them their colours.</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Pollution from nearby cities poisons the coral.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Review -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">3</span>
+                <span class="section-title">Review</span>
+            </div>
+
+            <div class="review-box">
+                <div class="review-header">
+                    <span class="icon">📍</span>
+                    <span class="place">Great Barrier Reef Snorkelling Tour from Cairns</span>
+                </div>
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p>Never before had I seen anything so magnificent as the Great Barrier Reef. Our snorkelling tour departed from Cairns Marina at seven in the morning and reached the outer reef after approximately ninety minutes. The marine biologist on board explained that the section we were visiting was classified as a protected zone, where fishing and collecting are strictly prohibited. As soon as I submerged my face in the water, an entirely different universe revealed itself. Schools of brilliantly coloured fish darted in every direction, while enormous sea turtles glided past with an elegance that seemed almost otherworldly. The coral formations, ranging from delicate fan shapes to massive boulder-like structures, created an underwater landscape unlike anything I had ever imagined. Our guide told us that if everyone practised reef-safe behaviour — such as using mineral sunscreen and not touching the coral — the reef's chances of recovery would be significantly improved. I was profoundly moved by the experience. If I were asked what the single most memorable moment of my Australian trip was, I would answer without hesitation: floating above the Great Barrier Reef.</p>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-copy" onclick="copyText(this)">📋 コピー</button>
+                <button class="btn btn-audio" onclick="openNaturalReader(this)">🔊 Natural Reader</button>
+            </div>
+
+            <div class="vocab-toggle" onclick="toggleVocab(this)">
+                📚 単語・フレーズリストを見る <span class="arrow">▼</span>
+            </div>
+
+            <div class="vocab-section collapsed">
+                <div class="vocab-header">
+                    <span>💡</span> わからなかったものにチェック ✓
+                </div>
+                <div class="vocab-legend">
+                    <div class="vocab-legend-item"><div class="legend-word"></div> 単語</div>
+                    <div class="vocab-legend-item"><div class="legend-chunk"></div> フレーズ</div>
+                </div>
+                <div class="vocab-grid">
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">magnificent</span><br>
+                            <span class="japanese">壮大な</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">departed</span><br>
+                            <span class="japanese">出発した</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">marine biologist</span><br>
+                            <span class="japanese">海洋生物学者</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">classified</span><br>
+                            <span class="japanese">分類された</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">prohibited</span><br>
+                            <span class="japanese">禁止された</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">submerged</span><br>
+                            <span class="japanese">水中に沈めた</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">revealed</span><br>
+                            <span class="japanese">現れた</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">brilliantly</span><br>
+                            <span class="japanese">鮮やかに</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">darted</span><br>
+                            <span class="japanese">素早く動いた</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">glided</span><br>
+                            <span class="japanese">滑るように進んだ</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">elegance</span><br>
+                            <span class="japanese">優雅さ</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">otherworldly</span><br>
+                            <span class="japanese">異世界のような</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">delicate</span><br>
+                            <span class="japanese">繊細な</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">reef-safe</span><br>
+                            <span class="japanese">リーフセーフ（サンゴに安全な）</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">mineral sunscreen</span><br>
+                            <span class="japanese">ミネラル日焼け止め</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">profoundly</span><br>
+                            <span class="japanese">深く</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Quiz 2 -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">4</span>
+                <span class="section-title">Quiz 2</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">Reviewの内容チェック</p>
+
+            <div class="quiz-question">
+                <p>Q: ガイドが訪問者にリーフの回復のために勧めたことは何ですか？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Donating money to reef conservation organisations.</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">Using mineral sunscreen and not touching the coral.</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Limiting the number of visitors per day.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Australia Tips -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">5</span>
+                <span class="section-title">🦘 Australia Tips</span>
+            </div>
+
+            <div class="tips-box" style="background: linear-gradient(135deg, #e8f5e9, #f1f8e9); ">
+                <h4>グレートバリアリーフのエチケット</h4>
+                <p>リーフでのシュノーケリングやダイビングには守るべきルールがあります。サンゴに触らない（Don't touch the coral）、足をつかない（Don't stand on the reef）、リーフセーフの日焼け止めを使う（Use reef-safe sunscreen）。化学物質を含む通常の日焼け止めはサンゴを傷つけます。</p>
+            </div>
+            <div class="tips-box" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); margin-top: 12px;">
+                <h4>Never before had I... — 否定語句の倒置</h4>
+                <p>'Never before had I seen anything so magnificent.' のように、Never, Rarely, Seldom, Not until などの否定語句が文頭に来ると倒置が起こります。had + 主語 + 過去分詞の語順になります。準2級の長文読解でよく見かける構文です。</p>
+            </div>
+        </div>
+
+        <!-- Section 6: Conversation -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">6</span>
+                <span class="section-title">Conversation</span>
+            </div>
+
+            <div class="conversation-box">
+                <div class="conversation-header">
+                    🎭 ケアンズのダイビングショップでグレートバリアリーフツアーを予約する
+                </div>
+
+                <div class="dialogue">
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (Koa):</span><br>
+                        Hello! I'd like to book a trip to the Great Barrier Reef. What options do you have?
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        G'day! We've got snorkelling tours and intro dive packages. Have you ever been diving before?
+                    </div>
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (Koa):</span><br>
+                        No, I haven't. Would it be possible for a complete beginner to try diving?
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        Absolutely! Our intro dive doesn't require any certification. The instructor guides you the entire time, so even if you were nervous, you'd be perfectly safe.
+                    </div>
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (Koa):</span><br>
+                        That's great to hear. How deep would we go?
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        For beginners, we stay at about eight to twelve metres. If you had a diving licence, we could take you to eighteen metres or deeper.
+                    </div>
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (Koa):</span><br>
+                        I think eight metres sounds exciting enough! What marine life might we see?
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        Clownfish, sea turtles, reef sharks — you name it. It's reported that over fifteen hundred species of fish live on the reef.
+                    </div>
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (Koa):</span><br>
+                        Reef sharks? Is that dangerous?
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        Not at all! They're quite small and shy. Had they been dangerous, we wouldn't be running tours out there!
+                    </div>
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (Koa):</span><br>
+                        Fair enough! I'll book the intro dive package for tomorrow, please.
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        Excellent choice. Just remember to bring reef-safe sunscreen and a towel. We provide everything else.
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-copy" onclick="copyText(this)">📋 コピー</button>
+                <button class="btn btn-audio" onclick="openNaturalReader(this)">🔊 Natural Reader</button>
+            </div>
+
+            <div class="vocab-toggle" onclick="toggleVocab(this)">
+                📚 単語・フレーズリストを見る <span class="arrow">▼</span>
+            </div>
+
+            <div class="vocab-section collapsed">
+                <div class="vocab-header">
+                    <span>💡</span> わからなかったものにチェック ✓
+                </div>
+                <div class="vocab-legend">
+                    <div class="vocab-legend-item"><div class="legend-word"></div> 単語</div>
+                    <div class="vocab-legend-item"><div class="legend-chunk"></div> フレーズ</div>
+                </div>
+                <div class="vocab-grid">
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">intro dive</span><br>
+                            <span class="japanese">体験ダイビング</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">certification</span><br>
+                            <span class="japanese">資格</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">instructor</span><br>
+                            <span class="japanese">インストラクター</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">nervous</span><br>
+                            <span class="japanese">緊張した</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">licence</span><br>
+                            <span class="japanese">免許</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">marine life</span><br>
+                            <span class="japanese">海洋生物</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">clownfish</span><br>
+                            <span class="japanese">カクレクマノミ</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">reef sharks</span><br>
+                            <span class="japanese">リーフシャーク</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">you name it</span><br>
+                            <span class="japanese">何でもいる</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">fair enough</span><br>
+                            <span class="japanese">なるほど</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">excellent choice</span><br>
+                            <span class="japanese">素晴らしい選択</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">we provide everything else</span><br>
+                            <span class="japanese">他はすべてこちらで用意します</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 7: Quiz 3 -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">7</span>
+                <span class="section-title">Quiz 3</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">Conversationの内容チェック</p>
+
+            <div class="quiz-question">
+                <p>Q: スタッフがリーフシャークは危険ではないと言った根拠は何ですか？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Because they only come out at night.</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">Because if they were dangerous, tours would not be running there.</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Because special nets keep the sharks away from divers.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 8: Key Sentences -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">8</span>
+                <span class="section-title">🔑 Key Sentences</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">今日のそのまま使える表現3つ</p>
+
+            <div class="key-sentences-box">
+                <h4>🌟 覚えておきたいフレーズ</h4>
+                <div class="key-sentence">
+                    <div class="english">Were the current rate of ocean warming to continue unchecked, the majority of the reef's coral could perish.</div>
+                    <div class="japanese">もし現在の海水温上昇の速度が抑制されずに続いたら、リーフのサンゴの大部分が滅びる可能性がある。</div>
+                    <div class="source">📍 Reading</div>
+                </div>
+                <div class="key-sentence">
+                    <div class="english">Never before had I seen anything so magnificent as the Great Barrier Reef.</div>
+                    <div class="japanese">グレートバリアリーフほど壮大なものを今まで見たことがなかった。</div>
+                    <div class="source">📍 Review</div>
+                </div>
+                <div class="key-sentence">
+                    <div class="english">Had they been dangerous, we wouldn't be running tours out there!</div>
+                    <div class="japanese">もし危険だったら、そこでツアーを運営していないでしょう！</div>
+                    <div class="source">📍 Conversation</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 9: Word Order Quiz -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">9</span>
+                <span class="section-title">🔀 並べ替えクイズ</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">Key Sentencesを並べ替えて作ってみよう</p>
+
+            <div class="word-order-box">
+                <div class="word-order-question" data-answer="Had,stronger protections,been implemented,earlier,much of,the damage,might have been prevented">
+                    <p class="prompt">Q1: 「もしより強力な環境保護が早く実施されていたら、損害の多くは防げたかもしれない。」</p>
+                    <div class="word-chips-container">
+                        <div class="word-chips">
+                            <span class="word-chip" onclick="moveToAnswer(this)">Had</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">stronger protections</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">been implemented</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">earlier</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">much of</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">the damage</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">might have been prevented</span>
+                        </div>
+                    </div>
+                    <div class="answer-area" onclick="handleAnswerAreaClick(event)">
+                        <span class="placeholder">👆 上の単語をタップして並べよう</span>
+                    </div>
+                </div>
+
+                <div class="word-order-question" data-answer="It is,reported,that,over 1500,species of fish,live on,the reef">
+                    <p class="prompt">Q2: 「1500種以上の魚がリーフに生息していると報告されている。」</p>
+                    <div class="word-chips-container">
+                        <div class="word-chips">
+                            <span class="word-chip" onclick="moveToAnswer(this)">It is</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">reported</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">that</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">over 1500</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">species of fish</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">live on</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">the reef</span>
+                        </div>
+                    </div>
+                    <div class="answer-area" onclick="handleAnswerAreaClick(event)">
+                        <span class="placeholder">👆 上の単語をタップして並べよう</span>
+                    </div>
+                </div>
+
+                <div class="word-order-question" data-answer="If everyone,practised,reef-safe behaviour,the reef's chances,of recovery,would be,significantly improved">
+                    <p class="prompt">Q3: 「もし全員がリーフセーフな行動を実践したら、回復の可能性は大幅に向上するだろう。」</p>
+                    <div class="word-chips-container">
+                        <div class="word-chips">
+                            <span class="word-chip" onclick="moveToAnswer(this)">If everyone</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">practised</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">reef-safe behaviour</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">the reef's chances</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">of recovery</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">would be</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">significantly improved</span>
+                        </div>
+                    </div>
+                    <div class="answer-area" onclick="handleAnswerAreaClick(event)">
+                        <span class="placeholder">👆 上の単語をタップして並べよう</span>
+                    </div>
+                </div>
+
+                <button class="check-btn" onclick="checkAllAnswers()">✓ 答えをチェック</button>
+
+                <div id="result-area"></div>
+            </div>
+        </div>
+
+        <!-- Section 10: Try It! -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">10</span>
+                <span class="section-title">✏️ Try It!</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">今日のことを3行で書いてみよう</p>
+
+            <div class="try-it-box">
+                <p>💡 今日の会話や文をマネしてOK！わからない英語は日本語のままで大丈夫。</p>
+
+                <textarea placeholder="ここに書いてみよう...
+
+1.
+2.
+3. "></textarea>
+
+                <div class="btn-group">
+                    <button class="btn btn-copy" onclick="copyText(this)">📋 コピー</button>
+                    <button class="btn" style="background: #9c27b0; color: white;" onclick="openChatGPT(this)">🤖 ChatGPTで添削</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="section summary-section">
+            <h3>📊 学習サマリー</h3>
+            <p class="summary-desc">今日の回答をまとめてAIに質問しよう</p>
+            <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
+            <pre id="summary-output" class="summary-output"></pre>
+            <div id="summary-actions" class="summary-actions">
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
+                <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-buttons">
+            <a href="day11.html" class="nav-btn">← Day 11</a>
+            <a href="day13.html" class="nav-btn">Day 13 →</a>
+        </div>
+
+        <a href="/australia-english-p2/" class="home-btn">🏠 ホームに戻る</a>
+    </div>
+
+    <script>
+        function toggleVocab(element) {
+            element.classList.toggle('open');
+            const vocabSection = element.nextElementSibling;
+            vocabSection.classList.toggle('collapsed');
+        }
+
+        function toggleCheck(element) {
+            element.classList.toggle('checked');
+        }
+
+        function checkQuiz(element, isCorrect) {
+            const parent = element.parentElement;
+            parent.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+            });
+
+            if (isCorrect) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('wrong');
+            }
+        }
+
+        function moveToAnswer(chip) {
+            if (chip.classList.contains('in-answer')) return;
+
+            const question = chip.closest('.word-order-question');
+            const answerArea = question.querySelector('.answer-area');
+            const placeholder = answerArea.querySelector('.placeholder');
+
+            if (placeholder) {
+                placeholder.style.display = 'none';
+            }
+
+            const answerChip = document.createElement('span');
+            answerChip.className = 'answer-chip';
+            answerChip.textContent = chip.textContent;
+            answerChip.dataset.originalChip = Array.from(chip.parentElement.children).indexOf(chip);
+            answerChip.onclick = function() {
+                removeFromAnswer(this, chip);
+            };
+
+            answerArea.appendChild(answerChip);
+            chip.classList.add('in-answer');
+        }
+
+        function removeFromAnswer(answerChip, originalChip) {
+            const question = answerChip.closest('.word-order-question');
+            const answerArea = question.querySelector('.answer-area');
+
+            answerChip.remove();
+            originalChip.classList.remove('in-answer');
+
+            const remainingChips = answerArea.querySelectorAll('.answer-chip');
+            if (remainingChips.length === 0) {
+                const placeholder = answerArea.querySelector('.placeholder');
+                if (placeholder) {
+                    placeholder.style.display = 'inline';
+                }
+            }
+        }
+
+        function handleAnswerAreaClick(event) {
+            if (event.target.classList.contains('answer-chip')) {
+                const question = event.target.closest('.word-order-question');
+                const chips = question.querySelectorAll('.word-chip');
+                const index = parseInt(event.target.dataset.originalChip);
+                removeFromAnswer(event.target, chips[index]);
+            }
+        }
+
+        function checkAllAnswers() {
+            const questions = document.querySelectorAll('.word-order-question');
+            let allCorrect = true;
+            let results = [];
+
+            questions.forEach((question, index) => {
+                const answerArea = question.querySelector('.answer-area');
+                const answerChips = answerArea.querySelectorAll('.answer-chip');
+                const userAnswer = Array.from(answerChips).map(chip => chip.textContent).join(',');
+                const correctAnswer = question.dataset.answer;
+
+                const isCorrect = userAnswer === correctAnswer;
+                if (!isCorrect) allCorrect = false;
+
+                results.push({
+                    num: index + 1,
+                    correct: isCorrect,
+                    userAnswer: userAnswer || '(未回答)',
+                    correctAnswer: correctAnswer.replace(/,/g, ' ')
+                });
+            });
+
+            const resultArea = document.getElementById('result-area');
+            let html = '<div style="margin-top: 16px;">';
+
+            results.forEach(r => {
+                if (r.correct) {
+                    html += `<div class="result-message correct">Q${r.num}: ⭕ 正解！</div>`;
+                } else {
+                    html += `<div class="result-message wrong">Q${r.num}: ❌ 惜しい！<br>正解: ${r.correctAnswer}</div>`;
+                }
+            });
+
+            if (allCorrect) {
+                html += '<div style="text-align: center; margin-top: 16px; font-size: 1.5rem;">🎉 パーフェクト！ 🎉</div>';
+            }
+
+            html += '</div>';
+            resultArea.innerHTML = html;
+        }
+
+        function copyText(btn) {
+            const section = btn.closest('.section, .try-it-box');
+            const textBox = section.querySelector('.reading-box, .review-box, .conversation-box, textarea');
+            if (textBox) {
+                const text = textBox.tagName === 'TEXTAREA' ? textBox.value : textBox.innerText;
+                navigator.clipboard.writeText(text).then(() => {
+                    btn.textContent = '✓ コピーしました';
+                    setTimeout(() => { btn.textContent = '📋 コピー'; }, 2000);
+                });
+            }
+        }
+
+        function openNaturalReader(btn) {
+            var section = btn.closest('.section');
+            var textBox = section.querySelector('.reading-box, .review-box, .conversation-box');
+            if (textBox) {
+                var text = textBox.innerText;
+                navigator.clipboard.writeText(text).then(function() {
+                    btn.textContent = '\u2713 \u30b3\u30d4\u30fc\u6e08\u307f';
+                    setTimeout(function() { btn.textContent = '\ud83d\udd0a Natural Reader'; }, 2000);
+                    window.open('https://www.naturalreaders.com/online/', '_blank');
+                });
+            }
+        }
+
+        function openChatGPT(btn) {
+            var section = btn.closest('.section');
+            var textarea = section.querySelector('textarea');
+            if (textarea && textarea.value.trim()) {
+                var prompt = '\u4ee5\u4e0b\u306e\u82f1\u4f5c\u6587\u3092\u6dfb\u524a\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u9593\u9055\u3044\u304c\u3042\u308c\u3070\u4fee\u6b63\u3057\u3001\u3088\u308a\u81ea\u7136\u306a\u8868\u73fe\u304c\u3042\u308c\u3070\u63d0\u6848\u3057\u3066\u304f\u3060\u3055\u3044\u3002\n\n' + textarea.value;
+                window.open('https://chatgpt.com/?q=' + encodeURIComponent(prompt), '_blank');
+            } else {
+                alert('\u5148\u306b\u30c6\u30ad\u30b9\u30c8\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044');
+            }
+        }
+
+        function generateDaySummary() {
+            var title = document.title || 'Workbook';
+            var s = '\u3010' + title + ' \u5b66\u7fd2\u30b5\u30de\u30ea\u30fc\u3011\n\n';
+
+            var quizzes = document.querySelectorAll('.quiz-question');
+            if (quizzes.length > 0) {
+                s += '\u25a0 \u30af\u30a4\u30ba\u56de\u7b54:\n';
+                quizzes.forEach(function(q, i) {
+                    var selected = q.querySelector('.quiz-option.correct, .quiz-option.wrong');
+                    var answer = selected ? selected.textContent.trim() : '(\u672a\u56de\u7b54)';
+                    var isCorrect = selected && selected.classList.contains('correct');
+                    s += 'Q' + (i+1) + ': ' + answer + (isCorrect ? ' \u2b55' : selected ? ' \u274c' : '') + '\n';
+                });
+                s += '\n';
+            }
+
+            var checkedVocab = document.querySelectorAll('.vocab-item.checked');
+            if (checkedVocab.length > 0) {
+                s += '\u25a0 \u308f\u304b\u3089\u306a\u304b\u3063\u305f\u5358\u8a9e:\n';
+                checkedVocab.forEach(function(el) {
+                    var eng = el.querySelector('.english');
+                    var jpn = el.querySelector('.japanese');
+                    if (eng) {
+                        s += '- ' + eng.textContent + (jpn ? ' (' + jpn.textContent + ')' : '') + '\n';
+                    }
+                });
+                s += '\n';
+            }
+
+            var wordOrders = document.querySelectorAll('.word-order-question');
+            if (wordOrders.length > 0) {
+                s += '\u25a0 \u4e26\u3079\u66ff\u3048\u56de\u7b54:\n';
+                wordOrders.forEach(function(q, i) {
+                    var chips = q.querySelectorAll('.answer-chip');
+                    var answer = Array.from(chips).map(function(c) { return c.textContent; }).join(' ');
+                    s += 'Q' + (i+1) + ': ' + (answer || '(\u672a\u56de\u7b54)') + '\n';
+                });
+                s += '\n';
+            }
+
+            var tryItBox = document.querySelector('.try-it-box textarea');
+            if (tryItBox) {
+                s += '\u25a0 Try It\uff08\u81ea\u7531\u8a18\u8ff0\uff09:\n' + (tryItBox.value.trim() || '(\u672a\u8a18\u5165)') + '\n\n';
+            }
+
+            s += '---\n';
+            s += '\u4e0a\u306e\u5185\u5bb9\u3092\u3082\u3068\u306b\u3001\u4ee5\u4e0b\u3092\u6559\u3048\u3066\u304f\u3060\u3055\u3044\uff1a\n';
+            s += '1. \u9593\u9055\u3048\u305f\u554f\u984c\u306e\u89e3\u8aac\n';
+            s += '2. Try It\u306e\u6587\u6cd5\u30fb\u8868\u73fe\u306e\u6dfb\u524a\uff08\u4fee\u6b63\u7b87\u6240\u306e\u8aac\u660e\u4ed8\u304d\uff09\n';
+            s += '3. \u3088\u308a\u81ea\u7136\u306a\u8a00\u3044\u56de\u3057\u306e\u63d0\u6848\n';
+            s += '4. \u4eca\u65e5\u306e\u5b66\u7fd2\u5185\u5bb9\u306b\u95a2\u9023\u3059\u308b\u8ffd\u52a0\u30d5\u30ec\u30fc\u30ba\n';
+            s += '5. \u767a\u5c55\u7684\u306a\u7df4\u7fd2\u554f\u984c\uff081\u301c2\u554f\uff09';
+
+            var output = document.getElementById('summary-output');
+            var actions = document.getElementById('summary-actions');
+            output.textContent = s;
+            output.style.display = 'block';
+            actions.classList.add('show');
+        }
+
+        function copySummaryText() {
+            var text = document.getElementById('summary-output').textContent || '';
+            navigator.clipboard.writeText(text).then(function() {
+                var btn = event.target;
+                btn.textContent = '\u2713 \u30b3\u30d4\u30fc\u6e08\u307f';
+                setTimeout(function() { btn.textContent = '\ud83d\udccb \u30b3\u30d4\u30fc'; }, 2000);
+            });
+        }
+
+    </script>
+
+<script>
+(function() {
+  var NAME_KEY = "uchiwai_course_name_australia-english-p2";
+  try {
+    var userName = localStorage.getItem(NAME_KEY);
+    if (userName) {
+      var labels = document.querySelectorAll(".speaker-a .speaker-label");
+      labels.forEach(function(el) {
+        el.textContent = "A (" + userName + "):";
+      });
+      var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+      while (walker.nextNode()) {
+        var node = walker.currentNode;
+        if (node.textContent.indexOf("Koa") !== -1) {
+          node.textContent = node.textContent.replace(/Koa/g, userName);
+        }
+      }
+    }
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>

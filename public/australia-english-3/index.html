@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦘 30日間オーストラリア英語 〜ワーホリ準備編〜 (英検3級合格レベル)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #e8b4cb 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #5a3e36;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #7a5a50;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        .intro {
+            background: #fdf8f5;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: left;
+            font-size: 0.95rem;
+            color: #5a4a40;
+        }
+
+        .unlock-bar {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .unlock-bar h3 {
+            color: #5a3e36;
+            margin-bottom: 12px;
+        }
+
+        .unlock-bar .desc {
+            color: #7a5a50;
+            font-size: 0.9rem;
+            margin-bottom: 16px;
+        }
+
+        .pw-row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .pw-input {
+            padding: 10px 16px;
+            border: 2px solid #e8d4cf;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 200px;
+        }
+
+        .pw-submit {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #e8a4b8, #d4919f);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .buy-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: transform 0.2s;
+        }
+
+        .buy-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .name-section {
+            background: #f0f4ff;
+            padding: 16px;
+            border-radius: 12px;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .name-section.show {
+            display: block;
+        }
+
+        .name-section h4 {
+            color: #5a3e36;
+            margin-bottom: 8px;
+        }
+
+        .name-row {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .week-section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .week-section h2 {
+            color: #5a3e36;
+            font-size: 1.3rem;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f5e6e0;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        .day-card {
+            display: flex;
+            align-items: center;
+            background: #fdf8f5;
+            padding: 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: #5a3e36;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .day-card:hover {
+            background: #fff0ed;
+            border-color: #e8a4b8;
+            transform: translateY(-2px);
+        }
+
+        .day-card.locked {
+            opacity: 0.7;
+            cursor: pointer;
+        }
+
+        .day-card.locked:hover {
+            border-color: #ffb74d;
+        }
+
+        .day-emoji {
+            font-size: 1.5rem;
+            margin-right: 12px;
+        }
+
+        .day-number {
+            font-weight: bold;
+            color: #e8a4b8;
+            margin-right: 8px;
+            min-width: 50px;
+        }
+
+        .day-title {
+            flex: 1;
+            font-size: 0.95rem;
+        }
+
+        .badge-free {
+            background: #4caf50;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .badge-lock {
+            margin-left: 8px;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #7a5a50;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🦘 30日間オーストラリア英語</h1>
+            <p class="subtitle">〜ワーホリ準備編〜</p>
+            <div class="intro">
+                <p>🎯 <strong>対象レベル：</strong>英検3級合格レベル</p>
+                <p>📅 <strong>学習期間：</strong>1日15〜20分 × 30日間</p>
+                <p>🌏 <strong>目標：</strong>オーストラリアで使える実践的な英語力を身につける</p>
+            </div>
+        </header>
+
+        <div class="unlock-bar" id="unlock-bar">
+            <h3>🔓 全30日分をアンロック</h3>
+            <p class="desc">購入済みの方はパスワードを入力してください</p>
+            <div class="pw-row">
+                <input type="text" class="pw-input" id="pw-input" placeholder="パスワード" onkeydown="if(event.key==='Enter')submitPw()">
+                <button class="pw-submit" onclick="submitPw()">解除</button>
+            </div>
+            <p class="desc" style="margin-bottom: 8px;">まだお持ちでない方はこちら</p>
+            <a href="https://buy.stripe.com/aFa5kC3Id9zMbnheFId7q02" class="buy-btn">💳 ¥500で購入する</a>
+            <div class="name-section" id="name-section">
+                <h4>📝 あなたの名前（会話に表示されます）</h4>
+                <div class="name-row">
+                    <input type="text" class="pw-input" id="name-input" placeholder="名前を入力" onkeydown="if(event.key==='Enter')saveName()">
+                    <button class="pw-submit" onclick="saveName()">保存</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="week-section">
+            <h2>Week 1: オーストラリア基礎知識</h2>
+            <div class="days-grid">
+                <a href="day1.html" class="day-card">
+                    <span class="day-emoji">🌏</span>
+                    <span class="day-number">Day 1</span>
+                    <span class="day-title">Australia is a Big Country</span>
+                    <span class="badge-free">FREE</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(2)">
+                    <span class="day-emoji">🌞</span>
+                    <span class="day-number">Day 2</span>
+                    <span class="day-title">The Seasons are Opposite</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(3)">
+                    <span class="day-emoji">🕐</span>
+                    <span class="day-number">Day 3</span>
+                    <span class="day-title">Time Zones in Australia</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(4)">
+                    <span class="day-emoji">🦘</span>
+                    <span class="day-number">Day 4</span>
+                    <span class="day-title">Unique Animals</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(5)">
+                    <span class="day-emoji">🕷️</span>
+                    <span class="day-number">Day 5</span>
+                    <span class="day-title">Dangerous Animals</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(6)">
+                    <span class="day-emoji">🎨</span>
+                    <span class="day-number">Day 6</span>
+                    <span class="day-title">First Australians</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(7)">
+                    <span class="day-emoji">🗣️</span>
+                    <span class="day-number">Day 7</span>
+                    <span class="day-title">Australian English</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+            </div>
+        </div>
+        <div class="week-section">
+            <h2>Week 2: 主要都市ガイド</h2>
+            <div class="days-grid">
+                <a href="day8.html" class="day-card">
+                    <span class="day-emoji">🏙️</span>
+                    <span class="day-number">Day 8</span>
+                    <span class="day-title">Sydney</span>
+                    <span class="badge-free">FREE</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(9)">
+                    <span class="day-emoji">☕</span>
+                    <span class="day-number">Day 9</span>
+                    <span class="day-title">Melbourne</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(10)">
+                    <span class="day-emoji">🌴</span>
+                    <span class="day-number">Day 10</span>
+                    <span class="day-title">Brisbane</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(11)">
+                    <span class="day-emoji">🏄</span>
+                    <span class="day-number">Day 11</span>
+                    <span class="day-title">Gold Coast</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(12)">
+                    <span class="day-emoji">🐠</span>
+                    <span class="day-number">Day 12</span>
+                    <span class="day-title">Cairns</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(13)">
+                    <span class="day-emoji">🌅</span>
+                    <span class="day-number">Day 13</span>
+                    <span class="day-title">Perth</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(14)">
+                    <span class="day-emoji">🤔</span>
+                    <span class="day-number">Day 14</span>
+                    <span class="day-title">Which City is Right for You?</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+            </div>
+        </div>
+        <div class="week-section">
+            <h2>Week 3: 食文化</h2>
+            <div class="days-grid">
+                <a href="#" class="day-card locked" onclick="handleLockedDay(15)">
+                    <span class="day-emoji">☕</span>
+                    <span class="day-number">Day 15</span>
+                    <span class="day-title">Café Culture</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(16)">
+                    <span class="day-emoji">🥑</span>
+                    <span class="day-number">Day 16</span>
+                    <span class="day-title">Brunch is a Lifestyle</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(17)">
+                    <span class="day-emoji">🍜</span>
+                    <span class="day-number">Day 17</span>
+                    <span class="day-title">Multicultural Food</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(18)">
+                    <span class="day-emoji">🍣</span>
+                    <span class="day-number">Day 18</span>
+                    <span class="day-title">Asian Food in Australia</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(19)">
+                    <span class="day-emoji">🍖</span>
+                    <span class="day-number">Day 19</span>
+                    <span class="day-title">Aussie BBQ</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(20)">
+                    <span class="day-emoji">🥧</span>
+                    <span class="day-number">Day 20</span>
+                    <span class="day-title">Meat Pies and Fish & Chips</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(21)">
+                    <span class="day-emoji">🫙</span>
+                    <span class="day-number">Day 21</span>
+                    <span class="day-title">Vegemite</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+            </div>
+        </div>
+        <div class="week-section">
+            <h2>Week 4: ワーホリ実践準備</h2>
+            <div class="days-grid">
+                <a href="day22.html" class="day-card">
+                    <span class="day-emoji">📋</span>
+                    <span class="day-number">Day 22</span>
+                    <span class="day-title">Working Holiday Visa</span>
+                    <span class="badge-free">FREE</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(23)">
+                    <span class="day-emoji">🏦</span>
+                    <span class="day-number">Day 23</span>
+                    <span class="day-title">Opening a Bank Account</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(24)">
+                    <span class="day-emoji">📄</span>
+                    <span class="day-number">Day 24</span>
+                    <span class="day-title">Getting a TFN</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(25)">
+                    <span class="day-emoji">💼</span>
+                    <span class="day-number">Day 25</span>
+                    <span class="day-title">Finding a Job</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(26)">
+                    <span class="day-emoji">👨‍🍳</span>
+                    <span class="day-number">Day 26</span>
+                    <span class="day-title">Working in a Kitchen</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(27)">
+                    <span class="day-emoji">🏠</span>
+                    <span class="day-number">Day 27</span>
+                    <span class="day-title">Share House Living</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(28)">
+                    <span class="day-emoji">🚌</span>
+                    <span class="day-number">Day 28</span>
+                    <span class="day-title">Public Transport</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+            </div>
+        </div>
+        <div class="week-section">
+            <h2>Week 5: まとめ</h2>
+            <div class="days-grid">
+                <a href="#" class="day-card locked" onclick="handleLockedDay(29)">
+                    <span class="day-emoji">📝</span>
+                    <span class="day-number">Day 29</span>
+                    <span class="day-title">My Australia Plan</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+                <a href="#" class="day-card locked" onclick="handleLockedDay(30)">
+                    <span class="day-emoji">🎉</span>
+                    <span class="day-number">Day 30</span>
+                    <span class="day-title">30 Days Review</span>
+                    <span class="badge-lock">🔒</span>
+                </a>
+            </div>
+        </div>
+
+        <footer>
+            <p>Made with ❤️ for your Australian adventure!</p>
+        </footer>
+    </div>
+
+    <script>
+        var COURSE_KEY = "uchiwai_course_access_australia-english-3";
+        var NAME_KEY = "uchiwai_course_name_australia-english-3";
+        var PASSWORD = "KANGAROO2026";
+
+        function submitPw() {
+            var pw = document.getElementById('pw-input').value.trim().toUpperCase();
+            if (pw === PASSWORD) {
+                try { localStorage.setItem(COURSE_KEY, 'true'); } catch(e) {}
+                applyUnlockState();
+                alert('\u30a2\u30f3\u30ed\u30c3\u30af\u3057\u307e\u3057\u305f\uff01');
+            } else {
+                alert('\u30d1\u30b9\u30ef\u30fc\u30c9\u304c\u6b63\u3057\u304f\u3042\u308a\u307e\u305b\u3093');
+            }
+        }
+
+        function saveName() {
+            var name = document.getElementById('name-input').value.trim();
+            if (name) {
+                try { localStorage.setItem(NAME_KEY, name); } catch(e) {}
+                alert(name + ' \u3055\u3093\u3001\u4fdd\u5b58\u3057\u307e\u3057\u305f\uff01');
+            }
+        }
+
+        function handleLockedDay(dayNum) {
+            var isUnlocked = false;
+            try { isUnlocked = localStorage.getItem(COURSE_KEY) === 'true'; } catch(e) {}
+            if (isUnlocked) {
+                window.location.href = 'day' + dayNum + '.html';
+            } else {
+                window.location.href = "https://buy.stripe.com/aFa5kC3Id9zMbnheFId7q02";
+            }
+        }
+
+        function applyUnlockState() {
+            var isUnlocked = false;
+            try { isUnlocked = localStorage.getItem(COURSE_KEY) === 'true'; } catch(e) {}
+
+            if (isUnlocked) {
+                document.querySelectorAll('.day-card.locked').forEach(function(card) {
+                    var dayNum = card.querySelector('.day-number').textContent.replace('Day ', '');
+                    card.href = 'day' + dayNum + '.html';
+                    card.classList.remove('locked');
+                    var lock = card.querySelector('.badge-lock');
+                    if (lock) lock.remove();
+                });
+                document.getElementById('name-section').classList.add('show');
+                var savedName = localStorage.getItem(NAME_KEY);
+                if (savedName) {
+                    document.getElementById('name-input').value = savedName;
+                }
+            }
+        }
+
+        applyUnlockState();
+    </script>
+</body>
+</html>

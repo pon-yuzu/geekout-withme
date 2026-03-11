@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<script>(function(){var k="uchiwai_course_access_australia-english-p2";try{if(localStorage.getItem(k)==="true")return;}catch(e){}window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");})()</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍜 Day 17: Multicultural Food</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #e8b4cb 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #5a3e36;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #7a5a50;
+            font-size: 1rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .section-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #e8a4b8, #d4919f);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 32px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .section-title {
+            display: inline-block;
+            font-size: 1.2rem;
+            color: #5a3e36;
+            font-weight: bold;
+        }
+
+        .section-header {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f5e6e0;
+        }
+
+        .reading-box {
+            background: #fdf8f5;
+            border-left: 4px solid #e8a4b8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+
+        .reading-box h3 {
+            color: #5a3e36;
+            margin-bottom: 12px;
+        }
+
+        .reading-box p {
+            color: #4a4a4a;
+            margin-bottom: 10px;
+        }
+
+        .vocab-section {
+            margin-top: 20px;
+            border-top: 2px solid #f5e6e0;
+            padding-top: 16px;
+        }
+
+        .vocab-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            color: #5a3e36;
+            font-weight: bold;
+        }
+
+        .vocab-header span {
+            margin-right: 8px;
+        }
+
+        .vocab-legend {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        .vocab-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .legend-word {
+            width: 12px;
+            height: 12px;
+            background: #fdf8f5;
+            border: 1px solid #e8d4cf;
+            border-radius: 3px;
+        }
+
+        .legend-chunk {
+            width: 12px;
+            height: 12px;
+            background: #f3e8ff;
+            border: 1px solid #d4b8ff;
+            border-radius: 3px;
+        }
+
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 6px;
+        }
+
+        .vocab-item {
+            display: flex;
+            align-items: center;
+            background: #fdf8f5;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
+        }
+
+        .vocab-item:hover {
+            background: #fff0ed;
+        }
+
+        .vocab-item.checked {
+            background: #fff3e0;
+            border-color: #ffb74d;
+        }
+
+        .vocab-item.chunk {
+            background: #f3e8ff;
+            grid-column: span 2;
+        }
+
+        .vocab-item.chunk:hover {
+            background: #ebe0ff;
+        }
+
+        .vocab-item.chunk.checked {
+            background: #ffe0f5;
+            border-color: #e040fb;
+        }
+
+        .vocab-item.chunk .vocab-icon {
+            color: #9c27b0;
+            margin-right: 6px;
+            font-size: 0.8rem;
+        }
+
+        .vocab-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .vocab-item.checked .vocab-checkbox {
+            background: #ff9800;
+            border-color: #ff9800;
+            color: white;
+        }
+
+        .vocab-item.chunk.checked .vocab-checkbox {
+            background: #9c27b0;
+            border-color: #9c27b0;
+        }
+
+        .vocab-item.checked .vocab-checkbox::after {
+            content: "✓";
+            font-size: 14px;
+        }
+
+        .vocab-text {
+            flex: 1;
+        }
+
+        .vocab-text .english {
+            font-weight: bold;
+            color: #c97a8a;
+        }
+
+        .vocab-item.chunk .vocab-text .english {
+            color: #7b1fa2;
+        }
+
+        .vocab-text .japanese {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .quiz-question {
+            background: #fff9f7;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .quiz-question p {
+            font-weight: bold;
+            color: #5a3e36;
+            margin-bottom: 12px;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .quiz-option {
+            background: white;
+            border: 2px solid #e8d4cf;
+            padding: 12px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .quiz-option:hover {
+            border-color: #e8a4b8;
+            background: #fdf5f7;
+        }
+
+        .quiz-option.correct {
+            border-color: #7cb87c;
+            background: #f0f9f0;
+        }
+
+        .quiz-option.wrong {
+            border-color: #e57373;
+            background: #ffebee;
+        }
+
+        .review-box {
+            background: #fdf8f5;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .review-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .review-header .icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+        }
+
+        .review-header .place {
+            font-weight: bold;
+            color: #5a3e36;
+        }
+
+        .stars {
+            color: #f5a623;
+            margin-bottom: 12px;
+        }
+
+        .tips-box {
+            background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .tips-box h4 {
+            color: #4a7c4a;
+            margin-bottom: 12px;
+        }
+
+        .conversation-box {
+            background: #f8f4ff;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .conversation-header {
+            background: #e8dff5;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 0.9rem;
+            color: #5a4a6a;
+        }
+
+        .dialogue {
+            margin-bottom: 12px;
+        }
+
+        .dialogue-line {
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+
+        .speaker-a {
+            background: #e8f4fc;
+            margin-right: 20%;
+        }
+
+        .speaker-b {
+            background: #f5f5f5;
+            margin-left: 20%;
+        }
+
+        .speaker-label {
+            font-weight: bold;
+            color: #5a7a9a;
+            font-size: 0.85rem;
+        }
+
+        .speaker-b .speaker-label {
+            color: #7a7a7a;
+        }
+
+        .key-sentences-box {
+            background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+            border: 2px solid #ffb74d;
+        }
+
+        .key-sentences-box h4 {
+            color: #e65100;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+        }
+
+        .key-sentence {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border-left: 4px solid #ff9800;
+        }
+
+        .key-sentence .english {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #5a3e36;
+            margin-bottom: 4px;
+        }
+
+        .key-sentence .japanese {
+            color: #7a7a7a;
+            font-size: 0.9rem;
+        }
+
+        .key-sentence .source {
+            color: #ff9800;
+            font-size: 0.8rem;
+            margin-top: 4px;
+        }
+
+        .word-order-box {
+            background: #fff8e1;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 16px 0;
+        }
+
+        .word-order-question {
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #e0c080;
+        }
+
+        .word-order-question:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .word-order-question .prompt {
+            color: #5a3e36;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        .word-chips-container {
+            min-height: 50px;
+            margin-bottom: 12px;
+        }
+
+        .word-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .word-chip {
+            background: white;
+            border: 2px solid #ddd;
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+            user-select: none;
+        }
+
+        .word-chip:hover {
+            border-color: #ff9800;
+            background: #fff3e0;
+            transform: scale(1.02);
+        }
+
+        .word-chip.in-answer {
+            opacity: 0.3;
+            cursor: default;
+            transform: none;
+        }
+
+        .answer-area {
+            min-height: 56px;
+            background: white;
+            border: 2px dashed #ffb74d;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .answer-area .placeholder {
+            color: #bbb;
+            font-style: italic;
+            font-size: 0.95rem;
+        }
+
+        .answer-chip {
+            background: #ff9800;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            animation: popIn 0.2s ease-out;
+        }
+
+        .answer-chip:hover {
+            background: #f57c00;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .check-btn {
+            background: linear-gradient(135deg, #ff9800, #f57c00);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 16px;
+            transition: transform 0.2s;
+            font-weight: bold;
+        }
+
+        .check-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .result-message {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .result-message.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .result-message.wrong {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .try-it-box {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .try-it-box textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 12px;
+            border: 2px solid #90caf9;
+            border-radius: 8px;
+            font-size: 1rem;
+            resize: vertical;
+            margin-top: 12px;
+        }
+
+        .hint-box {
+            background: #bbdefb;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 12px;
+            font-size: 0.9rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .btn-copy {
+            background: #e8a4b8;
+            color: white;
+        }
+
+        .btn-audio {
+            background: #7cb87c;
+            color: white;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding: 20px 0;
+        }
+
+        .nav-btn {
+            background: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: #5a3e36;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .nav-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .home-btn {
+            display: block;
+            text-align: center;
+            background: linear-gradient(135deg, #e8a4b8, #d4919f);
+            color: white;
+            padding: 16px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .vocab-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5e6e0;
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 16px;
+            color: #5a3e36;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .vocab-toggle:hover {
+            background: #eed6cf;
+        }
+
+        .vocab-toggle .arrow {
+            margin-left: 8px;
+            transition: transform 0.3s;
+        }
+
+        .vocab-toggle.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        .vocab-section.collapsed {
+            display: none;
+        }
+
+        .summary-section {
+            background: #f5f0ff;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        .summary-section h3 {
+            color: #5a3e36;
+            font-size: 1.1rem;
+            margin-bottom: 4px;
+        }
+        .summary-desc {
+            color: #7a5a50;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+        }
+        .summary-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #7c3aed, #9333ea);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 24px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+        .summary-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(124,58,237,0.3);
+        }
+        .summary-output {
+            display: none;
+            background: white;
+            border: 2px solid #e0d4f5;
+            border-radius: 12px;
+            padding: 16px;
+            font-size: 0.85rem;
+            color: #5a3e36;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+        }
+        .summary-actions {
+            display: none;
+            gap: 8px;
+            justify-content: center;
+        }
+        .summary-actions.show {
+            display: flex;
+        }
+        .summary-action-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .summary-copy-btn {
+            background: #e8e0f5;
+            color: #7c3aed;
+        }
+        .summary-copy-btn:hover {
+            background: #d4c8eb;
+        }
+        .summary-chatgpt-btn {
+            background: #10a37f;
+            color: white;
+        }
+        .summary-chatgpt-btn:hover {
+            background: #0d8c6d;
+        }
+        .summary-claude-btn {
+            background: #d97706;
+            color: white;
+        }
+        .summary-claude-btn:hover {
+            background: #b45309;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🍜 Day 17: Multicultural Food</h1>
+            <p class="subtitle">30日間オーストラリア英語 — 17日目</p>
+        </header>
+
+        <!-- Section 1: Reading -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">1</span>
+                <span class="section-title">Reading</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">多文化の食</p>
+
+            <div class="reading-box">
+                <h3>A Nation Built on Diverse Flavours</h3>
+                <p>Australia's culinary landscape is one that could not have existed without the successive waves of immigration that have shaped the country over the past century. What began as a predominantly British food culture, characterised by meat pies and roast dinners, has been transformed into one of the most diverse dining scenes on earth. The post-war influx of immigrants from Southern Europe introduced Australians to dishes they had never previously encountered — pasta, souvlaki, and espresso became staples virtually overnight. Subsequent waves of migration from Southeast Asia, the Middle East, and the Indian subcontinent further enriched the national palate. Were one to stroll through any major Australian city today, they would discover Thai, Lebanese, Vietnamese, Ethiopian, and Japanese restaurants coexisting harmoniously within a single neighbourhood. This multicultural approach to food, which many sociologists argue reflects Australia's broader commitment to inclusivity, has produced a cuisine that defies simple categorisation. It is this very diversity that Australians take the greatest pride in.</p>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-copy" onclick="copyText(this)">📋 コピー</button>
+                <button class="btn btn-audio" onclick="openNaturalReader(this)">🔊 Natural Reader</button>
+            </div>
+
+            <div class="vocab-toggle" onclick="toggleVocab(this)">
+                📚 単語・フレーズリストを見る <span class="arrow">▼</span>
+            </div>
+
+            <div class="vocab-section collapsed">
+                <div class="vocab-header">
+                    <span>💡</span> わからなかったものにチェック ✓
+                </div>
+                <div class="vocab-legend">
+                    <div class="vocab-legend-item"><div class="legend-word"></div> 単語</div>
+                    <div class="vocab-legend-item"><div class="legend-chunk"></div> フレーズ</div>
+                </div>
+                <div class="vocab-grid">
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">culinary</span><br>
+                            <span class="japanese">料理の</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">successive</span><br>
+                            <span class="japanese">連続する</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">predominantly</span><br>
+                            <span class="japanese">主に</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">characterised</span><br>
+                            <span class="japanese">特徴づけられた</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">post-war influx</span><br>
+                            <span class="japanese">戦後の流入</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">staples</span><br>
+                            <span class="japanese">定番・主食</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">virtually overnight</span><br>
+                            <span class="japanese">事実上一夜にして</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">subsequent</span><br>
+                            <span class="japanese">その後の</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">migration</span><br>
+                            <span class="japanese">移住</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">enriched</span><br>
+                            <span class="japanese">豊かにした</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">palate</span><br>
+                            <span class="japanese">味覚・好み</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">harmoniously</span><br>
+                            <span class="japanese">調和して</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">sociologists</span><br>
+                            <span class="japanese">社会学者</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">inclusivity</span><br>
+                            <span class="japanese">包括性</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">defies</span><br>
+                            <span class="japanese">〜に反する・困難にする</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">categorisation</span><br>
+                            <span class="japanese">分類</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Quiz 1 -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">2</span>
+                <span class="section-title">Quiz 1</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">Readingの内容チェック</p>
+
+            <div class="quiz-question">
+                <p>Q: オーストラリアの食文化はもともと何の影響を受けていましたか？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">French haute cuisine</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">British food culture</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">American fast food</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Review -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">3</span>
+                <span class="section-title">Review</span>
+            </div>
+
+            <div class="review-box">
+                <div class="review-header">
+                    <span class="icon">📍</span>
+                    <span class="place">Laksa King — Melbourne</span>
+                </div>
+                <div class="stars">⭐⭐⭐⭐⭐</div>
+                <p>Had someone told me a year ago that the best laksa I would ever taste could be found in suburban Melbourne, I might not have believed them. Yet Laksa King, nestled in the unassuming suburb of Flemington, serves a bowl so authentic that Malaysian visitors have reportedly declared it superior to many establishments in Kuala Lumpur. The curry laksa, prepared using a recipe that is said to have remained unchanged for over two decades, delivers a complexity of flavour that left me genuinely speechless. The broth, having been simmered for hours with a proprietary blend of spices, achieves a depth that mass-produced alternatives could never replicate. Were the restaurant located in a more central area, I suspect the queues would stretch around the block. The owner, whom I had the pleasure of speaking with briefly, explained that she wished more Australians understood the regional variations within Malaysian cuisine. Seldom does a humble restaurant leave such an indelible impression.</p>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-copy" onclick="copyText(this)">📋 コピー</button>
+                <button class="btn btn-audio" onclick="openNaturalReader(this)">🔊 Natural Reader</button>
+            </div>
+
+            <div class="vocab-toggle" onclick="toggleVocab(this)">
+                📚 単語・フレーズリストを見る <span class="arrow">▼</span>
+            </div>
+
+            <div class="vocab-section collapsed">
+                <div class="vocab-header">
+                    <span>💡</span> わからなかったものにチェック ✓
+                </div>
+                <div class="vocab-legend">
+                    <div class="vocab-legend-item"><div class="legend-word"></div> 単語</div>
+                    <div class="vocab-legend-item"><div class="legend-chunk"></div> フレーズ</div>
+                </div>
+                <div class="vocab-grid">
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">had someone told me</span><br>
+                            <span class="japanese">もし誰かが私に言っていたとしても（仮定法過去完了の倒置）</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">nestled</span><br>
+                            <span class="japanese">ひっそりと位置する</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">unassuming</span><br>
+                            <span class="japanese">控えめな・目立たない</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">authentic</span><br>
+                            <span class="japanese">本格的な</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">reportedly</span><br>
+                            <span class="japanese">伝えられるところでは</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">superior</span><br>
+                            <span class="japanese">優れた</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">complexity</span><br>
+                            <span class="japanese">複雑さ</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">genuinely</span><br>
+                            <span class="japanese">本当に</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">having been simmered</span><br>
+                            <span class="japanese">何時間も煮込まれたので（分詞構文）</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">proprietary</span><br>
+                            <span class="japanese">独自の・専有の</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">replicate</span><br>
+                            <span class="japanese">再現する</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">were the restaurant located</span><br>
+                            <span class="japanese">もしそのレストランが位置していたら（仮定法の倒置）</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">whom I had the pleasure of speaking with</span><br>
+                            <span class="japanese">お話しする機会があった方</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">she wished more Australians understood</span><br>
+                            <span class="japanese">もっと多くの豪州人に理解してほしい（仮定法過去）</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">seldom does ... leave</span><br>
+                            <span class="japanese">めったに〜残さない（否定倒置）</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">indelible</span><br>
+                            <span class="japanese">消えない・忘れられない</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Quiz 2 -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">4</span>
+                <span class="section-title">Quiz 2</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">Reviewの内容チェック</p>
+
+            <div class="quiz-question">
+                <p>Q: Laksa Kingのラクサのレシピについて何と書かれていますか？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">It is updated every season with new ingredients</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">It is said to have remained unchanged for over two decades</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">It was created by a famous chef from Kuala Lumpur</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Australia Tips -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">5</span>
+                <span class="section-title">🦘 Australia Tips</span>
+            </div>
+
+            <div class="tips-box" style="background: linear-gradient(135deg, #e8f5e9, #f1f8e9); ">
+                <h4>多文化オーストラリアの食の語彙</h4>
+                <p>オーストラリアでは cuisine（料理文化）、fusion（融合料理）、authentic（本格的な）などの語彙が日常的に使われます。"What cuisine are you in the mood for?"（何料理の気分？）はレストラン選びでよく聞くフレーズです。</p>
+            </div>
+            <div class="tips-box" style="background: linear-gradient(135deg, #e8f5e9, #c8e6c9); margin-top: 12px;">
+                <h4>関係代名詞 whom の使い方</h4>
+                <p>"The owner, whom I had the pleasure of speaking with" のように whom は目的格の関係代名詞です。口語では who で代用されることも多いですが、準2級レベルでは whom の正しい使い方を理解しておくことが重要です。前置詞 + whom の形にも注意しましょう。</p>
+            </div>
+        </div>
+
+        <!-- Section 6: Conversation -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">6</span>
+                <span class="section-title">Conversation</span>
+            </div>
+
+            <div class="conversation-box">
+                <div class="conversation-header">
+                    🎭 多文化な食のエリアを友達と歩きながら、どこで食べるか相談する
+                </div>
+
+                <div class="dialogue">
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (Koa):</span><br>
+                        This street is incredible! There must be at least twenty different cuisines represented here.
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        That's what I love about this neighbourhood. It's as if the whole world had gathered in one place.
+                    </div>
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (Koa):</span><br>
+                        If you could only choose one restaurant tonight, which would it be?
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        That's a tough question! I've been told that the Vietnamese place on the corner serves the most authentic pho in the city.
+                    </div>
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (Koa):</span><br>
+                        Really? Who told you that?
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        A colleague of mine, whose parents emigrated from Hanoi, said she wished she could eat there every day.
+                    </div>
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (Koa):</span><br>
+                        That's quite an endorsement! But I also noticed a Lebanese restaurant that looked amazing.
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        You mean the one with the outdoor seating? Had I known you were interested in Lebanese food, I would have suggested it immediately.
+                    </div>
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (Koa):</span><br>
+                        Let's compromise. What if we had pho tonight and saved the Lebanese place for next week?
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        That sounds like a perfect plan. Were we to try a different restaurant each week, it would take us months to get through this street.
+                    </div>
+                    <div class="dialogue-line speaker-a">
+                        <span class="speaker-label">A (Koa):</span><br>
+                        I wouldn't mind that at all! It would be like travelling the world without leaving Melbourne.
+                    </div>
+                    <div class="dialogue-line speaker-b">
+                        <span class="speaker-label">B:</span><br>
+                        Exactly! That's precisely what makes Australian food culture so remarkable.
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-copy" onclick="copyText(this)">📋 コピー</button>
+                <button class="btn btn-audio" onclick="openNaturalReader(this)">🔊 Natural Reader</button>
+            </div>
+
+            <div class="vocab-toggle" onclick="toggleVocab(this)">
+                📚 単語・フレーズリストを見る <span class="arrow">▼</span>
+            </div>
+
+            <div class="vocab-section collapsed">
+                <div class="vocab-header">
+                    <span>💡</span> わからなかったものにチェック ✓
+                </div>
+                <div class="vocab-legend">
+                    <div class="vocab-legend-item"><div class="legend-word"></div> 単語</div>
+                    <div class="vocab-legend-item"><div class="legend-chunk"></div> フレーズ</div>
+                </div>
+                <div class="vocab-grid">
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">represented</span><br>
+                            <span class="japanese">代表された・存在する</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">as if the whole world had gathered</span><br>
+                            <span class="japanese">まるで世界中が集まったかのように（仮定法過去完了）</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">if you could only choose</span><br>
+                            <span class="japanese">もし一つだけ選べるとしたら</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">I've been told that</span><br>
+                            <span class="japanese">〜だと聞いた（受動態の間接話法）</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">authentic</span><br>
+                            <span class="japanese">本格的な</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">whose parents emigrated from</span><br>
+                            <span class="japanese">両親が〜から移住した（所有格の関係代名詞）</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">endorsement</span><br>
+                            <span class="japanese">推薦・お墨付き</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">had I known</span><br>
+                            <span class="japanese">もし知っていたら（仮定法過去完了の倒置）</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">compromise</span><br>
+                            <span class="japanese">妥協する</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">what if we had</span><br>
+                            <span class="japanese">〜したらどうだろう</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item chunk" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="vocab-icon">🔗</span>
+                            <span class="english">were we to try</span><br>
+                            <span class="japanese">もし試すとしたら（仮定法の倒置）</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">precisely</span><br>
+                            <span class="japanese">まさに</span>
+                        </div>
+                    </div>
+                    <div class="vocab-item" onclick="toggleCheck(this)">
+                        <div class="vocab-checkbox"></div>
+                        <div class="vocab-text">
+                            <span class="english">remarkable</span><br>
+                            <span class="japanese">注目すべき</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 7: Quiz 3 -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">7</span>
+                <span class="section-title">Quiz 3</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">Conversationの内容チェック</p>
+
+            <div class="quiz-question">
+                <p>Q: 二人は最終的にどうすることに決めましたか？</p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Go to the Lebanese restaurant tonight</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">Have pho tonight and save the Lebanese place for next week</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Try both restaurants on the same evening</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 8: Key Sentences -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">8</span>
+                <span class="section-title">🔑 Key Sentences</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">今日のそのまま使える表現3つ</p>
+
+            <div class="key-sentences-box">
+                <h4>🌟 覚えておきたいフレーズ</h4>
+                <div class="key-sentence">
+                    <div class="english">What began as a predominantly British food culture has been transformed into one of the most diverse dining scenes on earth.</div>
+                    <div class="japanese">主にイギリスの食文化として始まったものが、地球上で最も多様な食事の光景の一つに変貌した。</div>
+                    <div class="source">📍 Reading</div>
+                </div>
+                <div class="key-sentence">
+                    <div class="english">Had someone told me a year ago that the best laksa could be found in Melbourne, I might not have believed them.</div>
+                    <div class="japanese">1年前に誰かがメルボルンで最高のラクサが見つかると教えてくれていたとしても、信じなかったかもしれない。</div>
+                    <div class="source">📍 Review</div>
+                </div>
+                <div class="key-sentence">
+                    <div class="english">It's as if the whole world had gathered in one place.</div>
+                    <div class="japanese">まるで世界中が一つの場所に集まったかのようだ。</div>
+                    <div class="source">📍 Conversation</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 9: Word Order Quiz -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">9</span>
+                <span class="section-title">🔀 並べ替えクイズ</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">Key Sentencesを並べ替えて作ってみよう</p>
+
+            <div class="word-order-box">
+                <div class="word-order-question" data-answer="were the restaurant,located,in a more central area,the queues,would stretch,around the block">
+                    <p class="prompt">Q1: 「もしそのレストランがもっと中心部にあったら、行列はブロックの周りに伸びるだろう。」</p>
+                    <div class="word-chips-container">
+                        <div class="word-chips">
+                            <span class="word-chip" onclick="moveToAnswer(this)">were the restaurant</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">located</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">in a more central area</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">the queues</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">would stretch</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">around the block</span>
+                        </div>
+                    </div>
+                    <div class="answer-area" onclick="handleAnswerAreaClick(event)">
+                        <span class="placeholder">👆 上の単語をタップして並べよう</span>
+                    </div>
+                </div>
+
+                <div class="word-order-question" data-answer="that's,precisely,what,makes,Australian food culture,so remarkable">
+                    <p class="prompt">Q2: 「それはまさにオーストラリアの食文化を注目すべきものにしているものだ。」</p>
+                    <div class="word-chips-container">
+                        <div class="word-chips">
+                            <span class="word-chip" onclick="moveToAnswer(this)">that's</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">precisely</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">what</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">makes</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">Australian food culture</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">so remarkable</span>
+                        </div>
+                    </div>
+                    <div class="answer-area" onclick="handleAnswerAreaClick(event)">
+                        <span class="placeholder">👆 上の単語をタップして並べよう</span>
+                    </div>
+                </div>
+
+                <div class="word-order-question" data-answer="had I,known,I would have,suggested,it,immediately">
+                    <p class="prompt">Q3: 「もし知っていたら、すぐに提案していただろう。」</p>
+                    <div class="word-chips-container">
+                        <div class="word-chips">
+                            <span class="word-chip" onclick="moveToAnswer(this)">had I</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">known</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">I would have</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">suggested</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">it</span>
+                            <span class="word-chip" onclick="moveToAnswer(this)">immediately</span>
+                        </div>
+                    </div>
+                    <div class="answer-area" onclick="handleAnswerAreaClick(event)">
+                        <span class="placeholder">👆 上の単語をタップして並べよう</span>
+                    </div>
+                </div>
+
+                <button class="check-btn" onclick="checkAllAnswers()">✓ 答えをチェック</button>
+
+                <div id="result-area"></div>
+            </div>
+        </div>
+
+        <!-- Section 10: Try It! -->
+        <div class="section">
+            <div class="section-header">
+                <span class="section-number">10</span>
+                <span class="section-title">✏️ Try It!</span>
+            </div>
+            <p style="color: #7a5a50; margin-bottom: 12px;">今日のことを3行で書いてみよう</p>
+
+            <div class="try-it-box">
+                <p>💡 今日の会話や文をマネしてOK！わからない英語は日本語のままで大丈夫。</p>
+
+                <textarea placeholder="ここに書いてみよう...
+
+1.
+2.
+3. "></textarea>
+
+                <div class="btn-group">
+                    <button class="btn btn-copy" onclick="copyText(this)">📋 コピー</button>
+                    <button class="btn" style="background: #9c27b0; color: white;" onclick="openChatGPT(this)">🤖 ChatGPTで添削</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="section summary-section">
+            <h3>📊 学習サマリー</h3>
+            <p class="summary-desc">今日の回答をまとめてAIに質問しよう</p>
+            <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
+            <pre id="summary-output" class="summary-output"></pre>
+            <div id="summary-actions" class="summary-actions">
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
+                <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-buttons">
+            <a href="day16.html" class="nav-btn">← Day 16</a>
+            <a href="day18.html" class="nav-btn">Day 18 →</a>
+        </div>
+
+        <a href="/australia-english-p2/" class="home-btn">🏠 ホームに戻る</a>
+    </div>
+
+    <script>
+        function toggleVocab(element) {
+            element.classList.toggle('open');
+            const vocabSection = element.nextElementSibling;
+            vocabSection.classList.toggle('collapsed');
+        }
+
+        function toggleCheck(element) {
+            element.classList.toggle('checked');
+        }
+
+        function checkQuiz(element, isCorrect) {
+            const parent = element.parentElement;
+            parent.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.classList.remove('correct', 'wrong');
+            });
+
+            if (isCorrect) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('wrong');
+            }
+        }
+
+        function moveToAnswer(chip) {
+            if (chip.classList.contains('in-answer')) return;
+
+            const question = chip.closest('.word-order-question');
+            const answerArea = question.querySelector('.answer-area');
+            const placeholder = answerArea.querySelector('.placeholder');
+
+            if (placeholder) {
+                placeholder.style.display = 'none';
+            }
+
+            const answerChip = document.createElement('span');
+            answerChip.className = 'answer-chip';
+            answerChip.textContent = chip.textContent;
+            answerChip.dataset.originalChip = Array.from(chip.parentElement.children).indexOf(chip);
+            answerChip.onclick = function() {
+                removeFromAnswer(this, chip);
+            };
+
+            answerArea.appendChild(answerChip);
+            chip.classList.add('in-answer');
+        }
+
+        function removeFromAnswer(answerChip, originalChip) {
+            const question = answerChip.closest('.word-order-question');
+            const answerArea = question.querySelector('.answer-area');
+
+            answerChip.remove();
+            originalChip.classList.remove('in-answer');
+
+            const remainingChips = answerArea.querySelectorAll('.answer-chip');
+            if (remainingChips.length === 0) {
+                const placeholder = answerArea.querySelector('.placeholder');
+                if (placeholder) {
+                    placeholder.style.display = 'inline';
+                }
+            }
+        }
+
+        function handleAnswerAreaClick(event) {
+            if (event.target.classList.contains('answer-chip')) {
+                const question = event.target.closest('.word-order-question');
+                const chips = question.querySelectorAll('.word-chip');
+                const index = parseInt(event.target.dataset.originalChip);
+                removeFromAnswer(event.target, chips[index]);
+            }
+        }
+
+        function checkAllAnswers() {
+            const questions = document.querySelectorAll('.word-order-question');
+            let allCorrect = true;
+            let results = [];
+
+            questions.forEach((question, index) => {
+                const answerArea = question.querySelector('.answer-area');
+                const answerChips = answerArea.querySelectorAll('.answer-chip');
+                const userAnswer = Array.from(answerChips).map(chip => chip.textContent).join(',');
+                const correctAnswer = question.dataset.answer;
+
+                const isCorrect = userAnswer === correctAnswer;
+                if (!isCorrect) allCorrect = false;
+
+                results.push({
+                    num: index + 1,
+                    correct: isCorrect,
+                    userAnswer: userAnswer || '(未回答)',
+                    correctAnswer: correctAnswer.replace(/,/g, ' ')
+                });
+            });
+
+            const resultArea = document.getElementById('result-area');
+            let html = '<div style="margin-top: 16px;">';
+
+            results.forEach(r => {
+                if (r.correct) {
+                    html += `<div class="result-message correct">Q${r.num}: ⭕ 正解！</div>`;
+                } else {
+                    html += `<div class="result-message wrong">Q${r.num}: ❌ 惜しい！<br>正解: ${r.correctAnswer}</div>`;
+                }
+            });
+
+            if (allCorrect) {
+                html += '<div style="text-align: center; margin-top: 16px; font-size: 1.5rem;">🎉 パーフェクト！ 🎉</div>';
+            }
+
+            html += '</div>';
+            resultArea.innerHTML = html;
+        }
+
+        function copyText(btn) {
+            const section = btn.closest('.section, .try-it-box');
+            const textBox = section.querySelector('.reading-box, .review-box, .conversation-box, textarea');
+            if (textBox) {
+                const text = textBox.tagName === 'TEXTAREA' ? textBox.value : textBox.innerText;
+                navigator.clipboard.writeText(text).then(() => {
+                    btn.textContent = '✓ コピーしました';
+                    setTimeout(() => { btn.textContent = '📋 コピー'; }, 2000);
+                });
+            }
+        }
+
+        function openNaturalReader(btn) {
+            var section = btn.closest('.section');
+            var textBox = section.querySelector('.reading-box, .review-box, .conversation-box');
+            if (textBox) {
+                var text = textBox.innerText;
+                navigator.clipboard.writeText(text).then(function() {
+                    btn.textContent = '\u2713 \u30b3\u30d4\u30fc\u6e08\u307f';
+                    setTimeout(function() { btn.textContent = '\ud83d\udd0a Natural Reader'; }, 2000);
+                    window.open('https://www.naturalreaders.com/online/', '_blank');
+                });
+            }
+        }
+
+        function openChatGPT(btn) {
+            var section = btn.closest('.section');
+            var textarea = section.querySelector('textarea');
+            if (textarea && textarea.value.trim()) {
+                var prompt = '\u4ee5\u4e0b\u306e\u82f1\u4f5c\u6587\u3092\u6dfb\u524a\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u9593\u9055\u3044\u304c\u3042\u308c\u3070\u4fee\u6b63\u3057\u3001\u3088\u308a\u81ea\u7136\u306a\u8868\u73fe\u304c\u3042\u308c\u3070\u63d0\u6848\u3057\u3066\u304f\u3060\u3055\u3044\u3002\n\n' + textarea.value;
+                window.open('https://chatgpt.com/?q=' + encodeURIComponent(prompt), '_blank');
+            } else {
+                alert('\u5148\u306b\u30c6\u30ad\u30b9\u30c8\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044');
+            }
+        }
+
+        function generateDaySummary() {
+            var title = document.title || 'Workbook';
+            var s = '\u3010' + title + ' \u5b66\u7fd2\u30b5\u30de\u30ea\u30fc\u3011\n\n';
+
+            var quizzes = document.querySelectorAll('.quiz-question');
+            if (quizzes.length > 0) {
+                s += '\u25a0 \u30af\u30a4\u30ba\u56de\u7b54:\n';
+                quizzes.forEach(function(q, i) {
+                    var selected = q.querySelector('.quiz-option.correct, .quiz-option.wrong');
+                    var answer = selected ? selected.textContent.trim() : '(\u672a\u56de\u7b54)';
+                    var isCorrect = selected && selected.classList.contains('correct');
+                    s += 'Q' + (i+1) + ': ' + answer + (isCorrect ? ' \u2b55' : selected ? ' \u274c' : '') + '\n';
+                });
+                s += '\n';
+            }
+
+            var checkedVocab = document.querySelectorAll('.vocab-item.checked');
+            if (checkedVocab.length > 0) {
+                s += '\u25a0 \u308f\u304b\u3089\u306a\u304b\u3063\u305f\u5358\u8a9e:\n';
+                checkedVocab.forEach(function(el) {
+                    var eng = el.querySelector('.english');
+                    var jpn = el.querySelector('.japanese');
+                    if (eng) {
+                        s += '- ' + eng.textContent + (jpn ? ' (' + jpn.textContent + ')' : '') + '\n';
+                    }
+                });
+                s += '\n';
+            }
+
+            var wordOrders = document.querySelectorAll('.word-order-question');
+            if (wordOrders.length > 0) {
+                s += '\u25a0 \u4e26\u3079\u66ff\u3048\u56de\u7b54:\n';
+                wordOrders.forEach(function(q, i) {
+                    var chips = q.querySelectorAll('.answer-chip');
+                    var answer = Array.from(chips).map(function(c) { return c.textContent; }).join(' ');
+                    s += 'Q' + (i+1) + ': ' + (answer || '(\u672a\u56de\u7b54)') + '\n';
+                });
+                s += '\n';
+            }
+
+            var tryItBox = document.querySelector('.try-it-box textarea');
+            if (tryItBox) {
+                s += '\u25a0 Try It\uff08\u81ea\u7531\u8a18\u8ff0\uff09:\n' + (tryItBox.value.trim() || '(\u672a\u8a18\u5165)') + '\n\n';
+            }
+
+            s += '---\n';
+            s += '\u4e0a\u306e\u5185\u5bb9\u3092\u3082\u3068\u306b\u3001\u4ee5\u4e0b\u3092\u6559\u3048\u3066\u304f\u3060\u3055\u3044\uff1a\n';
+            s += '1. \u9593\u9055\u3048\u305f\u554f\u984c\u306e\u89e3\u8aac\n';
+            s += '2. Try It\u306e\u6587\u6cd5\u30fb\u8868\u73fe\u306e\u6dfb\u524a\uff08\u4fee\u6b63\u7b87\u6240\u306e\u8aac\u660e\u4ed8\u304d\uff09\n';
+            s += '3. \u3088\u308a\u81ea\u7136\u306a\u8a00\u3044\u56de\u3057\u306e\u63d0\u6848\n';
+            s += '4. \u4eca\u65e5\u306e\u5b66\u7fd2\u5185\u5bb9\u306b\u95a2\u9023\u3059\u308b\u8ffd\u52a0\u30d5\u30ec\u30fc\u30ba\n';
+            s += '5. \u767a\u5c55\u7684\u306a\u7df4\u7fd2\u554f\u984c\uff081\u301c2\u554f\uff09';
+
+            var output = document.getElementById('summary-output');
+            var actions = document.getElementById('summary-actions');
+            output.textContent = s;
+            output.style.display = 'block';
+            actions.classList.add('show');
+        }
+
+        function copySummaryText() {
+            var text = document.getElementById('summary-output').textContent || '';
+            navigator.clipboard.writeText(text).then(function() {
+                var btn = event.target;
+                btn.textContent = '\u2713 \u30b3\u30d4\u30fc\u6e08\u307f';
+                setTimeout(function() { btn.textContent = '\ud83d\udccb \u30b3\u30d4\u30fc'; }, 2000);
+            });
+        }
+
+    </script>
+
+<script>
+(function() {
+  var NAME_KEY = "uchiwai_course_name_australia-english-p2";
+  try {
+    var userName = localStorage.getItem(NAME_KEY);
+    if (userName) {
+      var labels = document.querySelectorAll(".speaker-a .speaker-label");
+      labels.forEach(function(el) {
+        el.textContent = "A (" + userName + "):";
+      });
+      var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+      while (walker.nextNode()) {
+        var node = walker.currentNode;
+        if (node.textContent.indexOf("Koa") !== -1) {
+          node.textContent = node.textContent.replace(/Koa/g, userName);
+        }
+      }
+    }
+  } catch(e) {}
+})();
+</script>
+</body>
+</html>

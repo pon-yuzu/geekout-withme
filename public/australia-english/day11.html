@@ -1675,19 +1675,21 @@
   var NAME_KEY = "uchiwai_course_name_australia-english-30days";
   try {
     var userName = localStorage.getItem(NAME_KEY);
-    if (!userName) return;
-    var labels = document.querySelectorAll(".speaker-a .speaker-label");
-    labels.forEach(function(el) {
-      el.textContent = "A (" + userName + "):";
-    });
-    var dialogueLines = document.querySelectorAll(".dialogue-line");
-    dialogueLines.forEach(function(el) {
-      el.childNodes.forEach(function(node) {
-        if (node.nodeType === 3 && node.textContent.indexOf("Nanako") !== -1) {
-          node.textContent = node.textContent.replace(/Nanako/g, userName);
-        }
+    if (userName) {
+      // Replace in speaker labels
+      var labels = document.querySelectorAll(".speaker-a .speaker-label");
+      labels.forEach(function(el) {
+        el.textContent = "A (" + userName + "):";
       });
-    });
+      // Replace "Koa" everywhere in page text (dialogue, quiz, etc.)
+      var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+      while (walker.nextNode()) {
+        var node = walker.currentNode;
+        if (node.textContent.indexOf("Koa") !== -1) {
+          node.textContent = node.textContent.replace(/Koa/g, userName);
+        }
+      }
+    }
   } catch(e) {}
 })();
 </script>
