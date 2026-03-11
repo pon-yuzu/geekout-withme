@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<script>(function(){var k="uchiwai_course_access_australia-english-p2";try{if(localStorage.getItem(k)==="true")return;}catch(e){}window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");})()</script>
+<script>(function(){var k="uchiwai_course_access_australia-english-p2";var pk="uchiwai_course_purchased_at_australia-english-p2";var hk="uchiwai_course_has_account_australia-english-p2";try{var v=localStorage.getItem(k);if(v==="true"||v==="granted"){var pa=localStorage.getItem(pk);if(pa){var days=localStorage.getItem(hk)==="true"?365:183;var exp=new Date(pa);exp.setDate(exp.getDate()+days);if(new Date()>exp){localStorage.removeItem(k);localStorage.removeItem(pk);window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");return;}}return;}}catch(e){}window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");})();</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🍜 Day 17: Multicultural Food</title>
@@ -911,9 +911,9 @@
             <div class="quiz-question">
                 <p>Q: オーストラリアの食文化はもともと何の影響を受けていましたか？</p>
                 <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">American fast food</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">French haute cuisine</div>
                     <div class="quiz-option" onclick="checkQuiz(this, true)">British food culture</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">American fast food</div>
                 </div>
             </div>
         </div>
@@ -1085,9 +1085,9 @@
             <div class="quiz-question">
                 <p>Q: Laksa Kingのラクサのレシピについて何と書かれていますか？</p>
                 <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">It was created by a famous chef from Kuala Lumpur</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">It is updated every season with new ingredients</div>
                     <div class="quiz-option" onclick="checkQuiz(this, true)">It is said to have remained unchanged for over two decades</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">It was created by a famous chef from Kuala Lumpur</div>
                 </div>
             </div>
         </div>
@@ -1304,9 +1304,9 @@
             <div class="quiz-question">
                 <p>Q: 二人は最終的にどうすることに決めましたか？</p>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">Go to the Lebanese restaurant tonight</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">Have pho tonight and save the Lebanese place for next week</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">Try both restaurants on the same evening</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">Have pho tonight and save the Lebanese place for next week</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Go to the Lebanese restaurant tonight</div>
                 </div>
             </div>
         </div>
@@ -1436,7 +1436,7 @@
             <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
             <pre id="summary-output" class="summary-output"></pre>
             <div id="summary-actions" class="summary-actions">
-                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText(this)">📋 コピー</button>
                 <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
                 <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
             </div>

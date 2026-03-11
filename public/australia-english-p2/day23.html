@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<script>(function(){var k="uchiwai_course_access_australia-english-p2";try{if(localStorage.getItem(k)==="true")return;}catch(e){}window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");})()</script>
+<script>(function(){var k="uchiwai_course_access_australia-english-p2";var pk="uchiwai_course_purchased_at_australia-english-p2";var hk="uchiwai_course_has_account_australia-english-p2";try{var v=localStorage.getItem(k);if(v==="true"||v==="granted"){var pa=localStorage.getItem(pk);if(pa){var days=localStorage.getItem(hk)==="true"?365:183;var exp=new Date(pa);exp.setDate(exp.getDate()+days);if(new Date()>exp){localStorage.removeItem(k);localStorage.removeItem(pk);window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");return;}}return;}}catch(e){}window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");})();</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🏦 Day 23: Opening a Bank Account</title>
@@ -923,9 +923,9 @@
             <div class="quiz-question">
                 <p>Q: 到着後6週間を過ぎてから口座を開くとどうなりますか？</p>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">手数料が高くなる</div>
                     <div class="quiz-option" onclick="checkQuiz(this, true)">より多くの身分証明書が必要になる</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">口座が開設できなくなる</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">手数料が高くなる</div>
                 </div>
             </div>
         </div>
@@ -1085,8 +1085,8 @@
                 <p>Q: レビューの筆者がこの支店で特に感心した点は何ですか？</p>
                 <div class="quiz-options">
                     <div class="quiz-option" onclick="checkQuiz(this, false)">ATMの数が多いこと</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">多言語サポートがあること</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">手数料が無料であること</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">多言語サポートがあること</div>
                 </div>
             </div>
         </div>
@@ -1310,9 +1310,9 @@
             <div class="quiz-question">
                 <p>Q: 会話によると、Goal Saver口座で高い金利を得るための条件は何ですか？</p>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">毎月100ドル以上の入金</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">毎月200ドル以上の入金</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">毎月500ドル以上の入金</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">毎月200ドル以上の入金</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">毎月100ドル以上の入金</div>
                 </div>
             </div>
         </div>
@@ -1442,7 +1442,7 @@
             <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
             <pre id="summary-output" class="summary-output"></pre>
             <div id="summary-actions" class="summary-actions">
-                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText(this)">📋 コピー</button>
                 <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
                 <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
             </div>

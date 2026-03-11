@@ -957,9 +957,9 @@
             <div class="quiz-question">
                 <p>Q: アボリジニの文化は何年くらい前からありますか？</p>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">約1万年前</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">約3万年前</div>
                     <div class="quiz-option" onclick="checkQuiz(this, true)">約6万5千年前</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">約1万年前</div>
                 </div>
             </div>
         </div>
@@ -1373,9 +1373,9 @@
             <div class="quiz-question">
                 <p>Q: クイーンズランド博物館の入場料はいくらですか？</p>
                 <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">無料</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">10ドル</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">20ドル</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">無料</div>
                 </div>
             </div>
         </div>
@@ -1499,7 +1499,7 @@
             <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
             <pre id="summary-output" class="summary-output"></pre>
             <div id="summary-actions" class="summary-actions">
-                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText(this)">📋 コピー</button>
                 <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
                 <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
             </div>
@@ -1713,6 +1713,27 @@
                 s += '■ Try It（自由記述）:\n' + (tryItBox.value.trim() || '(未記入)') + '\n\n';
             }
 
+            // Collect learning context (reading & dialogue)
+            var readingBox = document.querySelector('.reading-box');
+            if (readingBox) {
+                var readingTitle = readingBox.querySelector('h3');
+                var readingText = readingBox.querySelector('p');
+                s += '■ 今日のReading:\n';
+                if (readingTitle) s += readingTitle.textContent + '\n';
+                if (readingText) s += readingText.textContent + '\n\n';
+            }
+            var dialogueEl = document.querySelector('.dialogue');
+            if (dialogueEl) {
+                s += '■ 今日のDialogue:\n';
+                var lines = dialogueEl.querySelectorAll('.dialogue-line');
+                lines.forEach(function(line) {
+                    var label = line.querySelector('.speaker-label');
+                    var text = line.textContent.replace(label ? label.textContent : '', '').trim();
+                    s += (label ? label.textContent : '') + ' ' + text + '\n';
+                });
+                s += '\n';
+            }
+
             s += '---\n';
             s += '上の内容をもとに、以下を教えてください：\n';
             s += '1. 間違えた問題の解説\n';
@@ -1728,10 +1749,9 @@
             actions.classList.add('show');
         }
 
-        function copySummaryText() {
+        function copySummaryText(btn) {
             var text = document.getElementById('summary-output').textContent || '';
             navigator.clipboard.writeText(text).then(function() {
-                var btn = event.target;
                 btn.textContent = '✓ コピー済み';
                 setTimeout(function() { btn.textContent = '📋 コピー'; }, 2000);
             });

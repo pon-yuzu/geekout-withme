@@ -903,9 +903,9 @@
             <div class="quiz-question">
                 <p>Q: 本文によると、キャンベラが首都に選ばれた理由は何ですか？</p>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">最大の都市だったから</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">シドニーとメルボルンの妥協として選ばれたから</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">最も古い都市だったから</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">シドニーとメルボルンの妥協として選ばれたから</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">最大の都市だったから</div>
                 </div>
             </div>
         </div>
@@ -1067,9 +1067,9 @@
             <div class="quiz-question">
                 <p>Q: レビューによると、筆者が最も感動したことは何ですか？</p>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">ウルルの大きさ</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">岩の色が一日を通して変化すること</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">ガイドツアーの内容</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">岩の色が一日を通して変化すること</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">ウルルの大きさ</div>
                 </div>
             </div>
         </div>
@@ -1297,9 +1297,9 @@
             <div class="quiz-question">
                 <p>Q: 会話の中で、マークがオーストラリアの内陸部について述べたことはどれですか？</p>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">人口密度が高く、発展していると述べた</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">人口がまばらだが、信じられないほど美しいと述べた</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">農業に適した肥沃な土地だと述べた</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">人口がまばらだが、信じられないほど美しいと述べた</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">人口密度が高く、発展していると述べた</div>
                 </div>
             </div>
         </div>
@@ -1429,7 +1429,7 @@
             <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
             <pre id="summary-output" class="summary-output"></pre>
             <div id="summary-actions" class="summary-actions">
-                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText(this)">📋 コピー</button>
                 <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
                 <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
             </div>

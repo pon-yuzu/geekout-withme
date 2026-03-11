@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<script>(function(){var k="uchiwai_course_access_australia-english-p2";try{if(localStorage.getItem(k)==="true")return;}catch(e){}window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");})()</script>
+<script>(function(){var k="uchiwai_course_access_australia-english-p2";var pk="uchiwai_course_purchased_at_australia-english-p2";var hk="uchiwai_course_has_account_australia-english-p2";try{var v=localStorage.getItem(k);if(v==="true"||v==="granted"){var pa=localStorage.getItem(pk);if(pa){var days=localStorage.getItem(hk)==="true"?365:183;var exp=new Date(pa);exp.setDate(exp.getDate()+days);if(new Date()>exp){localStorage.removeItem(k);localStorage.removeItem(pk);window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");return;}}return;}}catch(e){}window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");})();</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🕷️ Day 5: Dangerous Animals</title>
@@ -912,9 +912,9 @@
             <div class="quiz-question">
                 <p>Q: 本文によると、東部ブラウンスネークはオーストラリアの蛇咬傷死亡事故の何パーセントを占めていますか？</p>
                 <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">約80パーセント</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">約40パーセント</div>
                     <div class="quiz-option" onclick="checkQuiz(this, true)">約60パーセント</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">約80パーセント</div>
                 </div>
             </div>
         </div>
@@ -1074,8 +1074,8 @@
                 <p>Q: オーストラリア動物園を創設したのは誰ですか？</p>
                 <div class="quiz-options">
                     <div class="quiz-option" onclick="checkQuiz(this, false)">デイビッド・アッテンボロー</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">スティーブ・アーウィン</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">ジェーン・グドール</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">スティーブ・アーウィン</div>
                 </div>
             </div>
         </div>
@@ -1300,8 +1300,8 @@
             <div class="quiz-question">
                 <p>Q: ジェイクが蛇に遭遇した時にすべきだと言ったことはどれですか？</p>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">すぐに走って逃げること</div>
                     <div class="quiz-option" onclick="checkQuiz(this, true)">完全に静止してじっとしていること</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">すぐに走って逃げること</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">大きな声で叫んで追い払うこと</div>
                 </div>
             </div>
@@ -1433,7 +1433,7 @@
             <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
             <pre id="summary-output" class="summary-output"></pre>
             <div id="summary-actions" class="summary-actions">
-                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText(this)">📋 コピー</button>
                 <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
                 <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
             </div>

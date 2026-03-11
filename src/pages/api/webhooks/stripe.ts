@@ -4,7 +4,8 @@ import { createClient } from '@supabase/supabase-js';
 import { createMemberBooking, createGuestBooking, useCoupon } from '../../../lib/booking/db';
 import { createZoomMeeting } from '../../../lib/zoom';
 import { createCalendarEvent } from '../../../lib/google-calendar';
-import { sendBookingConfirmation } from '../../../lib/email';
+import { sendBookingConfirmation, sendWorkbookPurchaseEmail } from '../../../lib/email';
+import { findCourseByPaymentLink } from '../../../lib/workbook/paid-courses';
 
 export const POST: APIRoute = async ({ request, locals }) => {
   const runtime = (locals as any).runtime;
@@ -177,6 +178,40 @@ export const POST: APIRoute = async ({ request, locals }) => {
             stripe_session_id: session.id,
             amount: session.amount_total,
           });
+        }
+
+        // --- Payment Link workbook purchase ---
+        const paymentLinkId = session.payment_link as string | null;
+        if (paymentLinkId && !meta.type) {
+          const course = findCourseByPaymentLink(paymentLinkId);
+          if (course) {
+            const customerEmail = session.customer_details?.email;
+            const customerName = session.customer_details?.name || '';
+
+            try {
+              await supabase.from('purchases').insert({
+                product_type: 'workbook',
+                product_id: course.id,
+                stripe_session_id: session.id,
+                amount: session.amount_total,
+                customer_email: customerEmail,
+                customer_name: customerName,
+              });
+            } catch (e) { console.error('Purchase insert failed:', e); }
+
+            if (customerEmail) {
+              try {
+                await sendWorkbookPurchaseEmail(locals, {
+                  to: customerEmail,
+                  customerName: customerName || customerEmail,
+                  courseTitle: course.title + ' ' + course.subtitle,
+                  password: course.password,
+                  courseUrl: course.baseUrl,
+                  hasAccount: false,
+                });
+              } catch (e) { console.error('Workbook purchase email failed:', e); }
+            }
+          }
         }
       }
       break;

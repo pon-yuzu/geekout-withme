@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<script>(function(){var k="uchiwai_course_access_australia-english-p2";try{if(localStorage.getItem(k)==="true")return;}catch(e){}window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");})()</script>
+<script>(function(){var k="uchiwai_course_access_australia-english-p2";var pk="uchiwai_course_purchased_at_australia-english-p2";var hk="uchiwai_course_has_account_australia-english-p2";try{var v=localStorage.getItem(k);if(v==="true"||v==="granted"){var pa=localStorage.getItem(pk);if(pa){var days=localStorage.getItem(hk)==="true"?365:183;var exp=new Date(pa);exp.setDate(exp.getDate()+days);if(new Date()>exp){localStorage.removeItem(k);localStorage.removeItem(pk);window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");return;}}return;}}catch(e){}window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");})();</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🎨 Day 6: First Australians</title>
@@ -1072,8 +1072,8 @@
                 <p>Q: 「盗まれた世代」とは何を指していますか？</p>
                 <div class="quiz-options">
                     <div class="quiz-option" onclick="checkQuiz(this, false)">先住民の土地が奪われた時代</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">先住民の子どもたちが家族から強制的に引き離された時代</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">先住民の言語が禁止された時代</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">先住民の子どもたちが家族から強制的に引き離された時代</div>
                 </div>
             </div>
         </div>
@@ -1294,9 +1294,9 @@
             <div class="quiz-question">
                 <p>Q: トム先生によると、先住民の言語の現状はどうですか？</p>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">250以上の言語がすべて健全に生き残っている</div>
                     <div class="quiz-option" onclick="checkQuiz(this, true)">約120が話されているが、多くが絶滅の危機にある</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">すべての先住民言語がすでに消滅した</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">250以上の言語がすべて健全に生き残っている</div>
                 </div>
             </div>
         </div>
@@ -1427,7 +1427,7 @@
             <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
             <pre id="summary-output" class="summary-output"></pre>
             <div id="summary-actions" class="summary-actions">
-                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText(this)">📋 コピー</button>
                 <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
                 <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
             </div>

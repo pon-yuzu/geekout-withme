@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<script>(function(){var k="uchiwai_course_access_australia-english-p2";try{if(localStorage.getItem(k)==="true")return;}catch(e){}window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");})()</script>
+<script>(function(){var k="uchiwai_course_access_australia-english-p2";var pk="uchiwai_course_purchased_at_australia-english-p2";var hk="uchiwai_course_has_account_australia-english-p2";try{var v=localStorage.getItem(k);if(v==="true"||v==="granted"){var pa=localStorage.getItem(pk);if(pa){var days=localStorage.getItem(hk)==="true"?365:183;var exp=new Date(pa);exp.setDate(exp.getDate()+days);if(new Date()>exp){localStorage.removeItem(k);localStorage.removeItem(pk);window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");return;}}return;}}catch(e){}window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");})();</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>📝 Day 29: My Australia Plan</title>
@@ -1102,8 +1102,8 @@
                 <p>Q: レビュアーがスタッフに感謝している理由として最も適切なものはどれですか？</p>
                 <div class="quiz-options">
                     <div class="quiz-option" onclick="checkQuiz(this, false)">無料で航空券を手配してくれたから</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">専門的なアドバイスで旅行が特別なものになったから</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">日本語で対応してくれたから</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">専門的なアドバイスで旅行が特別なものになったから</div>
                 </div>
             </div>
         </div>
@@ -1330,9 +1330,9 @@
             <div class="quiz-question">
                 <p>Q: リアムがオーストラリアの運転について述べていることは何ですか？</p>
                 <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">レンタカーが非常に安いこと</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">国際免許証が必要ないこと</div>
                     <div class="quiz-option" onclick="checkQuiz(this, true)">日本と同じ左側通行であること</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">レンタカーが非常に安いこと</div>
                 </div>
             </div>
         </div>
@@ -1464,7 +1464,7 @@
             <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
             <pre id="summary-output" class="summary-output"></pre>
             <div id="summary-actions" class="summary-actions">
-                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText(this)">📋 コピー</button>
                 <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
                 <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
             </div>

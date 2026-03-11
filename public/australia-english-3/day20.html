@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<script>(function(){var k="uchiwai_course_access_australia-english-3";try{if(localStorage.getItem(k)==="true")return;}catch(e){}window.location.replace("https://buy.stripe.com/aFa5kC3Id9zMbnheFId7q02");})()</script>
+<script>(function(){var k="uchiwai_course_access_australia-english-3";var pk="uchiwai_course_purchased_at_australia-english-3";var hk="uchiwai_course_has_account_australia-english-3";try{var v=localStorage.getItem(k);if(v==="true"||v==="granted"){var pa=localStorage.getItem(pk);if(pa){var days=localStorage.getItem(hk)==="true"?365:183;var exp=new Date(pa);exp.setDate(exp.getDate()+days);if(new Date()>exp){localStorage.removeItem(k);localStorage.removeItem(pk);window.location.replace("https://buy.stripe.com/aFa5kC3Id9zMbnheFId7q02");return;}}return;}}catch(e){}window.location.replace("https://buy.stripe.com/aFa5kC3Id9zMbnheFId7q02");})();</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🥧 Day 20: Meat Pies and Fish & Chips</title>
@@ -896,9 +896,9 @@
             <div class="quiz-question">
                 <p>Q: ミートパイはどこで売られていますか？</p>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">Only at bakeries</div>
                     <div class="quiz-option" onclick="checkQuiz(this, true)">At bakeries, petrol stations, and football stadiums</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">Only at restaurants</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Only at bakeries</div>
                 </div>
             </div>
         </div>
@@ -1057,9 +1057,9 @@
             <div class="quiz-question">
                 <p>Q: Harry's Café de Wheelsは何年から営業していますか？</p>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">Since 1920</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">Since 1938</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">Since 1955</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">Since 1938</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Since 1920</div>
                 </div>
             </div>
         </div>
@@ -1265,8 +1265,8 @@
                 <p>Q: AさんがBBQ以外に食べたいと言ったものは何ですか？</p>
                 <div class="quiz-options">
                     <div class="quiz-option" onclick="checkQuiz(this, false)">Sushi</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">Fish and chips</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">Pasta</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">Fish and chips</div>
                 </div>
             </div>
         </div>
@@ -1393,7 +1393,7 @@
             <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
             <pre id="summary-output" class="summary-output"></pre>
             <div id="summary-actions" class="summary-actions">
-                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText(this)">📋 コピー</button>
                 <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
                 <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
             </div>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<script>(function(){var k="uchiwai_course_access_australia-english-3";try{if(localStorage.getItem(k)==="true")return;}catch(e){}window.location.replace("https://buy.stripe.com/aFa5kC3Id9zMbnheFId7q02");})()</script>
+<script>(function(){var k="uchiwai_course_access_australia-english-3";var pk="uchiwai_course_purchased_at_australia-english-3";var hk="uchiwai_course_has_account_australia-english-3";try{var v=localStorage.getItem(k);if(v==="true"||v==="granted"){var pa=localStorage.getItem(pk);if(pa){var days=localStorage.getItem(hk)==="true"?365:183;var exp=new Date(pa);exp.setDate(exp.getDate()+days);if(new Date()>exp){localStorage.removeItem(k);localStorage.removeItem(pk);window.location.replace("https://buy.stripe.com/aFa5kC3Id9zMbnheFId7q02");return;}}return;}}catch(e){}window.location.replace("https://buy.stripe.com/aFa5kC3Id9zMbnheFId7q02");})();</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🦘 Day 4: Unique Animals</title>
@@ -869,9 +869,9 @@
             <div class="quiz-question">
                 <p>Q: オーストラリアにいるカンガルーの数はおよそ何匹ですか？</p>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">約2,600万匹</div>
                     <div class="quiz-option" onclick="checkQuiz(this, true)">約5,000万匹</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">約1億匹</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">約2,600万匹</div>
                 </div>
             </div>
         </div>
@@ -997,8 +997,8 @@
                 <p>Q: タロンガ動物園について正しくないのはどれですか？</p>
                 <div class="quiz-options">
                     <div class="quiz-option" onclick="checkQuiz(this, false)">シドニーハーバーの岸にある</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">フェリーで行くことができる</div>
                     <div class="quiz-option" onclick="checkQuiz(this, true)">コアラを抱っこできる体験がある</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">フェリーで行くことができる</div>
                 </div>
             </div>
         </div>
@@ -1163,9 +1163,9 @@
             <div class="quiz-question">
                 <p>Q: ジャックによると、コアラが長時間寝る理由は何ですか？</p>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">夜行性だから</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">ユーカリの葉からあまりエネルギーを得られないから</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">冬眠する習性があるから</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">ユーカリの葉からあまりエネルギーを得られないから</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">夜行性だから</div>
                 </div>
             </div>
         </div>
@@ -1293,7 +1293,7 @@
             <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
             <pre id="summary-output" class="summary-output"></pre>
             <div id="summary-actions" class="summary-actions">
-                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText(this)">📋 コピー</button>
                 <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
                 <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
             </div>

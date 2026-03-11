@@ -884,8 +884,8 @@
                 <p>Q: ワーキングホリデービザで、オーストラリアで勉強できる最大期間はどれですか？</p>
                 <div class="quiz-options">
                     <div class="quiz-option" onclick="checkQuiz(this, false)">2ヶ月</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">4ヶ月</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">6ヶ月</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">4ヶ月</div>
                 </div>
             </div>
         </div>
@@ -1029,8 +1029,8 @@
                 <p>Q: レビューによると、同じ雇用主のもとで最大何ヶ月働けますか？</p>
                 <div class="quiz-options">
                     <div class="quiz-option" onclick="checkQuiz(this, false)">3ヶ月</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">6ヶ月</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">12ヶ月</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">6ヶ月</div>
                 </div>
             </div>
         </div>
@@ -1231,8 +1231,8 @@
                 <p>Q: 会話の中で、Bさんは最初の2週間どこに泊まる予定ですか？</p>
                 <div class="quiz-options">
                     <div class="quiz-option" onclick="checkQuiz(this, false)">友人の家</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">市内のホステル</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">ホテル</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">市内のホステル</div>
                 </div>
             </div>
         </div>
@@ -1359,7 +1359,7 @@
             <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
             <pre id="summary-output" class="summary-output"></pre>
             <div id="summary-actions" class="summary-actions">
-                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText(this)">📋 コピー</button>
                 <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
                 <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
             </div>

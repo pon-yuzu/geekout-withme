@@ -310,6 +310,23 @@ if (user && Astro.locals.supabase) {
         }
       })();
     </script>
+    {user && (
+      <script is:inline>
+        // Auto-extend workbook access for logged-in users who purchased before registering
+        (function() {
+          var courseIds = ['australia-english-30days', 'australia-english-3', 'australia-english-p2'];
+          courseIds.forEach(function(id) {
+            var accessKey = 'uchiwai_course_access_' + id;
+            var accountKey = 'uchiwai_course_has_account_' + id;
+            try {
+              if (localStorage.getItem(accessKey) && !localStorage.getItem(accountKey)) {
+                localStorage.setItem(accountKey, 'true');
+              }
+            } catch(e) {}
+          });
+        })();
+      </script>
+    )}
   </body>
 </html>
 

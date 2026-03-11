@@ -1045,9 +1045,9 @@
             <div class="quiz-question">
                 <p>Q: BridgeClimbについて正しいものはどれですか？</p>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">約1時間で終わる</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">400万人以上が完了している</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">朝のクライムが一番人気</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">400万人以上が完了している</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">約1時間で終わる</div>
                 </div>
             </div>
         </div>
@@ -1376,7 +1376,7 @@
             <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
             <pre id="summary-output" class="summary-output"></pre>
             <div id="summary-actions" class="summary-actions">
-                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText(this)">📋 コピー</button>
                 <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
                 <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
             </div>

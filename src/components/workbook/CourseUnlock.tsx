@@ -2,14 +2,32 @@ import { useState, useEffect } from 'react';
 import type { PaidCourse } from '../../lib/workbook/paid-courses';
 
 const STORAGE_PREFIX = 'uchiwai_course_access_';
+const PURCHASED_AT_PREFIX = 'uchiwai_course_purchased_at_';
+const HAS_ACCOUNT_PREFIX = 'uchiwai_course_has_account_';
 
 function hasAccess(courseId: string): boolean {
   if (typeof window === 'undefined') return false;
-  return localStorage.getItem(STORAGE_PREFIX + courseId) === 'granted';
+  const val = localStorage.getItem(STORAGE_PREFIX + courseId);
+  if (val !== 'true' && val !== 'granted') return false;
+
+  // Check expiration if purchased_at exists
+  const purchasedAt = localStorage.getItem(PURCHASED_AT_PREFIX + courseId);
+  if (purchasedAt) {
+    const hasAccount = localStorage.getItem(HAS_ACCOUNT_PREFIX + courseId) === 'true';
+    const maxDays = hasAccount ? 365 : 183;
+    const expiry = new Date(purchasedAt);
+    expiry.setDate(expiry.getDate() + maxDays);
+    if (new Date() > expiry) {
+      localStorage.removeItem(STORAGE_PREFIX + courseId);
+      localStorage.removeItem(PURCHASED_AT_PREFIX + courseId);
+      return false;
+    }
+  }
+  return true;
 }
 
 function grantAccess(courseId: string): void {
-  localStorage.setItem(STORAGE_PREFIX + courseId, 'granted');
+  localStorage.setItem(STORAGE_PREFIX + courseId, 'true');
 }
 
 export default function CourseUnlock({ course }: { course: PaidCourse }) {

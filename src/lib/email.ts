@@ -212,3 +212,75 @@ export async function sendBookingCancellation(locals: any, opts: Omit<BookingEma
     `,
   });
 }
+
+interface WorkbookPurchaseEmailOpts {
+  to: string;
+  customerName: string;
+  courseTitle: string;
+  password: string;
+  courseUrl: string;
+  hasAccount: boolean;
+}
+
+/**
+ * Send workbook purchase confirmation email with password + admin notification.
+ */
+export async function sendWorkbookPurchaseEmail(locals: any, opts: WorkbookPurchaseEmailOpts): Promise<void> {
+  const resend = getResendClient(locals);
+  if (!resend) {
+    console.error('Resend not configured, skipping workbook purchase email');
+    return;
+  }
+
+  const { to, customerName, courseTitle, password, courseUrl, hasAccount } = opts;
+  const accessPeriod = hasAccount ? '1年間' : '6ヶ月';
+  const fullUrl = `https://uchiwai.app${courseUrl}`;
+
+  // Customer email
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: `【Uchiwai】${courseTitle} ご購入ありがとうございます`,
+    html: `
+      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+        <h2 style="color: #f97316;">ご購入ありがとうございます！</h2>
+        <p>${escapeHtml(customerName)} さん</p>
+        <p>「${escapeHtml(courseTitle)}」のご購入ありがとうございます。</p>
+
+        <div style="background: #fff7ed; border-radius: 12px; padding: 20px; margin: 20px 0;">
+          <p style="margin: 4px 0;"><strong>パスワード:</strong></p>
+          <p style="margin: 8px 0; font-size: 24px; font-weight: bold; color: #f97316; letter-spacing: 2px;">${escapeHtml(password)}</p>
+          <p style="margin: 12px 0;"><strong>コースページ:</strong> <a href="${escapeHtml(fullUrl)}" style="color: #2563eb;">${escapeHtml(fullUrl)}</a></p>
+          <p style="margin: 4px 0;"><strong>アクセス期間:</strong> 購入から${accessPeriod}</p>
+        </div>
+
+        <p style="font-size: 14px; color: #6b7280;">コースページの「パスワード入力」ボタンから上記パスワードを入力すると、全Dayにアクセスできます。</p>
+
+        ${!hasAccount ? `
+        <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 16px; margin: 20px 0;">
+          <p style="font-weight: bold; color: #166534;">無料会員登録でアクセス期間を1年に延長！</p>
+          <p style="font-size: 14px; color: #166534; margin-top: 8px;">
+            <a href="https://uchiwai.app/signup" style="color: #2563eb;">会員登録はこちら（無料）</a>
+          </p>
+        </div>
+        ` : ''}
+
+        <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;" />
+        <p style="color: #9ca3af; font-size: 12px;">Uchiwai</p>
+      </div>
+    `,
+  });
+
+  // Admin notification
+  await resend.emails.send({
+    from: FROM,
+    to: ADMIN_EMAIL,
+    subject: `[Workbook Purchase] ${customerName} — ${courseTitle}`,
+    html: `
+      <h3>Workbook Purchase</h3>
+      <p><strong>Customer:</strong> ${escapeHtml(customerName)} (${escapeHtml(to)})</p>
+      <p><strong>Course:</strong> ${escapeHtml(courseTitle)}</p>
+      <p><strong>Has account:</strong> ${hasAccount ? 'Yes' : 'No'}</p>
+    `,
+  });
+}

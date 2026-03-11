@@ -1097,9 +1097,9 @@
             <div class="quiz-question">
                 <p>Q: 筆者が「もっと早くシドニーに来ればよかった」と感じた理由は何ですか？</p>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">Because the local food was better than expected.</div>
                     <div class="quiz-option" onclick="checkQuiz(this, true)">Because the coastal walk was so spectacular.</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">Because the weather was perfect for swimming.</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Because the local food was better than expected.</div>
                 </div>
             </div>
         </div>
@@ -1317,9 +1317,9 @@
             <div class="quiz-question">
                 <p>Q: スタッフがブルーマウンテンズを勧めたのはどんな条件の場合ですか？</p>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">If the visitor had more money to spend.</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">If the visitor had a week in Sydney.</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">If the visitor enjoyed mountain climbing.</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">If the visitor had a week in Sydney.</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">If the visitor had more money to spend.</div>
                 </div>
             </div>
         </div>
@@ -1452,7 +1452,7 @@
             <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
             <pre id="summary-output" class="summary-output"></pre>
             <div id="summary-actions" class="summary-actions">
-                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText(this)">📋 コピー</button>
                 <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
                 <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
             </div>

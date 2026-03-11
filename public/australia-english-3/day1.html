@@ -868,9 +868,9 @@
             <div class="quiz-question">
                 <p>Q: オーストラリアの人口はおよそどれくらいですか？</p>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">約1,600万人</div>
                     <div class="quiz-option" onclick="checkQuiz(this, true)">約2,600万人</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">約3,600万人</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">約1,600万人</div>
                 </div>
             </div>
         </div>
@@ -1162,8 +1162,8 @@
                 <p>Q: 会話の中で、マークがオーストラリアの首都について言ったことはどれですか？</p>
                 <div class="quiz-options">
                     <div class="quiz-option" onclick="checkQuiz(this, false)">シドニーが首都だと説明した</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">キャンベラは首都として建設されたと言った</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">メルボルンが以前の首都だったと言った</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">キャンベラは首都として建設されたと言った</div>
                 </div>
             </div>
         </div>
@@ -1289,7 +1289,7 @@
             <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
             <pre id="summary-output" class="summary-output"></pre>
             <div id="summary-actions" class="summary-actions">
-                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText(this)">📋 コピー</button>
                 <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
                 <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
             </div>

@@ -921,9 +921,9 @@
             <div class="quiz-question">
                 <p>Q: ワーキングホリデービザの申請はどの方法で行いますか？</p>
                 <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">郵送で書類提出</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">大使館に直接訪問</div>
                     <div class="quiz-option" onclick="checkQuiz(this, true)">オンラインのみ</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">郵送で書類提出</div>
                 </div>
             </div>
         </div>
@@ -1080,9 +1080,9 @@
             <div class="quiz-question">
                 <p>Q: レビューの筆者は、相談員のアドバイスで特に何を先にすべきだと知りましたか？</p>
                 <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">銀行口座の開設</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">航空券の予約</div>
                     <div class="quiz-option" onclick="checkQuiz(this, true)">健康診断の結果を先に提出すること</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">銀行口座の開設</div>
                 </div>
             </div>
         </div>
@@ -1430,7 +1430,7 @@
             <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
             <pre id="summary-output" class="summary-output"></pre>
             <div id="summary-actions" class="summary-actions">
-                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText(this)">📋 コピー</button>
                 <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
                 <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
             </div>

@@ -1,142 +1,152 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
-import { t } from '../../../i18n/index';
-import type { Lang } from '../../../i18n/index';
-import { getUserTier } from '../../../lib/tier';
-import { hasLineSupport } from '../../../lib/line-support';
 
 const user = Astro.locals.user;
-const lang = Astro.locals.lang as Lang;
-
-let showLineUpsell = false;
-if (user && Astro.locals.supabase) {
-  const runtime = (Astro.locals as any).runtime;
-  const linePriceId = runtime?.env?.STRIPE_LINE_SUPPORT_PRICE_ID || import.meta.env.STRIPE_LINE_SUPPORT_PRICE_ID;
-  if (linePriceId) {
-    const tier = await getUserTier(Astro.locals.supabase, user.id);
-    showLineUpsell = !(await hasLineSupport(Astro.locals.supabase, user.id, tier, linePriceId));
-  }
-}
+const isLoggedIn = !!user;
 ---
 
-<Layout title={t(lang, 'services.thanks.workbook.title')} user={user}>
+<Layout title="ご購入ありがとうございます" user={user}>
   <section class="py-12 px-4">
     <div class="max-w-xl mx-auto">
-      <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm text-center">
-        <span class="text-5xl block mb-4">📘</span>
-        <h1 class="text-2xl font-bold mb-2">{t(lang, 'services.thanks.workbook.title')}</h1>
-        <p class="text-gray-600 mb-8">{t(lang, 'services.thanks.workbook.subtitle')}</p>
-
-        <form id="workbook-form" class="text-left space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{t(lang, 'services.thanks.workbook.name')}</label>
-            <input type="text" name="name" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{t(lang, 'services.thanks.workbook.email')}</label>
-            <input type="email" name="email" required value={user?.email || ''} class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
-          </div>
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1">{t(lang, 'services.thanks.workbook.deadline')}</label>
-            <input type="date" name="deadline" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent" />
-          </div>
-          <button
-            type="submit"
-            class="w-full px-6 py-3 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition-colors disabled:opacity-50"
-          >
-            {t(lang, 'services.thanks.workbook.submit')}
-          </button>
-          <p id="form-status" class="text-center text-sm text-green-600 hidden"></p>
-        </form>
+      <!-- Loading state -->
+      <div id="loading" class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm text-center">
+        <span class="text-5xl block mb-4">⏳</span>
+        <h1 class="text-2xl font-bold mb-2">購入情報を確認中...</h1>
+        <p class="text-gray-500">少々お待ちください</p>
       </div>
 
-      {showLineUpsell && (
-        <div class="mt-6 bg-gradient-to-br from-teal-50 to-emerald-50 border border-teal-200 rounded-2xl p-6">
+      <!-- Success state (hidden by default) -->
+      <div id="success" class="hidden">
+        <div class="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm text-center">
+          <span class="text-5xl block mb-4">🎉</span>
+          <h1 class="text-2xl font-bold mb-2">ご購入ありがとうございます！</h1>
+          <p class="text-gray-600 mb-6">
+            <span id="customer-name-display"></span>さん、コースのアクセス情報をお届けします。
+          </p>
+
+          <div class="bg-orange-50 border border-orange-200 rounded-xl p-6 mb-6 text-left">
+            <p class="text-sm text-gray-600 mb-1">パスワード</p>
+            <p id="password-display" class="text-2xl font-bold text-orange-500 tracking-wider mb-4"></p>
+
+            <p class="text-sm text-gray-600 mb-1">コースページ</p>
+            <a id="course-link" href="#" class="text-blue-600 hover:underline font-medium block mb-4"></a>
+
+            <p class="text-sm text-gray-600 mb-1">アクセス期間</p>
+            <p id="access-period" class="font-medium text-gray-800"></p>
+          </div>
+
+          <p class="text-sm text-gray-500 mb-4">
+            コースページの「パスワード入力」ボタンから上記パスワードを入力すると、全Dayにアクセスできます。
+            パスワードはメールにも送信されています。
+          </p>
+
+          <a id="course-btn" href="#" class="inline-block px-6 py-3 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition-colors">
+            コースを開く
+          </a>
+        </div>
+
+        <!-- Free account registration CTA (only for non-logged-in users) -->
+        <div id="signup-cta" class={isLoggedIn ? 'hidden' : 'mt-6 bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-2xl p-6'}>
           <div class="text-center mb-4">
-            <span class="text-4xl block mb-2">💬</span>
-            <h2 class="text-xl font-bold text-gray-800">
-              {t(lang, 'services.lineUpsell.title')}
-            </h2>
+            <span class="text-4xl block mb-2">🆙</span>
+            <h2 class="text-xl font-bold text-gray-800">無料会員登録でアクセス期間を1年に延長！</h2>
             <p class="text-gray-600 text-sm mt-2">
-              {t(lang, 'services.lineUpsell.desc')}
+              現在のアクセス期間は6ヶ月です。無料会員登録するだけで1年に延長されます。
             </p>
           </div>
 
-          <div class="bg-white rounded-xl p-4 mb-4 text-center">
-            <p class="text-3xl font-bold text-teal-500">¥5,000<span class="text-base font-normal text-gray-400">/月</span></p>
-          </div>
-
           <ul class="text-sm text-gray-600 space-y-2 mb-5">
-            <li class="flex items-center gap-2"><span class="text-teal-400">✓</span>{t(lang, 'services.lineUpsell.feature1')}</li>
-            <li class="flex items-center gap-2"><span class="text-teal-400">✓</span>{t(lang, 'services.lineUpsell.feature2')}</li>
-            <li class="flex items-center gap-2"><span class="text-teal-400">✓</span>{t(lang, 'services.lineUpsell.feature3')}</li>
+            <li class="flex items-center gap-2"><span class="text-green-500">✓</span> ワークブックのアクセス期間が1年に延長</li>
+            <li class="flex items-center gap-2"><span class="text-green-500">✓</span> AI Workbook（パーソナライズ学習）が使える</li>
+            <li class="flex items-center gap-2"><span class="text-green-500">✓</span> レベルチェック結果の保存</li>
+            <li class="flex items-center gap-2"><span class="text-green-500">✓</span> コミュニティ・掲示板への参加</li>
           </ul>
 
-          <button
-            id="line-upsell-btn"
-            data-label={t(lang, 'services.lineUpsell.cta')}
-            data-processing={t(lang, 'services.lineUpsell.processing')}
-            class="w-full py-3 bg-teal-500 text-white rounded-full font-semibold hover:bg-teal-600 transition-colors disabled:opacity-50"
+          <a
+            id="signup-link"
+            href="/signup"
+            class="block w-full py-3 bg-green-600 text-white rounded-full font-semibold hover:bg-green-700 transition-colors text-center"
           >
-            {t(lang, 'services.lineUpsell.cta')}
-          </button>
-          <p class="text-xs text-gray-400 text-center mt-2">
-            {t(lang, 'services.lineUpsell.cancelNote')}
-          </p>
+            無料会員登録する（30秒で完了）
+          </a>
         </div>
-      )}
+
+        <!-- Already logged in confirmation -->
+        <div id="account-confirmed" class={isLoggedIn ? 'mt-6 bg-green-50 border border-green-200 rounded-xl p-4 text-center' : 'hidden'}>
+          <span class="text-sm text-green-700 font-medium">✓ 会員登録済み — 1年間アクセス可能です</span>
+        </div>
+      </div>
+
+      <!-- Error state (hidden by default) -->
+      <div id="error-state" class="hidden bg-white border border-gray-200 rounded-2xl p-8 shadow-sm text-center">
+        <span class="text-5xl block mb-4">⚠️</span>
+        <h1 class="text-2xl font-bold mb-2">購入情報の取得に失敗しました</h1>
+        <p class="text-gray-600 mb-6">メールでパスワードをお送りしていますのでご確認ください。</p>
+        <a href="/workbook" class="inline-block px-6 py-3 bg-orange-500 text-white rounded-full font-semibold hover:bg-orange-600 transition-colors">
+          ワークブックページへ
+        </a>
+      </div>
     </div>
   </section>
 </Layout>
 
-<script is:inline>
-  document.getElementById('workbook-form')?.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const btn = form.querySelector('button[type="submit"]');
-    const status = document.getElementById('form-status');
-    btn.disabled = true;
-    btn.textContent = btn.dataset.sending || 'Sending...';
+<script is:inline define:vars={{ isLoggedIn }}>
+(async function() {
+  const params = new URLSearchParams(window.location.search);
+  const sessionId = params.get('session_id');
 
-    try {
-      const data = new FormData(form);
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: data.get('name'),
-          email: data.get('email'),
-          category: 'workbook-order',
-          message: 'Preferred delivery date: ' + (data.get('deadline') || 'Not specified'),
-        }),
-      });
-      if (res.ok) {
-        status.textContent = status.dataset.sent || 'Form submitted! We\'ll be in touch soon.';
-        status.classList.remove('hidden');
-        form.reset();
-      }
-    } catch (err) {
-      console.error(err);
-    }
-    btn.disabled = false;
-    btn.textContent = btn.dataset.label || 'Submit';
-  });
+  if (!sessionId) {
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('error-state').classList.remove('hidden');
+    return;
+  }
 
-  document.getElementById('line-upsell-btn')?.addEventListener('click', async (e) => {
-    const btn = e.currentTarget;
-    btn.disabled = true;
-    btn.textContent = btn.dataset.processing || 'Processing...';
-    try {
-      const res = await fetch('/api/create-line-support-checkout', { method: 'POST' });
-      const data = await res.json();
-      if (data.url) {
-        window.location.href = data.url;
-        return;
-      }
-    } catch (err) {
-      console.error(err);
+  try {
+    const res = await fetch('/api/stripe-session?session_id=' + encodeURIComponent(sessionId));
+    if (!res.ok) throw new Error('API error');
+
+    const data = await res.json();
+    const { customerName, courseId, password, baseUrl, courseTitle } = data;
+
+    // Save to localStorage
+    localStorage.setItem('uchiwai_course_access_' + courseId, 'true');
+    localStorage.setItem('uchiwai_course_purchased_at_' + courseId, new Date().toISOString());
+    if (customerName) {
+      localStorage.setItem('uchiwai_course_name_' + courseId, customerName);
     }
-    btn.disabled = false;
-    btn.textContent = btn.dataset.label || 'Add LINE Support Now';
-  });
+    if (isLoggedIn) {
+      localStorage.setItem('uchiwai_course_has_account_' + courseId, 'true');
+    }
+
+    // Update UI
+    var nameDisplay = document.getElementById('customer-name-display');
+    nameDisplay.textContent = customerName || 'ゲスト';
+
+    document.getElementById('password-display').textContent = password;
+
+    var courseLink = document.getElementById('course-link');
+    courseLink.href = baseUrl;
+    courseLink.textContent = 'https://uchiwai.app' + baseUrl;
+
+    document.getElementById('course-btn').href = baseUrl;
+
+    var accessPeriod = document.getElementById('access-period');
+    accessPeriod.textContent = isLoggedIn
+      ? '購入から1年間'
+      : '購入から6ヶ月（無料会員登録で1年に延長）';
+
+    // Update signup CTA link with redirect back to this page
+    var signupLink = document.getElementById('signup-link');
+    if (signupLink) {
+      signupLink.href = '/signup?redirect=' + encodeURIComponent(window.location.pathname + window.location.search);
+    }
+
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('success').classList.remove('hidden');
+  } catch (err) {
+    console.error('Thanks page error:', err);
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('error-state').classList.remove('hidden');
+  }
+})();
 </script>

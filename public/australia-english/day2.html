@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<script>(function(){var k="uchiwai_course_access_australia-english-30days";try{if(localStorage.getItem(k)==="true")return;}catch(e){}window.location.replace("https://buy.stripe.com/fZu3cu4MheU6fDxfJMd7q00");})();</script>
+<script>(function(){var k="uchiwai_course_access_australia-english-30days";var pk="uchiwai_course_purchased_at_australia-english-30days";var hk="uchiwai_course_has_account_australia-english-30days";try{var v=localStorage.getItem(k);if(v==="true"||v==="granted"){var pa=localStorage.getItem(pk);if(pa){var days=localStorage.getItem(hk)==="true"?365:183;var exp=new Date(pa);exp.setDate(exp.getDate()+days);if(new Date()>exp){localStorage.removeItem(k);localStorage.removeItem(pk);window.location.replace("https://buy.stripe.com/fZu3cu4MheU6fDxfJMd7q00");return;}}return;}}catch(e){}window.location.replace("https://buy.stripe.com/fZu3cu4MheU6fDxfJMd7q00");})();</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🌞 Day 2: The Seasons are Opposite</title>
@@ -940,9 +940,9 @@
             <div class="quiz-question">
                 <p>Q: オーストラリアのクリスマスはどの季節ですか？</p>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">春</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, true)">夏</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">冬</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, true)">夏</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">春</div>
                 </div>
             </div>
         </div>
@@ -1097,9 +1097,9 @@
             <div class="quiz-question">
                 <p>Q: この日のボンダイビーチの天気はどうでしたか？</p>
                 <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">雨だった</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">曇りで寒かった</div>
                     <div class="quiz-option" onclick="checkQuiz(this, true)">晴れで約28度だった</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">雨だった</div>
                 </div>
             </div>
         </div>
@@ -1448,7 +1448,7 @@
             <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
             <pre id="summary-output" class="summary-output"></pre>
             <div id="summary-actions" class="summary-actions">
-                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText(this)">📋 コピー</button>
                 <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
                 <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
             </div>
@@ -1662,6 +1662,27 @@
                 s += '■ Try It（自由記述）:\n' + (tryItBox.value.trim() || '(未記入)') + '\n\n';
             }
 
+            // Collect learning context (reading & dialogue)
+            var readingBox = document.querySelector('.reading-box');
+            if (readingBox) {
+                var readingTitle = readingBox.querySelector('h3');
+                var readingText = readingBox.querySelector('p');
+                s += '■ 今日のReading:\n';
+                if (readingTitle) s += readingTitle.textContent + '\n';
+                if (readingText) s += readingText.textContent + '\n\n';
+            }
+            var dialogueEl = document.querySelector('.dialogue');
+            if (dialogueEl) {
+                s += '■ 今日のDialogue:\n';
+                var lines = dialogueEl.querySelectorAll('.dialogue-line');
+                lines.forEach(function(line) {
+                    var label = line.querySelector('.speaker-label');
+                    var text = line.textContent.replace(label ? label.textContent : '', '').trim();
+                    s += (label ? label.textContent : '') + ' ' + text + '\n';
+                });
+                s += '\n';
+            }
+
             s += '---\n';
             s += '上の内容をもとに、以下を教えてください：\n';
             s += '1. 間違えた問題の解説\n';
@@ -1677,10 +1698,9 @@
             actions.classList.add('show');
         }
 
-        function copySummaryText() {
+        function copySummaryText(btn) {
             var text = document.getElementById('summary-output').textContent || '';
             navigator.clipboard.writeText(text).then(function() {
-                var btn = event.target;
                 btn.textContent = '✓ コピー済み';
                 setTimeout(function() { btn.textContent = '📋 コピー'; }, 2000);
             });

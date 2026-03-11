@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<script>(function(){var k="uchiwai_course_access_australia-english-p2";try{if(localStorage.getItem(k)==="true")return;}catch(e){}window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");})()</script>
+<script>(function(){var k="uchiwai_course_access_australia-english-p2";var pk="uchiwai_course_purchased_at_australia-english-p2";var hk="uchiwai_course_has_account_australia-english-p2";try{var v=localStorage.getItem(k);if(v==="true"||v==="granted"){var pa=localStorage.getItem(pk);if(pa){var days=localStorage.getItem(hk)==="true"?365:183;var exp=new Date(pa);exp.setDate(exp.getDate()+days);if(new Date()>exp){localStorage.removeItem(k);localStorage.removeItem(pk);window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");return;}}return;}}catch(e){}window.location.replace("https://buy.stripe.com/cNi00i6UpeU6gHB414d7q01");})();</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🥧 Day 20: Meat Pies and Fish & Chips</title>
@@ -919,9 +919,9 @@
             <div class="quiz-question">
                 <p>Q: オーストラリアでは年間約何個のミートパイが販売されていますか？</p>
                 <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">Approximately five hundred million</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">Approximately one hundred million</div>
                     <div class="quiz-option" onclick="checkQuiz(this, true)">Approximately two hundred and seventy million</div>
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">Approximately five hundred million</div>
                 </div>
             </div>
         </div>
@@ -1316,9 +1316,9 @@
             <div class="quiz-question">
                 <p>Q: Aさんは、もしミートパイの消費量が減ったらどうなると言いましたか？</p>
                 <div class="quiz-options">
-                    <div class="quiz-option" onclick="checkQuiz(this, false)">The government would lower the price</div>
                     <div class="quiz-option" onclick="checkQuiz(this, true)">There would be a national outcry</div>
                     <div class="quiz-option" onclick="checkQuiz(this, false)">People would switch to fish and chips</div>
+                    <div class="quiz-option" onclick="checkQuiz(this, false)">The government would lower the price</div>
                 </div>
             </div>
         </div>
@@ -1447,7 +1447,7 @@
             <button class="summary-btn" onclick="generateDaySummary()">📋 サマリーを生成する</button>
             <pre id="summary-output" class="summary-output"></pre>
             <div id="summary-actions" class="summary-actions">
-                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText()">📋 コピー</button>
+                <button class="summary-action-btn summary-copy-btn" onclick="copySummaryText(this)">📋 コピー</button>
                 <a class="summary-action-btn summary-chatgpt-btn" href="https://chatgpt.com" target="_blank" rel="noopener">🤖 ChatGPT</a>
                 <a class="summary-action-btn summary-claude-btn" href="https://claude.ai" target="_blank" rel="noopener">🤖 Claude</a>
             </div>
